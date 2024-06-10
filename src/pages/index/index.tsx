@@ -13,8 +13,8 @@ export default function Index() {
       <View>Hello world!</View>
       <Navigator url='/sub-packages/pages/foo/index'>测试跳转sub-packages独立分包foo页面</Navigator>
       <Navigator url='/sub-packages/pages/bar/index'>测试跳转sub-packages独立分包bar页面</Navigator>
-      <Navigator url='/sub-packages-2/pages/foo/index'>测试跳转sub-packages-2独立分包foo页面</Navigator>
-      <Navigator url='/sub-packages-2/pages/bar/index'>测试跳转sub-packages-2独立分包bar页面</Navigator>
+      <Navigator url='/sub-ai-common/pages/foo/index'>测试跳转sub-ai-common独立分包foo页面</Navigator>
+      <Navigator url='/sub-ai-common/pages/bar/index'>测试跳转sub-ai-common独立分包bar页面</Navigator>
     </View>
   )
 }

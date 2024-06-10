@@ -11,7 +11,7 @@ export default defineAppConfig({
       ]
     },
     {
-      root: "sub-packages-2/",
+      root: "sub-ai-common/",
       pages: [
         "pages/bar/index",
         "pages/foo/index"

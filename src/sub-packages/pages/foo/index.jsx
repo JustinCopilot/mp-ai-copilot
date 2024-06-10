@@ -1,6 +1,6 @@
 import { View, Text } from '@tarojs/components'
 import './index.scss'
-import Name from '../../../sub-packages-2/components/Name'
+import Name from '../../../sub-ai-common/components/Name'
 
 export default function () {
 
