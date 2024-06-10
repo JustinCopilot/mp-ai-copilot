@@ -3,6 +3,15 @@ export default defineAppConfig({
     'pages/index/index'
   ],
   subPackages: [
+    // AI通用组件分包
+    {
+      root: "sub-ai-common/",
+      pages: [
+        "pages/bar/index",
+        "pages/foo/index"
+      ]
+    },
+    // 测试独立分包
     {
       root: "sub-packages/",
       pages: [
@@ -10,13 +19,6 @@ export default defineAppConfig({
         "pages/foo/index"
       ]
     },
-    {
-      root: "sub-ai-common/",
-      pages: [
-        "pages/bar/index",
-        "pages/foo/index"
-      ]
-    }
   ],
   window: {
     backgroundTextStyle: 'light',
