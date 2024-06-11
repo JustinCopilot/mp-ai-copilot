@@ -18,7 +18,7 @@ export default defineConfig(async (merge, { command, mode }) => {
     },
     sourceRoot: 'src',
     outputRoot: 'dist',
-    plugins: [],
+    plugins: [path.join(process.cwd(), '/plugin-mv/index.js')],
     defineConstants: {
     },
     copy: {
