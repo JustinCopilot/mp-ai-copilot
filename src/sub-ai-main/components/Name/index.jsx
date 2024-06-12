@@ -6,7 +6,7 @@ export default function (props) {
 
   return (
     <View className='index'>
-      <Text className='blue'>sub-ai-common components Name：{props.name}</Text>
+      <Text className='blue'>sub-ai-main components Name：{props.name}</Text>
       {/* <Image src={Png}></Image> */}
     </View>
   )

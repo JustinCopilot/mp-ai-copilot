@@ -5,7 +5,7 @@ export default function () {
 
   return (
     <View className='index'>
-      <Text className='yellow'>sub-ai-common foo: <Text className='red'>red</Text></Text>
+      <Text className='yellow'>sub-ai-main foo: <Text className='red'>red</Text></Text>
     </View>
   )
 }

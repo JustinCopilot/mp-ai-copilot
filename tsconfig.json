@@ -22,7 +22,7 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@sub-ai-common/*": ["./src/sub-ai-common/*"],
+      "@sub-ai-main/*": ["./src/sub-ai-main/*"],
     }
   },
   "include": ["./src", "./types", "./config"],

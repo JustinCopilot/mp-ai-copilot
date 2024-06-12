@@ -99,7 +99,7 @@ export default defineConfig(async (merge, { command, mode }) => {
       }
     },
     alias: {
-      '@sub-ai-common': path.resolve(__dirname, '..', 'src/sub-ai-common'),
+      '@sub-ai-main': path.resolve(__dirname, '..', 'src/sub-ai-main'),
     },
   }
   if (process.env.NODE_ENV === 'development') {

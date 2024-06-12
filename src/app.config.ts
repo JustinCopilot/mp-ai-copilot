@@ -5,7 +5,7 @@ export default defineAppConfig({
   subPackages: [
     // AI通用组件分包
     {
-      root: "sub-ai-common/",
+      root: "sub-ai-main/",
       pages: [
         "pages/bar/index",
         "pages/foo/index"
