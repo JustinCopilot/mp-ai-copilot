@@ -1,0 +1,38 @@
+//自定义css全局变量
+
+//字体相关
+@font-large-size: 48px;
+@font-size: 30px;
+@font-small-size: 26px;
+@font-mini-size: 24px;
+
+//颜色相关
+@theme-color: #716AE5; // 主题色
+@background-color: #F2F4F7; // 背景色
+@main-color: #1E222F; //主文字色
+@sub-color: #9296A6; //次文字色
+@boder-color: #CDCFD7;
+// @error-color: #f5222d; //错误文字色
+// @placeholder-color: #999999; //placeholder文字色
+// @btn-text-color: #fff; //按钮文字色
+// @textarea-bg: #f1f4fb; //textarea背景色
+// @btn-back-color: #0dc7c1; //按钮文字色
+
+.safe-bottom() {
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.bg-image(@size) {
+  width: @size;
+  height: @size;
+  background-size: cover;
+  background-position: center;
+}
+
+.mix-flexbox(@direction: row, @justify: space-between, @items: center) {
+  display: flex;
+  flex-direction: @direction;
+  justify-content: @justify;
+  align-items: @items;
+}

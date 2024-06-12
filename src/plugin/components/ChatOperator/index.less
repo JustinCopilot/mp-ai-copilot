@@ -1,0 +1,31 @@
+@import "@assets/styles/variables.less";
+
+.operator_container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  z-index: 5;
+  width: 100%;
+
+  .bottom_container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .tip_text {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 24px;
+    }
+
+    .open_new_session {
+      font-size: 26px;
+      border-radius: 50px;
+      border: 2px solid #C6C3F5;
+      color: @theme-color;
+      padding: 20px 28px;
+    }
+
+  }
+
+}

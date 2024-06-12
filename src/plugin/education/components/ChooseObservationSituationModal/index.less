@@ -1,0 +1,120 @@
+.observation-situation-modal {
+  .modal-title {
+    padding: 40px 28px;
+    color: #1E222F;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-close {
+      width: 52px;
+      height: 52px
+    }
+  }
+
+  .situation-label {
+    padding: 0 28rpx;
+    height: 834rpx;
+    overflow: auto;
+    padding-bottom: 32rpx;
+
+    &-title {
+      height: 26rpx;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      font-size: 26rpx;
+      color: #9296A6;
+      letter-spacing: 0;
+      line-height: 26rpx;
+    }
+
+    &-item {
+      &:not(:first-child) {
+        padding-top: 32rpx;
+      }
+    }
+
+    &-list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    &-name {
+      font-family: MiSans-Medium;
+      font-weight: 500;
+      font-size: 26rpx;
+      color: #9296A6;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 74rpx;
+      padding: 0 28rpx;
+      border: 1rpx dashed #9296A6;
+      border-radius: 20rpx;
+      background: #fff;
+      margin-top: 16rpx;
+      margin-right: 24rpx;
+
+      &.checked {
+        color: #1E222F;
+        background: #BECCFC;
+        border-color: transparent;
+        position: relative;
+
+        &.multiple::after {
+          content: '';
+          position: absolute;
+          width: 26rpx;
+          height: 26rpx;
+          right: 0;
+          top: 0;
+          background-image: url('https://senior.cos.clife.cn/xiao-c/icon-close-label.png');
+          background-size: cover;
+        }
+      }
+    }
+  }
+
+  .situation-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24rpx 32rpx;
+    padding-bottom: 48rpx;
+
+    .footer-btn {
+      border-radius: 20rpx;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      font-size: 30rpx;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 100rpx;
+      height: 100rpx;
+
+      &::after {
+        border: none;
+      }
+    }
+
+    .cancel-btn {
+      width: 226rpx;
+      color: #1E222F;
+      background: #F2F4F7;
+
+    }
+
+    .confirm-btn {
+      flex: 1;
+      margin-left: 20rpx;
+      background: #716AE5;
+      color: #FFFFFF;
+
+      &.disabled {
+        opacity: 0.45;
+      }
+    }
+  }
+
+}

@@ -1,0 +1,120 @@
+@import "@assets/styles/variables.less";
+
+
+.choose-child {
+  .safe-bottom();
+
+  .container {
+    .mix-flexbox();
+
+    .class-list {
+      width: 162px;
+      height: calc(100vh - constant(safe-area-inset-bottom) - 140px);
+      height: calc(100vh - env(safe-area-inset-bottom) - 140px);
+      overflow: auto;
+      background: @background-color;
+      padding: 20px 0 0;
+      box-sizing: border-box;
+      border-right: 1px solid #fff;
+
+      .class-item {
+        width: 162px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        font-weight: 500;
+        font-size: 26px;
+        color: @main-color;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        &.active {
+          background-color: #FFF;
+        }
+      }
+    }
+
+    .child-list {
+      display: flex;
+      flex-wrap: wrap;
+      width: calc(100vw - 162px);
+      height: calc(100vh - constant(safe-area-inset-bottom) - 140px);
+      height: calc(100vh - env(safe-area-inset-bottom) - 140px);
+      overflow: auto;
+      padding: 28px;
+      box-sizing: border-box;
+      align-content: flex-start;
+
+      .child {
+        width: 160px;
+        height: 194px;
+        border-radius: 20px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border: 2px solid transparent;
+        margin-bottom: 24px;
+
+        &:nth-child(3n+1) {
+          margin-right: 20px;
+        }
+
+        &:nth-child(3n+2) {
+          margin-right: 20px;
+        }
+
+        &.active {
+          border: 2px solid @theme-color;
+        }
+
+        .avatar {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+        }
+
+        .name {
+          font-weight: 500;
+          font-size: 26px;
+          color: @sub-color;
+          margin-top: 20px;
+        }
+      }
+    }
+  }
+
+  .bottom {
+    display: flex;
+    padding: 20px 32px;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: constant(safe-area-inset-bottom);
+    bottom: env(safe-area-inset-bottom);
+    border-top: 1px solid #EFEFEF;
+
+    .reset,
+    .confirm {
+      height: 100px;
+      line-height: 100px;
+      border-radius: 20px;
+      font-weight: 500;
+      font-size: 30px;
+      text-align: center;
+    }
+
+    .reset {
+      width: 226px;
+      background: @background-color;
+    }
+
+    .confirm {
+      width: 440px;
+      background: @theme-color;
+      color: #FFF;
+      margin-left: 20px;
+    }
+  }
+}

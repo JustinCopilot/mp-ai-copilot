@@ -1,0 +1,55 @@
+@import "@assets/styles/variables.less";
+
+
+.beauty-answer-summary {
+  background-color: #FFF;
+  width: 638px;
+  padding: 26px 28px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  margin-top: 20px;
+
+  .title {
+    font-weight: 400;
+    font-size: 30px;
+    color: @main-color;
+    display: flex;
+    align-items: center;
+  }
+
+  .user-satisfaction {
+    .mix-flexbox();
+
+  }
+
+  .user-tags {
+    margin-top: 20px;
+
+    .edit-icon {
+      width: 30px;
+      height: 30px;
+      background-image: url('https://senior.cos.clife.cn/xiao-c/5587CEEC-8645-4178-ABE2-1789A2BD7A41.png');
+      background-size: cover;
+      display: inline-block;
+      margin-left: 8px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+
+      .tag {
+        height: 56px;
+        line-height: 56px;
+        padding: 0 20px;
+        border: 2px solid @boder-color;
+        border-radius: 12px;
+        font-weight: 400;
+        font-size: 24px;
+        color: @main-color;
+        margin-right: 20px;
+        margin-top: 16px;
+      }
+    }
+  }
+}

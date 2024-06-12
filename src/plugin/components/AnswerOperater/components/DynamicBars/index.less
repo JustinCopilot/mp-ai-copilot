@@ -1,0 +1,102 @@
+@import "@assets/styles/variables.less";
+
+@keyframes barAnimation {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(0.5);
+  }
+}
+
+.bar_container_2 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+
+  .bar {
+    width: 5px;
+    margin: 0 5px;
+    background-color: @theme-color;
+    animation: barAnimation .6s infinite ease-in-out;
+    border-radius: 20px;
+
+    &.animating {
+      animation-play-state: running;
+    }
+
+    &:not(.animating) {
+      animation-play-state: paused;
+    }
+
+    &:nth-child(1) {
+      height: 10px;
+      animation-delay: -0.6s;
+    }
+
+    &:nth-child(2) {
+      height: 20px;
+      animation-delay: -0.5s;
+    }
+
+    &:nth-child(3) {
+      height: 30px;
+      animation-delay: -0.4s;
+    }
+
+    &:nth-child(4) {
+      height: 20px;
+      animation-delay: -0.3s;
+    }
+
+    &:nth-child(5) {
+      height: 30px;
+      animation-delay: -0.2s;
+    }
+
+    &:nth-child(6) {
+      height: 20px;
+      animation-delay: -0.1s;
+    }
+
+    &:nth-child(7) {
+      height: 30px;
+      animation-delay: 0s;
+    }
+
+    &:nth-child(8) {
+      height: 20px;
+      animation-delay: -0.1s;
+    }
+
+    &:nth-child(9) {
+      height: 30px;
+      animation-delay: -0.2s;
+    }
+
+    &:nth-child(10) {
+      height: 20px;
+      animation-delay: -0.3s;
+    }
+
+    &:nth-child(11) {
+      height: 30px;
+      animation-delay: -0.4s;
+    }
+
+    &:nth-child(12) {
+      height: 20px;
+      animation-delay: -0.5s;
+    }
+
+    &:nth-child(13) {
+      height: 10px;
+      animation-delay: -0.6s;
+    }
+  }
+
+}

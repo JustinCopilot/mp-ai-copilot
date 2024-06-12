@@ -1,0 +1,45 @@
+@import "@assets/styles/variables.less";
+
+.beauty-operator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  .tip-text {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 24px;
+  }
+
+  .open-new-session {
+    font-size: 26px;
+    border-radius: 50px;
+    border: 2px solid #C6C3F5;
+    color: @theme-color;
+    padding: 20px 28px;
+  }
+
+  .summary-confirm {
+    .tip {
+      font-weight: 400;
+      font-size: 24px;
+      color: #818597;
+      text-align: center;
+      line-height: 24px;
+    }
+
+    .confirm-btn {
+      margin-top: 24px;
+      width: 686px;
+      height: 100px;
+      line-height: 100px;
+      background: @theme-color;
+      border-radius: 20px;
+      color: #FFF;
+    }
+  }
+}

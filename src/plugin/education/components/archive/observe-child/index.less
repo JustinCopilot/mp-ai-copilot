@@ -1,0 +1,219 @@
+.observe-child-container {
+  .add-btn {
+    border: none;
+    padding: 0;
+    color: #716AE5;
+    height: unset;
+    line-height: unset;
+
+    .at-button__text {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 26px;
+      line-height: 26px;
+
+      .at-icon {
+        font-size: 30px;
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .child-list {
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+    padding-bottom: 40px;
+
+    .child-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 22px;
+      width: 156px;
+      height: 194px;
+      border: 2px solid #716AE5;
+      border-radius: 20px;
+      position: relative;
+
+      &.unchecked {
+        border: 1px dashed #9296A6;
+      }
+
+      &+.child-item {
+        margin-left: 20px;
+      }
+
+      .at-avatar {
+        flex-shrink: 0;
+      }
+
+      .child-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        margin-top: 20px;
+        font-family: PingFangSC-Medium;
+        font-weight: 500;
+        font-size: 26px;
+        color: #1E222F;
+        letter-spacing: 0;
+        line-height: 26px;
+        width: 100%;
+      }
+
+      .close-btn {
+        position: absolute;
+        top: 7px;
+        right: 7px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.6);
+        border-radius: 50%;
+
+        .at-icon {
+          color: #fff;
+          font-size: 18px;
+          line-height: unset;
+        }
+      }
+    }
+  }
+}
+
+.child-modal {
+  .at-float-layout__container {
+    height: 90%;
+    max-height: unset;
+
+    .layout-body,
+    .layout-body__content {
+      height: 100%;
+      max-height: unset;
+      padding: 0;
+    }
+  }
+
+  .child-modal-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+
+    .modal-header {
+      height: 88px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: PingFangSC-SNaNpxibold;
+      font-weight: 600;
+      font-size: 30px;
+      color: #1E222F;
+      letter-spacing: 0;
+      position: relative;
+
+      .cancel-btn {
+        position: absolute;
+        left: 28px;
+        bottom: 29px;
+      }
+    }
+
+    .modal-body {
+      display: flex;
+      height: 0;
+      flex-grow: 1;
+      padding-bottom: 208px;
+
+      .class-list {
+        min-width: 162px;
+        max-width: 200px;
+        height: 100%;
+        overflow-y: auto;
+        background: #F2F4F7;
+        padding: 20px 0;
+        flex-shrink: 0;
+
+        .class-item {
+          height: 100px;
+          line-height: 100px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          font-family: MiSans-Medium;
+          font-weight: 500;
+          font-size: 26px;
+          color: #1E222F;
+          letter-spacing: 0;
+          text-align: center;
+          padding: 0 16px;
+
+          &.active {
+            background-color: #fff;
+          }
+        }
+      }
+
+      .student-list-wrap {
+        flex-grow: 1;
+        overflow-y: auto;
+
+        .student-list {
+          padding: 28px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 24px 20px;
+
+          .student-item {
+            width: calc(33% - 40px / 3);
+            height: 194px;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 24px 16px 20px;
+            border: 2px solid transparent;
+            font-family: MiSans-Medium;
+            font-weight: 500;
+            font-size: 26px;
+            color: #9296A6;
+            letter-spacing: 0;
+            line-height: 26px;
+
+            &.active {
+              color: #1E222F;
+              border-color: #716AE5;
+            }
+
+            .at-avatar {
+              flex-shrink: 0;
+            }
+
+            .student-name {
+              width: 100%;
+              margin-top: 20px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+              text-align: center;
+            }
+          }
+        }
+      }
+
+    }
+
+    .modal-footer-wrap {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      padding: 20px 32px 88px;
+      border-top: 1px solid #E3E4EC;
+    }
+  }
+}

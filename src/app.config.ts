@@ -2,13 +2,22 @@ export default defineAppConfig({
   pages: [
     'pages/index/index'
   ],
+  window: {
+    backgroundTextStyle: 'light',
+    navigationBarBackgroundColor: '#fff',
+    navigationBarTitleText: 'WeChat',
+    navigationBarTextStyle: 'black'
+  },
   subPackages: [
     // AI通用组件分包
     {
-      root: "sub-ai-main/",
+      root: "plugin/",
       pages: [
         "pages/bar/index",
-        "pages/foo/index"
+        "pages/foo/index",
+        "pages/list/index",
+        "pages/chat/index",
+        "pages/chat_extension/index",
       ]
     },
     // 测试独立分包
@@ -20,10 +29,14 @@ export default defineAppConfig({
       ]
     },
   ],
-  window: {
-    backgroundTextStyle: 'light',
-    navigationBarBackgroundColor: '#fff',
-    navigationBarTitleText: 'WeChat',
-    navigationBarTextStyle: 'black'
-  }
+  plugins: {
+    WechatSI: {
+      version: '0.3.5',
+      provider: 'wx069ba97219f66d99',
+    },
+    QCloudAIVoice: {
+      version: '2.3.1',
+      provider: 'wx3e17776051baf153',
+    },
+  },
 })

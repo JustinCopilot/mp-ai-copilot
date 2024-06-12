@@ -1,0 +1,107 @@
+@import "@assets/styles/variables.less";
+
+.observation-points {
+
+  &.disabled {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .observation-title {
+    height: 30rpx;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    font-size: 30rpx;
+    color: #1E222F;
+    letter-spacing: 0;
+    line-height: 30rpx;
+  }
+
+  .observation-list {
+    margin-top: 28rpx;
+  }
+
+  .observation-item {
+    &:not(:last-child) {
+      margin-bottom: 20rpx;
+    }
+  }
+
+  .observation-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .observation-label {
+      height: 26rpx;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      font-size: 26rpx;
+      color: #1E222F;
+      letter-spacing: 0;
+      line-height: 26rpx;
+      margin-right: 20rpx;
+    }
+
+    .select-label-picker-wrap {
+      flex: 1;
+    }
+
+    .observation-value {
+      flex: 1;
+      height: 82rpx;
+      background: #F5F7F9;
+      border: 2rpx solid #CDCFD7;
+      border-radius: 41rpx;
+      font-family: PingFangSC-Regular;
+      font-weight: 400;
+      font-size: 26rpx;
+      color: #9296A6;
+      letter-spacing: 0;
+      line-height: 82rpx;
+      padding-left: 28rpx;
+      padding-right: 12rpx;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+
+      .text {
+        &.active {
+          color: #1E222F;
+          max-width: 428rpx;
+        }
+      }
+    }
+
+    .observation-arrow {
+      width: 52rpx;
+      height: 52rpx;
+    }
+  }
+
+  .observation-btn {
+    height: 82rpx;
+    background: #716AE5;
+    border-radius: 41rpx;
+    font-family: MiSans-Medium;
+    font-weight: 500;
+    font-size: 26rpx;
+    color: #FFFFFF;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 82rpx;
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    margin-top: 32rpx;
+  }
+
+}

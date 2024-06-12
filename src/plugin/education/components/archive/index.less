@@ -1,0 +1,44 @@
+.archve-container {
+  padding: 20px 28px 248px;
+  box-sizing: border-box;
+  position: relative;
+
+  view {
+    box-sizing: border-box;
+  }
+
+  .footer-wrap {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    z-index: 99;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px 32px 88px;
+    background-color: #fff;
+    border-top: 1px solid #E3E4EC;
+
+    .at-button {
+      border: none;
+      height: 100px;
+      border-radius: 20px;
+
+      &.cancel {
+        width: 226px;
+        background-color: #F2F4F7;
+      }
+
+      &.at-button--primary {
+        flex-grow: 1;
+        margin-left: 20px;
+      }
+
+      .at-button__text {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+  }
+}

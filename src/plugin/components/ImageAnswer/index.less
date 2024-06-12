@@ -1,0 +1,57 @@
+@import "@assets/styles/variables.less";
+
+
+.image-answer {
+
+  .operator {
+    display: flex;
+    // justify-content: space-between;
+    margin-top: 24px;
+
+    &-btn {
+      margin: 0;
+      // min-width: 210px;
+      margin-right: 12px;
+      width: calc((100% - 24px)/3);
+      border-radius: 40px;
+      background-color: @theme-color;
+      font-size: 26px;
+      line-height: 26px;
+      text-align: center;
+      padding: 24px 0;
+      flex: 1;
+    }
+  }
+
+  .frame {
+    display: flex;
+    flex-wrap: wrap;
+
+    &-content {
+      position: relative;
+      width: calc((100% - 12px)/3);
+      height: fit-content;
+      border-radius: 8px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+      overflow: hidden;
+
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+    }
+
+    &-img {
+      width: 100%;
+    }
+
+    &-load {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+  }
+}

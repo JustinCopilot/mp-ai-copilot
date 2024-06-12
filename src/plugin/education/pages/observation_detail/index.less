@@ -1,0 +1,158 @@
+@import '@assets/styles/variables.less';
+
+.observation-detail {
+  position: relative;
+  box-sizing: border-box;
+  padding: 40px 28px 68px;
+  max-width: 100vh;
+  overflow: auto;
+
+  .operation {
+    padding: 0 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fff;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    box-sizing: border-box;
+
+    &-flex {
+      display: flex;
+    }
+
+    .left-btn {
+      border: 2px solid @boder-color;
+      border-radius: 50px;
+      box-sizing: border-box;
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+    }
+
+    .update,
+    .refresh {
+      margin-right: 12px;
+      font-size: 22px;
+    }
+
+    .delete {
+      margin-right: 26px;
+    }
+
+    .link {
+      color: @theme-color;
+      background-color: rgba(113, 106, 229, 0.1);
+      border: none;
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      padding: 20px 24px;
+      border-radius: 33px;
+
+      &-img {
+        width: 32px;
+        height: 32px;
+        margin-right: 12px
+      }
+    }
+
+    .icon {
+      .bg-image(32px);
+
+      &.update-icon {
+        background-image: url('https://senior.cos.clife.cn/xiao-c/update@2x.png');
+      }
+
+      &.delete-icon {
+        background-image: url('https://senior.cos.clife.cn/xiao-c/delete2@2x.png');
+      }
+
+      &.refresh-icon {
+        margin-right: 8px;
+        background-image: url('https://senior.cos.clife.cn/xiao-c/refresh@2x.png');
+      }
+
+      &.link-icon {
+        margin-right: 8px;
+        background-image: url('https://senior.cos.clife.cn/xiao-c/link@2x.png');
+      }
+    }
+  }
+
+  .modal-content {
+    padding: 62px;
+    text-align: center;
+
+    .header {
+      font-weight: bold;
+      font-size: 36px;
+      color: #1E222F;
+      margin-bottom: 20px;
+    }
+
+    .content {
+      font-size: 24px;
+      color: #1E222F;
+    }
+  }
+
+  .loading-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 100px;
+
+    .text {
+      font-weight: bold;
+      font-size: 30px;
+    }
+
+    .sub-text {
+      margin-top: 20px;
+      font-size: 24px;
+      color: @sub-color;
+    }
+
+    .btn {
+      font-size: 26px;
+      padding: 24px 80px;
+      border-radius: 50px;
+      margin-top: 40px;
+    }
+
+    .cancel {
+      border: 2px solid @boder-color;
+    }
+
+    .retry {
+      color: #fff;
+      background-color: @theme-color;
+    }
+  }
+
+  .analyze-info {
+    padding: 0 28px;
+
+    .analyze-item {
+      margin-top: 28px;
+
+      .header {
+        font-weight: bold;
+        margin-bottom: 12px;
+      }
+    }
+
+    .update-time {
+      color: @sub-color;
+      font-size: 24px;
+      margin: 16px 0 28px;
+    }
+  }
+
+}

@@ -1,0 +1,29 @@
+@import "@assets/styles/variables.less";
+
+.image-loading {
+  width: 100%;
+  height: 166px;
+  background: @background-color;
+  border-radius: 28px;
+  padding: 24px 28px;
+  box-sizing: border-box;
+
+  &-top {
+    .mix-flexbox();
+    font-weight: 400;
+    font-size: 30px;
+    color: @main-color;
+  }
+
+  &-bottom {
+    height: 64px;
+    position: relative;
+
+    .progress {
+      width: 560px;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+  }
+}

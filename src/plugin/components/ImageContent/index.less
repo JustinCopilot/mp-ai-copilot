@@ -1,0 +1,182 @@
+@import "@assets/styles/variables.less";
+
+@gap: 3px;
+@gap2x: @gap * 2;
+
+.image-wrapper {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: 0 -@gap;
+  box-sizing: border-box;
+  height: 100vh;
+
+  .image-content {
+    flex: 1;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    row-gap: @gap * 2;
+  }
+
+  .radio-item-container {
+    flex: 0 0 33.3333333333%;
+    max-width: 33.3333333333%;
+    // width: calc((100vw - (24px* 2) - (28px *2))/3);
+    box-sizing: border-box;
+    white-space: nowrap;
+    display: block;
+    padding: 0 @gap;
+  }
+
+
+  .radio-item {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+
+    &-img {
+      position: relative;
+      width: 100%;
+      height: 210px;
+      display: block;
+    }
+
+    &-unresult {
+      height: 246px;
+    }
+
+    &-operator {
+      position: absolute;
+      z-index: 0;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+
+      //   .icon,
+      .radio {
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        z-index: 2;
+      }
+
+      &-mask {
+        background-color: rgba(255, 255, 255, 0.5);
+      }
+
+    }
+
+    &-mask {
+      width: 100%;
+      height: 100%;
+    }
+
+    &-rest {
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.6);
+
+      .text {
+        font-weight: 500;
+        font-size: 36px;
+        color: #FFFFFF;
+        letter-spacing: 0;
+        line-height: 36px;
+      }
+
+    }
+  }
+
+}
+
+
+.result-pop {
+  row-gap: @gap2x * 2;
+  margin: 0 -@gap2x;
+  height: unset;
+  padding-bottom: unset;
+
+  .radio-item-container {
+    padding: 0 @gap2x;
+  }
+
+  .radio-item {
+    border-radius: 16px;
+  }
+}
+
+.check {
+  width: 52px;
+  height: 52px;
+  background-image: url('https://senior.cos.clife.cn/xiao-c/uncheck@2x.png');
+  background-size: cover;
+  background-position: center;
+
+  &-isCheck {
+    background-image: url('https://senior.cos.clife.cn/xiao-c/check@2x.png');
+  }
+}
+
+.next-step {
+  position: relative;
+  z-index: 10;
+}
+
+.previewModal {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px 16px;
+
+    .back {
+      width: 52px;
+      height: 52px;
+      background-image: url('https://senior.cos.clife.cn/xiao-c/back@2x.png');
+      background-size: cover;
+      background-position: center;
+    }
+  }
+
+  .img-content {
+    flex: 1;
+    padding-bottom: 140px;
+
+    .img-swiper {
+      height: 100%;
+    }
+
+    .img-swiper-item {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .show-img {
+      width: 100%;
+    }
+  }
+}

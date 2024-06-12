@@ -1,0 +1,31 @@
+@import "@assets/styles/variables.less";
+
+.operate-bar {
+  .mix-flexbox();
+
+  &-divider {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid @boder-color;
+  }
+
+  &.hide {
+    display: none
+  }
+
+  &-left {
+    .mix-flexbox();
+  }
+
+  &-right {
+    .mix-flexbox();
+
+    .adjust-content {
+      color: @theme-color;
+      font-size: 24px;
+      padding: 0 24px;
+      border-radius: 24px;
+      border: 1px solid rgba(113, 106, 229, 0.5);
+    }
+  }
+}

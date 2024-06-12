@@ -1,0 +1,48 @@
+@import "@assets/styles/variables.less";
+
+
+
+.title-block {
+  height: 74px;
+  background: @background-color;
+  .mix-flexbox();
+  padding: 0 28px;
+
+  &.fixed {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 998;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+
+    .date {
+      font-weight: 500;
+      font-size: 26px;
+      color: @main-color;
+    }
+
+    .arrow-right {
+      width: 13px;
+      height: 13px;
+      border-top: 1px solid rgb(136, 139, 155);
+      border-right: 1px solid @sub-color;
+      transform: rotate(45deg);
+      margin-left: 8px;
+    }
+  }
+
+  .filter {
+    font-size: 26px;
+    color: @sub-color;
+    background-color: transparent;
+
+    &.active {
+      color: @theme-color;
+    }
+  }
+}

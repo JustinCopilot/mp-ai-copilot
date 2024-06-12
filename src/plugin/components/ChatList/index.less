@@ -1,0 +1,99 @@
+@import "@assets/styles/variables.less";
+
+.chat_list {
+  flex: 1;
+  line-height: 1.5em;
+  position: relative;
+}
+
+.chat_list_mask {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.chat_list_scroll_view {
+  height: 100vh;
+  padding: 24px;
+  box-sizing: border-box;
+}
+
+.chat_list_chat_item {
+  display: flex;
+  flex-direction: column;
+
+  // align-items: center;
+  // justify-content: flex-end;
+
+  &.last {
+    .chat_list_chat_item_answer {
+      margin-bottom: 4px;
+    }
+  }
+
+  .new_session {
+    text-align: center;
+    font-size: @font-mini-size;
+    color: @sub-color;
+    margin-bottom: 24px;
+  }
+
+  .check-data-reference {
+    display: flex;
+    align-items: center;
+    width: 320px;
+    height: 66px;
+    background: rgba(113, 106, 229, 0.1);
+    border-radius: 12px;
+    font-weight: 400;
+    font-size: 26px;
+    color: @theme-color;
+    margin-top: -20px;
+    margin-bottom: 16px;
+
+    &.last {
+      margin-top: 10px;
+    }
+
+    .left-icon {
+      width: 30px;
+      height: 30px;
+      background-image: url('https://senior.cos.clife.cn/xiao-c/752907C5-E6C1-47BD-AD6F-2FA2A573F039.png');
+      background-size: cover;
+      background-position: center;
+      margin: 0 16px 0 26px;
+    }
+
+    .right-icon {
+      width: 44px;
+      height: 44px;
+      background-image: url('https://senior.cos.clife.cn/xiao-c/more-right@2x.png');
+      background-size: cover;
+      background-position: center;
+      margin: 0;
+    }
+  }
+}
+
+.chat_list_chat_item_time {
+  font-size: @font-mini-size;
+  color: @sub-color;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.chat_list_chat_item_asker {
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 24px;
+}
+
+.chat_list_chat_item_answer {
+  width: 100%;
+  display: flex;
+  margin-bottom: 36px;
+}

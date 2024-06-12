@@ -1,0 +1,38 @@
+@import "@assets/styles/variables.less";
+
+.preset_question {
+  font-size: @font-small-size;
+}
+
+.preset_question_item {
+  .mix-flexbox();
+  width: fit-content;
+  color: @theme-color;
+  margin-top: 16px;
+  padding: 20px 26px 20px 16px;
+  border: 1px solid @boder-color;
+  border-radius: 12px;
+  line-height: 1em;
+}
+
+.preset_question_item_text {
+  flex: 1;
+}
+
+.preset_question_item_left {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #D4D2F7;
+  margin-right: 10px;
+}
+
+.preset_question_item_right {
+  color: #55718D;
+  margin-left: 4px;
+  width: 28px;
+  height: 28px;
+  background-size: cover;
+  background-position: center;
+  background-image: url('https://senior.cos.clife.cn/xiao-c/more-right@2x.png');
+}

@@ -1,0 +1,38 @@
+@import "@assets/styles/variables.less";
+
+.bubble-list {
+  height: 74px;
+  margin: 12px 0;
+  display: flex;
+  white-space: nowrap;
+  overflow-x: scroll;
+  margin-top: 20px;
+
+  .item-container {
+    display: flex;
+
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    .item {
+      height: 74px;
+      display: flex;
+      align-items: center;
+      background: #F8F9FB;
+      border: 2px solid @boder-color;
+      border-radius: 37px;
+      padding: 24px 28px;
+      box-sizing: border-box;
+      margin-left: 16px;
+      font-weight: 500;
+      font-size: 26px;
+      color: #1E222F;
+
+      &:active {
+        background-color: #EEE;
+      }
+    }
+  }
+
+}

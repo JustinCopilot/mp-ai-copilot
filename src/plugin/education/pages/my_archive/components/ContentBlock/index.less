@@ -1,0 +1,72 @@
+@import "@assets/styles/variables.less";
+
+.content-block {
+  display: flex;
+  align-items: flex-start;
+  overflow: hidden;
+  background-color: transparent;
+
+  .time-line {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-right: 16px;
+    margin-top: 4px;
+    position: relative;
+    height: 100%;
+
+    .round {
+      width: 10px;
+      height: 10px;
+      border: 10px solid #CBCFD6;
+      border-radius: 20px;
+    }
+
+    .line {
+      width: 1px;
+      border-left: 2px dashed #CBCFD6;
+      height: 10000px;
+      position: absolute;
+      top: 28px;
+      left: 14px;
+    }
+  }
+
+  .right {
+    flex: 1;
+
+    .time {
+      font-weight: 500;
+      font-size: 26px;
+      color: @sub-color;
+      margin-bottom: 10px;
+    }
+
+    .content-wrapper {
+      background: @background-color;
+      border-radius: 4px 28px 28px 28px;
+      padding: 24px 20px;
+      box-sizing: border-box;
+      word-break: break-all;
+
+      .content {
+        font-weight: 400;
+        font-size: 30px;
+        color: @main-color;
+      }
+
+      .photos {
+        display: flex;
+
+        .photo {
+          margin-top: 24px;
+          width: 148px;
+          height: 148px;
+          border-radius: 16px;
+          margin-right: 10px;
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,91 @@
+@import "@assets/styles/variables.less";
+
+
+.my-archive {
+  .safe-bottom();
+  background-color: #FFF;
+  font-size: 30px;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+
+  .nav-bar-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    font-weight: 400;
+    color: @sub-color;
+
+    .item {
+      padding: 20px 30px;
+
+      &.active {
+        font-weight: 600;
+        color: @main-color;
+      }
+    }
+  }
+
+  .list {
+    flex: 1;
+    overflow: scroll;
+
+    .item-by-date {
+      .container {
+        padding: 28px 28px 28px 24px;
+      }
+    }
+  }
+
+  .calendar {
+    position: fixed;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    background-color: #fff;
+  }
+}
+
+.at-calendar__header {
+  .header__flex {
+    width: 100%;
+  }
+
+  .header__flex-item {
+    &:before {
+      content: '周';
+    }
+  }
+}
+
+.at-calendar__list.flex {
+  .flex__item--selected-head.flex__item--selected-tail {
+    .flex__item-container {
+      background-color: @theme-color;
+    }
+  }
+
+  .flex__item--selected {
+    .extra-marks {
+      .mark {
+        // background-color: #F2F4F7;
+      }
+    }
+  }
+
+  .flex__item-extra {
+    .extra-marks {
+      // bottom: 0;
+
+      .mark {
+        width: 12px;
+        height: 12px;
+        background-color: @theme-color;
+        color: @theme-color;
+
+      }
+    }
+  }
+}

@@ -99,7 +99,13 @@ export default defineConfig(async (merge, { command, mode }) => {
       }
     },
     alias: {
-      '@sub-ai-main': path.resolve(__dirname, '..', 'src/sub-ai-main'),
+      '@pages': path.resolve(__dirname, '..', 'src/pages'),
+      '@plugin': path.resolve(__dirname, '..', 'src/plugin'),
+      '@components': path.resolve(__dirname, '..', 'src/plugin/components'),
+      '@utils': path.resolve(__dirname, '..', 'src/plugin/utils'),
+      '@assets': path.resolve(__dirname, '..', 'src/plugin/assets'),
+      '@hooks': path.resolve(__dirname, '..', 'src/plugin/hooks'),
+      '@edu': path.resolve(__dirname, '..', 'src/plugin/education'),
     },
   }
   if (process.env.NODE_ENV === 'development') {

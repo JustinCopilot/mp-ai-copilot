@@ -1,0 +1,43 @@
+@import "@assets/styles/variables.less";
+
+.list-page {
+  height: 100vh;
+  overflow-y: auto;
+  background-color: #fff;
+
+  .item {
+    padding: 20px 28px;
+    height: 148px;
+    display: flex;
+    align-items: center;
+
+    .icon {
+      width: 108px;
+      height: 108px;
+      // background-image: url(https://senior.cos.clife.cn/xiao-c/icon_list_2@2x.png);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .text {
+      width: 550px;
+      margin-left: 24px;
+
+      .name {
+        font-weight: 600;
+        font-size: @font-size;
+        color: @main-color;
+      }
+
+      .tip {
+        font-weight: 400;
+        font-size: @font-mini-size;
+        color: @sub-color;
+        margin-top: 18px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+}

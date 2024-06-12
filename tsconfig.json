@@ -22,9 +22,16 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
-      "@sub-ai-main/*": ["./src/sub-ai-main/*"],
+      "@pages/*": ["./src/pages/*"],
+      "@plugin/*": ["./src/plugin/*"],
+      "@components/*": ["./src/plugin/components/*"],
+      "@edu/*": ["./src/plugin/education/*"],
+      "@utils/*": ["./src/plugin/utils/*"],
+      "@assets/*": ["./src/plugin/assets/*"],
+      "@hooks/*": ["./src/plugin/hooks/*"]
     }
   },
   "include": ["./src", "./types", "./config"],
+  "exclude": ["node_modules", "dist"],
   "compileOnSave": false
 }

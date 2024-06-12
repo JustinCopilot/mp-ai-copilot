@@ -1,0 +1,27 @@
+@import "@assets/styles/variables.less";
+
+@keyframes barAnimation {
+
+  0%,
+  100% {
+    transform: scaleY(1);
+  }
+
+  50% {
+    transform: scaleY(0.5);
+  }
+}
+
+.bar_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .bar {
+    width: 10px;
+    margin: 0 5px;
+    background-color: @theme-color;
+    animation: barAnimation 0.5s infinite ease-in-out;
+    border-radius: 26px;
+  }
+}

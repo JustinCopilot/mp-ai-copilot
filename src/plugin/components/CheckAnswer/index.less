@@ -1,0 +1,46 @@
+@import '@assets/styles/variables.less';
+
+.check-answer {
+  .check-list {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 24px;
+
+    .check-item {
+      position: relative;
+      width: calc((100% - 32px)/3);
+      margin-right: 16px;
+      margin-bottom: 12px;
+      overflow: hidden;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 12px 30px;
+      box-sizing: border-box;
+
+      &.isCheck {
+        opacity: 0.4;
+      }
+
+      &:nth-child(3n) {
+        margin-right: 0;
+      }
+
+      .avatar {
+        width: 140px;
+        height: 140px;
+        background-position: center;
+        background-size: cover;
+        // background-image: url('https://senior.cos.clife.cn/xiao-c/07fd496d-4915-49cb-a987-98bbff38e576-class@2x.png');
+        margin-bottom: 20px;
+        border-radius: 50%;
+        box-sizing: border-box;
+
+        &.active {
+          border: 2px solid @theme-color;
+        }
+      }
+    }
+  }
+}

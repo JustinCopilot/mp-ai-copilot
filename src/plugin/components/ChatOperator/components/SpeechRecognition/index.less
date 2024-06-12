@@ -1,0 +1,47 @@
+@import "@assets/styles/variables.less";
+
+.speech_recognition {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 200px;
+
+  .content {
+    width: 100%;
+    height: 84px;
+    font-weight: 600;
+    font-size: 32px;
+    color: #000000;
+    text-align: center;
+    padding: 0 26px;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .operator {
+    .mix-flexbox();
+    padding: 0 10px;
+
+    .close_btn {
+      width: 58px;
+      height: 58px;
+      background-image: url(https://senior.cos.clife.cn/xiao-c/icon_chat_feedback_close.png);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+
+    .text_btn {
+      width: 68px;
+      height: 68px;
+      background-image: url(https://senior.cos.clife.cn/xiao-c/icon_chat_keyboard.png);
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+    }
+  }
+}

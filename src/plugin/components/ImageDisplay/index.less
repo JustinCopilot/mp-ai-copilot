@@ -1,0 +1,35 @@
+@import "@assets/styles/variables.less";
+
+.beauty-answer-image-display {
+  padding: 20px;
+  box-sizing: border-box;
+  width: 100%;
+  background-color: @background-color;
+  border-radius: 28px;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+
+  .full,
+  .half,
+  .third {
+    border-radius: 16px;
+  }
+
+  .full {
+    text-align: center;
+    width: 100%;
+  }
+
+  .half {
+    width: calc(50% - 16px);
+    height: 320px;
+    margin: 8px;
+  }
+
+  .third {
+    width: calc(33.33% - 16px);
+    height: 210px;
+    margin: 8px;
+  }
+}

@@ -1,0 +1,152 @@
+.select-label-picker-modal {
+  .at-float-layout__container {
+    border-radius: 40px 40px 0 0;
+  }
+
+  .at-float-layout__container,
+  .layout-body,
+  .layout-body__content {
+    max-height: unset;
+
+    &.layout-body {
+      padding: 0;
+    }
+  }
+}
+
+.observation-situation-modal {
+  .modal-title {
+    padding: 40px 28px 32px;
+    font-size: 30px;
+    letter-spacing: 0;
+    line-height: 30px;
+    color: #1E222F;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &-close {
+      width: 52px;
+      height: 52px
+    }
+  }
+
+  .situation-label {
+    padding: 0 28rpx 32px;
+    height: 886rpx;
+    overflow: auto;
+
+    &-title {
+      height: 26rpx;
+      font-family: PingFangSC-Medium;
+      font-weight: 500;
+      font-size: 26rpx;
+      color: #9296A6;
+      letter-spacing: 0;
+      line-height: 26rpx;
+    }
+
+    &-item {
+      &:not(:first-child) {
+        padding-top: 32rpx;
+      }
+    }
+
+    &-list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px 24px;
+      margin-top: 16px;
+    }
+
+    &-name {
+      font-family: MiSans-Medium;
+      font-weight: 500;
+      font-size: 26rpx;
+      color: #9296A6;
+      letter-spacing: 0;
+      text-align: center;
+      line-height: 74rpx;
+      padding: 0 28rpx;
+      border: 1rpx dashed #9296A6;
+      border-radius: 20rpx;
+      background: #fff;
+
+      &.checked {
+        color: #1E222F;
+        background: #BECCFC;
+        border-color: transparent;
+        position: relative;
+
+        &.multiple::after {
+          content: '';
+          position: absolute;
+          width: 26rpx;
+          height: 26rpx;
+          right: 0;
+          top: 0;
+          background-image: url('https://senior.cos.clife.cn/xiao-c/icon-close-label.png');
+          background-size: cover;
+        }
+      }
+
+      &.allowDel {
+        position: relative;
+
+        .del {
+          content: '';
+          position: absolute;
+          width: 26rpx;
+          height: 26rpx;
+          right: 0;
+          top: 0;
+          background-image: url('https://senior.cos.clife.cn/xiao-c/icon-close-label.png');
+          background-size: cover;
+        }
+      }
+    }
+  }
+}
+
+.situation-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24rpx 32rpx 88px;
+  border-top: 1px solid #E3E4EC;
+
+  .footer-btn {
+    border-radius: 20rpx;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    font-size: 30rpx;
+    letter-spacing: 0;
+    text-align: center;
+    line-height: 100rpx;
+    height: 100rpx;
+
+    &::after {
+      border: none;
+    }
+  }
+
+  .cancel-btn {
+    width: 226rpx;
+    color: #1E222F;
+    background: #F2F4F7;
+
+  }
+
+  .confirm-btn {
+    flex: 1;
+    margin-left: 20rpx;
+    background: #716AE5;
+    color: #FFFFFF;
+
+    &.disabled {
+      opacity: 0.45;
+    }
+  }
+}

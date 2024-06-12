@@ -1,0 +1,88 @@
+@import "@assets/styles/variables.less";
+
+.generate-observation-records {
+  position: relative;
+
+  .mask {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+    background: rgba(242, 244, 247, 0.6);
+  }
+
+  .observation-title {
+    font-size: 30px;
+    font-weight: weight;
+    color: #1E222F;
+  }
+
+  .observation-tip {
+    margin-top: 24px;
+    color: #9296A6;
+    font-size: 26px;
+  }
+
+  .observation-btn {
+    margin-top: 40px;
+    display: flex;
+    // grid-template-columns: 1fr 3fr;
+    // align-items: center;
+    gap: 24px;
+
+    &-left {
+      font-size: 26px;
+      width: 80px;
+      color: #1E222F;
+      padding-top: 28px;
+    }
+
+    &-right {
+      flex: 1;
+
+      &-btn {
+        height: 82px;
+        line-height: 82px;
+        border-radius: 41px;
+        color: #9296A6;
+        border: 2px solid #CDCFD7;
+        text-align: center;
+      }
+
+      &-detail {
+        display: flex;
+        gap: 8px;
+        margin-top: 22px;
+
+        &-icon {
+          width: 30px;
+          height: 30px;
+          box-sizing: border-box;
+          margin: 5px;
+        }
+
+        &-text {
+          flex: 1;
+          word-break: break-all;
+          font-weight: bold;
+          font-size: 26px;
+          color: #1E222F;
+        }
+      }
+    }
+
+
+  }
+
+  .observation-submit {
+    margin-top: 32px;
+    border-radius: 41px;
+    height: 82px;
+    line-height: 82px;
+    background: #716AE5;
+    text-align: center;
+    color: #fff;
+  }
+}
