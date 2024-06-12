@@ -2,7 +2,7 @@ import React, { useMemo, useContext, useState, useEffect } from 'react';
 import { View, Text } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { getPageInstance } from '@plugin/utils';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { EAnswerStatus } from '@plugin/components/ChatWrapper';
 // import { UICardContext } from '@plugin/stores/UICardContext';
@@ -80,7 +80,7 @@ const ObservationRecord: React.FC<IObservationRecordProps> = ({ detail, showBtn,
     });
     // console.log({ data, chatItem });
     // console.log('correlateId', correlateId);
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/archive_observation?correlateId=${correlateId}` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/archive_observation/index?correlateId=${correlateId}` });
   };
 
   const chooseLnum = (index: number, index2: number) => {

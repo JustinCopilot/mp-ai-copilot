@@ -7,7 +7,7 @@ import { useRequest } from 'ahooks';
 import dayjs from 'dayjs';
 import { getPageInstance } from '@plugin/utils';
 import { EPageFrom } from '@plugin/types';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { getBaseUrl, isProdEnv } from '@plugin/utils/https';
 import { getToken } from '@plugin/utils/token';
 import type { IGetAnswerResultParams } from '@plugin/stores/ChatWrapperContext';
@@ -69,14 +69,14 @@ export const JotDownDetail = () => {
   const closeModal = () => setIsOpened(false);
   const linkHandle = () => {
     const studentIds = observeData?.studentList.map((item) => item.studentId).join(',');
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/jot_down_reference_detail?studentIds=${studentIds}` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_reference_detail/index?studentIds=${studentIds}` });
   };
   const updateHandle = () => {
     const currentPage = getPageInstance();
     currentPage.setData({
       observationdetail: userParams,
     });
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/information_supplement` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/information_supplement/index` });
   };
   const refreshHandle = (userParams: IUserParams) => {
     console.log('重新请求');

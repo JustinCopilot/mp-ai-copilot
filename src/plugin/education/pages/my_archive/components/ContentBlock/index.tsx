@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import Taro from '@tarojs/taro';
 import dayjs from 'dayjs';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { View, Image, type ITouchEvent, Video } from '@tarojs/components';
 import type { IObserveListRes } from '@edu/request/type';
 import './index.less';
@@ -38,7 +38,7 @@ const ContentBlock: React.FC<IContentBlockProps> = ({ showTimeLine, contentItem,
 
   const handleNavigate = () => {
     Taro.navigateTo({
-      url: `${PRE_PLUGIN_PATH}/${currentNav === 2 ? 'jot_down_detail' : 'observation_detail'}?observeId=${contentItem.observeId}`
+      url: `${PRE_EDU_PATH}/${currentNav === 2 ? 'jot_down_detail' : 'observation_detail'}/index?observeId=${contentItem.observeId}`
     })
   }
 

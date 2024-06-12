@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { UICardContext } from '@plugin/stores/UICardContext';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { ECheckStatus } from '@plugin/components/ChatWrapper';
 import { getResource, getRandomNotesListApi } from '@edu/request';
 
@@ -129,7 +129,7 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
 
   const goDetail = (record: any) => {
     // console.log('goDetail', record);
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/observation_detail?observeId=${record?.observeId}` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/observation_detail/index?observeId=${record?.observeId}` });
   };
 
   const secondClick = (record: IStudentListRes) => {

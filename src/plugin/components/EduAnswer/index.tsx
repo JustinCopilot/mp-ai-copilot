@@ -16,6 +16,7 @@ import './index.less';
 export interface IEduAnswerProps {
   chatItem: IChatItem;
 }
+
 const EduAnswer: React.FC<IEduAnswerProps> = ({ chatItem }) => {
   const [chatCard, setChatCard] = useState<EEduBehaviorChatCard | null>(null);
 

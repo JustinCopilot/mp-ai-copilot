@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect } from 'react';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { View, Image } from '@tarojs/components';
 import dayjs from 'dayjs';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { ECheckStatus } from '@plugin/components/ChatWrapper';
 import type { IAgentResponseData } from '@edu/request/type';
 import { /* getResource, */ getRandomNotesListApi, getSituationLabelList } from '@edu/request';
@@ -130,7 +130,7 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
   }, [tabsIndex]);
 
   const goDetail = (record: any) => {
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/observation_detail?observeId=${record?.observeId}` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/observation_detail/index?observeId=${record?.observeId}` });
   };
 
   const chooseItem = (record: IObserveListRes) => {

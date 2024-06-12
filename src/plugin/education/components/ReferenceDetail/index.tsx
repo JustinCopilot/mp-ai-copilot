@@ -6,7 +6,7 @@ import { useReducer } from '@plugin/education/utils';
 import dayjs from 'dayjs';
 import { AtTabs } from 'taro-ui';
 import Taro from '@tarojs/taro';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL, PRE_PLUGIN_PATH } from '@plugin/constants';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL, PRE_EDU_PATH } from '@plugin/constants';
 import { IUserParams } from '@plugin/education/pages/jot_down_detail';
 import { DataType } from './config';
 import type { State, Props, StudentInfo } from './config';
@@ -62,7 +62,7 @@ const CurrentContent: FC<{ data: StudentInfo; type: DataType; observationdetail?
     },
   ];
   const handleSelect = (observeId) => {
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/jot_down_detail?observeId=${observeId}` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_detail/index?observeId=${observeId}` });
   };
   return (
     <View className="student-info-wrap">

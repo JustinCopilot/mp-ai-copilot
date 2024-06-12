@@ -1,7 +1,7 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { View, Navigator } from '@tarojs/components';
-import { TOP_BAR_HEIGHT } from '@plugin/constants';
+import { TOP_BAR_HEIGHT, PRE_EDU_PATH } from '@plugin/constants';
 import './index.less';
 
 export interface ITitleBlockProps {
@@ -25,7 +25,7 @@ const TitleBlock: React.FC<ITitleBlockProps> = ({ isLatest, date, onTriggerCalen
       </View>
       {isLatest && (
         <Navigator
-          url={`plugin://aiPlugin/choose_child?selectedChildData=${selectedChildData.join()}`}
+          url={`${PRE_EDU_PATH}/choose_child/index?selectedChildData=${selectedChildData.join()}`}
           className={`filter ${selectedChildData?.length ? 'active' : ''}`}
         >
           筛选幼儿

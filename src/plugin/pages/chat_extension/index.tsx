@@ -3,7 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro';
 import { Button, View } from '@tarojs/components';
 import useGetScenes from '@plugin/hooks/useGetScenes';
 import { putResetApi } from '@plugin/request';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { AtModal, AtModalAction } from 'taro-ui';
 import { EPageFrom } from '@plugin/types';
 import { getPageInstance } from '@plugin/utils';
@@ -62,7 +62,7 @@ const ChatExtension = () => {
             icon: 'https://senior.cos.clife.cn/xiao-c/printer@2x.png',
             text: '幼儿行为观察归档记录',
             cb: () => {
-              Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/my_archive/index` });
+              Taro.navigateTo({ url: `${PRE_EDU_PATH}/my_archive/index` });
             },
             needRight: true,
           },

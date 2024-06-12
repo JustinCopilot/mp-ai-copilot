@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import { View, Button, Text, Image } from '@tarojs/components';
 import Taro, { useRouter, useDidShow } from '@tarojs/taro';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { getPageInstance } from '@plugin/utils';
 import { getObserveDetailApi, removeObserveApi } from '@plugin/education/request';
 import { EEduBehaviorTag } from '@plugin/education/interface';
@@ -70,7 +70,7 @@ const Observationdetail = () => {
   const linkHandle = () => {
     const studentIds = observeData?.studentList?.map((item) => item.studentId).join(',');
     Taro.navigateTo({
-      url: `${PRE_PLUGIN_PATH}/data_reference_detail?source=1&studentIds=${studentIds}&observeDate=${observeData?.observeDate}&correlateId=${observeData?.correlateId}`,
+      url: `${PRE_EDU_PATH}/data_reference_detail/index?source=1&studentIds=${studentIds}&observeDate=${observeData?.observeDate}&correlateId=${observeData?.correlateId}`,
     });
   };
   const observeDataDetail = useMemo(() => {
@@ -210,7 +210,7 @@ const Observationdetail = () => {
     currentPage.setData({
       observationdetail: observeDataDetail,
     });
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/archive_observation` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/archive_observation/index` });
   };
 
   const abortChatRequest = () => {

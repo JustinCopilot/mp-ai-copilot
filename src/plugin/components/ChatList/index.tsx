@@ -4,7 +4,7 @@ import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
 import { EChatUser, EMicroAppIdITest, EMicroAppIdProd, type IGetPresetRes } from '@plugin/request/chat/type';
 import { ESummaryStatus } from '@plugin/components/ChatWrapper/hooks/useBeautySummary';
 import useGetScenes from '@plugin/hooks/useGetScenes';
-import { TOP_BAR_HEIGHT, PRE_PLUGIN_PATH } from '@plugin/constants';
+import { TOP_BAR_HEIGHT, PRE_EDU_PATH } from '@plugin/constants';
 import { useThrottleFn } from 'ahooks';
 import type { SelectorQuery } from '@tarojs/taro';
 import Taro, { useReady } from '@tarojs/taro';
@@ -125,7 +125,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
       currentPage.setData({
         observationdetail: eduBehaviorUserParams,
       });
-      Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/jot_down_reference_detail/index?studentIds=${studentIds}` });
+      Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_reference_detail/index?studentIds=${studentIds}` });
     } else if (checkDataReferenceSign === 'data_reference_detail') {
       const { detailData = [] } = JSON.parse(chatItem?.agentResponse || '{}')?.data || {};
       const top3IdList: number[] = [];
@@ -136,7 +136,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
       });
       const correlateId = [...new Set(top3IdList)].join(',');
       Taro.navigateTo({
-        url: `${PRE_PLUGIN_PATH}/data_reference_detail/index?source=1&studentIds=${studentIds}&observeDate=${eduBehaviorUserParams?.extractInfo?.date}&correlateId=${correlateId}`,
+        url: `${PRE_EDU_PATH}/data_reference_detail/index?source=1&studentIds=${studentIds}&observeDate=${eduBehaviorUserParams?.extractInfo?.date}&correlateId=${correlateId}`,
       });
     }
   }

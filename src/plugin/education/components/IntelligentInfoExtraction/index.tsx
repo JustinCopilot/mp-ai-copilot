@@ -4,7 +4,7 @@ import MarkdownIt from 'markdown-it';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { IAgentResponseData } from '@edu/request/type';
 import Taro, { useDidShow } from '@tarojs/taro';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
 import { EPageFrom } from '@plugin/types';
 import { getPageInstance } from '@plugin/utils';
 import { setTagApi } from '@plugin/request/chat';
@@ -49,7 +49,7 @@ const IntelligentInfoExtraction: React.FC<IIntelligentInfoExtractionProps> = ({ 
       observationdetail: data,
     });
     currentDataId.current = chatItem?.dataId;
-    Taro.navigateTo({ url: `${PRE_PLUGIN_PATH}/information_supplement` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/information_supplement/index` });
   };
   useDidShow(() => {
     const currentPage = getPageInstance();
