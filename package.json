@@ -10,7 +10,10 @@
     "framework": "React"
   },
   "scripts": {
-    "build:weapp": "taro build --type weapp  --new-blended",
+    "build:weapp": "taro build --type weapp  --new-blended --mode prod",
+    "build:weapp:plugin": "PACK_MODE=plugin taro build --type weapp  --new-blended --mode prod",
+    "build:weapp:pag": "PACK_MODE=sub-pag taro build --type weapp  --new-blended --mode prod",
+    "build:weapp:all": "npm run build:weapp && npm run build:weapp:plugin && npm run build:weapp:pag",
     "build:weapp:not-blended": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",

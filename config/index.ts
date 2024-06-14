@@ -1,8 +1,8 @@
 import path from 'path';
-import { defineConfig, type UserConfigExport } from '@tarojs/cli'
-import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin'
-import devConfig from './dev'
-import prodConfig from './prod'
+import { defineConfig, type UserConfigExport } from '@tarojs/cli';
+import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import devConfig from './dev';
+import prodConfig from './prod';
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig(async (merge, { command, mode }) => {
@@ -16,8 +16,8 @@ export default defineConfig(async (merge, { command, mode }) => {
       375: 2,
       828: 1.81 / 2
     },
-    sourceRoot: 'src',
-    outputRoot: 'dist',
+    sourceRoot: process.env.PACK_MODE ? `src/${process.env.PACK_MODE}` : 'src',
+    outputRoot: process.env.PACK_MODE ? `dist/${process.env.PACK_MODE}` : 'dist',
     plugins: [path.join(process.cwd(), '/plugin-mv/index.js')],
     defineConstants: {
     },
@@ -34,7 +34,7 @@ export default defineConfig(async (merge, { command, mode }) => {
     },
     mini: {
       output: {
-        chunkLoadingGlobal: 'mpAiCopilotWebpackJsonp',
+        chunkLoadingGlobal: `WebpackJsonp-${process.env.PACK_MODE}`,
       },
       postcss: {
         pxtransform: {
@@ -59,6 +59,9 @@ export default defineConfig(async (merge, { command, mode }) => {
       },
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin)
+      },
+      optimizeMainPackage: {
+        enable: true
       }
     },
     h5: {
