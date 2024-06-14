@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import React, { View, Button, Input } from '@tarojs/components';
+import React, { useState } from 'react';
+import { View, Button, Input } from '@tarojs/components';
 import { ETurnTokenType } from '@plugin/request/common/type';
 import Taro from '@tarojs/taro';
 import { PAGInit } from 'libpag-miniprogram';
