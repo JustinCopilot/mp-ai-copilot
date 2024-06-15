@@ -34,14 +34,8 @@ export default defineAppConfig({
       pages: [
         "pages/bar/index",
         "pages/foo/index"
-      ]
+      ],
     },
-    // {
-    //   root: "sub-pag/",
-    //   pages: [
-    //     "pages/index",
-    //   ]
-    // },
   ],
   plugins: {
     WechatSI: {

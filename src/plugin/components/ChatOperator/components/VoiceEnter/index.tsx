@@ -3,6 +3,7 @@ import Taro from '@tarojs/taro';
 import { View } from '@tarojs/components';
 import { GlobalContext } from '@plugin/stores/GlobalContext';
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
+// import StaticVoice from '@sub-pag/components/StaticVoice';
 import { StaticVoice } from '@plugin/components/PagIcon';
 import useGetScenes from '@plugin/hooks/useGetScenes';
 import { EAnswerStatus } from '@plugin/components/ChatWrapper';
@@ -55,6 +56,7 @@ const VoiceEnter: React.FC<IVoiceEnterProps> = ({ handleSend }) => {
         }}
       >
         <StaticVoice play={operateState === EOperateState.VOICE_REST && !globalContext?.isShowBottomDialog} />
+        {/* <xiao-c-static-voice play={operateState === EOperateState.VOICE_REST && !globalContext?.isShowBottomDialog} /> */}
       </View>
 
       <SpeechRecognition

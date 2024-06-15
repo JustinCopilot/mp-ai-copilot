@@ -1,8 +1,14 @@
 import path from 'path';
+// import fs from 'fs';
 import { defineConfig, type UserConfigExport } from '@tarojs/cli';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 import devConfig from './dev';
 import prodConfig from './prod';
+
+// const outputDir = 'dist/xiao-c';
+// if (!fs.existsSync(outputDir)) {
+//   fs.mkdirSync(outputDir, { recursive: true });
+// }
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig(async (merge, { command, mode }) => {
@@ -24,6 +30,7 @@ export default defineConfig(async (merge, { command, mode }) => {
     },
     copy: {
       patterns: [
+        // { from: 'node_modules/libpag-miniprogram/lib', to: 'dist' }
       ],
       options: {
       }
@@ -110,6 +117,7 @@ export default defineConfig(async (merge, { command, mode }) => {
       '@assets': path.resolve(__dirname, '..', 'src/plugin/assets'),
       '@hooks': path.resolve(__dirname, '..', 'src/plugin/hooks'),
       '@edu': path.resolve(__dirname, '..', 'src/plugin/education'),
+      '@sub-pag': path.resolve(__dirname, '..', 'src/sub-pag'),
     },
   }
   if (process.env.NODE_ENV === 'development') {

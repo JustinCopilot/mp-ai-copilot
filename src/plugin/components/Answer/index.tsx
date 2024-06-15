@@ -71,6 +71,7 @@ const Answer: React.FC<IAnswerProps> = ({ chatItem }) => {
   return answerStatus === EAnswerStatus.STAR_ANSWER && isLastAnswer ? (
     <View className="answering">
       <LoadingText />
+      {/* <xiao-c-loading-text /> */}
     </View>
   ) : (
     <View className="answer">

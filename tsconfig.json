@@ -28,7 +28,8 @@
       "@edu/*": ["./src/plugin/education/*"],
       "@utils/*": ["./src/plugin/utils/*"],
       "@assets/*": ["./src/plugin/assets/*"],
-      "@hooks/*": ["./src/plugin/hooks/*"]
+      "@hooks/*": ["./src/plugin/hooks/*"],
+      "@sub-pag/*": ["./src/sub-pag/*"],
     }
   },
   "include": ["./src", "./types", "./config"],
