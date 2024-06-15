@@ -15,4 +15,14 @@ export default defineAppConfig({
     "education/pages/information_supplement/index",
     "education/pages/observation_detail/index"
   ],
+  plugins: {
+    WechatSI: {
+      version: '0.3.5',
+      provider: 'wx069ba97219f66d99',
+    },
+    QCloudAIVoice: {
+      version: '2.3.1',
+      provider: 'wx3e17776051baf153',
+    },
+  },
 })

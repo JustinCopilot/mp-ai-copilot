@@ -18,7 +18,7 @@ const envUrlList = {
   [EEnv.ITEST]: 'https://itest.clife.net/assistant',
   [EEnv.PROD]: 'https://cms.clife.cn/assistant',
 };
-export const isProduction = process.env.NODE_ENV === 'production' && process.env.TARO_APP_NAME === 'CMS';
+export const isProduction = process.env.NODE_ENV === 'production' && process.env.TARO_APP_API_ENV === 'production';
 console.log('isProduction', isProduction);
 export const isProdEnv = () => {
   return Taro.getStorageSync(EStorage.HOST_ENV) === EEnv.PROD;

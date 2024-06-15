@@ -6,6 +6,7 @@ import prodConfig from './prod';
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig(async (merge, { command, mode }) => {
+  const packMode = process.env.PACK_MODE;
   const baseConfig: UserConfigExport = {
     projectName: 'mp-ai-copilot',
     date: '2024-6-7',
@@ -16,8 +17,8 @@ export default defineConfig(async (merge, { command, mode }) => {
       375: 2,
       828: 1.81 / 2
     },
-    sourceRoot: process.env.PACK_MODE ? `src/${process.env.PACK_MODE}` : 'src',
-    outputRoot: process.env.PACK_MODE ? `dist/${process.env.PACK_MODE}` : 'dist',
+    sourceRoot: packMode ? `src/${packMode}` : 'src',
+    outputRoot: packMode ? `dist/xiao-c/${packMode}` : 'dist',
     plugins: [path.join(process.cwd(), '/plugin-mv/index.js')],
     defineConstants: {
     },

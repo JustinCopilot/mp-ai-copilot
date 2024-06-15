@@ -10,10 +10,13 @@
     "framework": "React"
   },
   "scripts": {
-    "build:weapp": "taro build --type weapp  --new-blended --mode prod",
-    "build:weapp:plugin": "PACK_MODE=plugin taro build --type weapp  --new-blended --mode prod",
-    "build:weapp:pag": "PACK_MODE=sub-pag taro build --type weapp  --new-blended --mode prod",
-    "build:weapp:all": "npm run build:weapp && npm run build:weapp:plugin && npm run build:weapp:pag",
+    "build:weapp": "taro build --type weapp  --new-blended --mode dev",
+    "build:weapp:all:itest": "npm run build:weapp:plugin:itest && npm run build:weapp:pag:itest",
+    "build:weapp:all:prod": "npm run build:weapp:plugin:prod && npm run build:weapp:pag:prod",
+    "build:weapp:plugin:itest": "PACK_MODE=plugin taro build --type weapp  --new-blended --mode itest",
+    "build:weapp:plugin:prod": "PACK_MODE=plugin taro build --type weapp  --new-blended --mode prod",
+    "build:weapp:pag:itest": "PACK_MODE=sub-pag taro build --type weapp  --new-blended --mode itest",
+    "build:weapp:pag:prod": "PACK_MODE=sub-pag taro build --type weapp  --new-blended --mode prod",
     "build:weapp:not-blended": "taro build --type weapp",
     "build:swan": "taro build --type swan",
     "build:alipay": "taro build --type alipay",
