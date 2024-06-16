@@ -6,7 +6,7 @@ import Taro from '@tarojs/taro';
 import { EStorage } from '@plugin/types';
 import { useRequest } from 'ahooks';
 import { getEduPhotoModelApi } from '@plugin/request/chat';
-import './index.less';
+import './synthesis.less';
 
 export enum EChangeHandelType {
   NEXT,
