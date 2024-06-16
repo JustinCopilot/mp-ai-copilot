@@ -28,7 +28,7 @@ const Answer: React.FC<IAnswerProps> = ({ chatItem }) => {
     chatSuspendedToolShow,
     chatSuspendedToolPositionX = 0,
     chatSuspendedToolPositionY = 0,
-    microAppId,
+    microAppUuid,
     chatList,
     answerStatus,
     changeCurrentPlayingId,
@@ -36,11 +36,11 @@ const Answer: React.FC<IAnswerProps> = ({ chatItem }) => {
     changeCurrentPlayingContent,
   } = useContext(ChatWrapperContext) || {};
   const { isBeautySummaryScenes, isEduKnowledgeScenes, isEduPhotoScenes, isEduBehaviorScenes } =
-    useGetScenes(microAppId);
+    useGetScenes(microAppUuid);
 
   const isLastAnswer = useMemo(() => {
     const lastAnswer = chatList?.findLast((item) => item.chatUser === EChatUser.Ai);
-    return lastAnswer?.dataId === chatItem.dataId && lastAnswer?.ssdId === chatItem.ssdId;
+    return lastAnswer?.uniqueId === chatItem.uniqueId && lastAnswer?.ssdId === chatItem.ssdId;
   }, [chatList, chatItem]);
   const bubbleList = useMemo(() => {
     return chatItem.bubbleList && JSON.parse(chatItem.bubbleList);
@@ -62,7 +62,7 @@ const Answer: React.FC<IAnswerProps> = ({ chatItem }) => {
     changeIfPlayVoice?.(true);
     changeCurrentPlayingContent?.(chatItem.playContent || chatItem.chatContent);
     setTimeout(() => {
-      changeCurrentPlayingId && changeCurrentPlayingId(chatItem.dataId);
+      changeCurrentPlayingId && changeCurrentPlayingId(chatItem.uniqueId);
     }, 100);
   };
 
@@ -76,10 +76,10 @@ const Answer: React.FC<IAnswerProps> = ({ chatItem }) => {
   ) : (
     <View className="answer">
       <ChatSuspendedTool
-        id={`ChatSuspendedTool-${chatItem.dataId}`}
+        id={`ChatSuspendedTool-${chatItem.uniqueId}`}
         copyText={chatItem.copyText || chatItem.chatContent}
         onVoicePlay={chatItem.playContent || chatItem.chatContent ? handlePlayVoice : undefined}
-      // onShare={handleShare}
+        // onShare={handleShare}
       >
         {isEduKnowledgeScenes && (
           <Text decode className="answer_content">

@@ -9,7 +9,7 @@ const Redirect = () => {
   useEffect(() => {
     if (process.env.NODE_ENV !== 'production') {
       Taro.redirectTo({
-        url: `${PRE_PLUGIN_PATH}/list/index`,
+        url: `${PRE_PLUGIN_PATH}/list/list`,
       });
     }
   }, []);
@@ -17,7 +17,7 @@ const Redirect = () => {
   useEffect(() => {
     if (aiToken) {
       Taro.redirectTo({
-        url: `${PRE_PLUGIN_PATH}/list/index`,
+        url: `${PRE_PLUGIN_PATH}/list/list`,
       });
     }
   }, [aiToken]);

@@ -6,37 +6,26 @@ import { getMicroListApi } from '@plugin/request';
 import { useRequest } from 'ahooks';
 import { transformRouterParams } from '@plugin/utils/router';
 import { useDidShow, useRouter } from '@tarojs/taro';
-import { isProdEnv } from '@plugin/utils/https';
 import { PRE_PLUGIN_PATH } from '@plugin/constants';
-import { EMicroAppIdITest, EMicroAppIdProd } from '@plugin/request/chat/type';
-import type { IChatRouter } from '../chat';
-import './index.less';
+import { EMicroAppUuid } from '@plugin/request/chat/type';
+import type { IChatRouter } from '../chat/chat';
+import './list.less';
 
 let firstFlag = true;
 const List = () => {
   const router = useRouter<Partial<IRouterParams>>();
   const { aiToken } = useTurnToken();
-  const { data, run } = useRequest(getMicroListApi);
+  const { data, run } = useRequest(getMicroListApi, { manual: true });
 
   const microList = useMemo(() => {
     console.log('%c [ data ]', 'font-size:13px; background:pink; color:#bf2c9f;', data);
-    if (isProdEnv()) {
-      return data?.filter((item) =>
-        [
-          EMicroAppIdProd.EDU_KNOWLEDGE,
-          EMicroAppIdProd.EDU_PHOTO,
-          EMicroAppIdProd.BEAUTY_SUMMARY,
-          EMicroAppIdProd.EDU_BEHAVIOR,
-        ].includes(item.microAppId as EMicroAppIdProd),
-      );
-    }
     return data?.filter((item) =>
       [
-        EMicroAppIdITest.EDU_KNOWLEDGE,
-        EMicroAppIdITest.EDU_PHOTO,
-        EMicroAppIdITest.BEAUTY_SUMMARY,
-        EMicroAppIdITest.EDU_BEHAVIOR,
-      ].includes(item.microAppId as EMicroAppIdITest),
+        EMicroAppUuid.EDU_KNOWLEDGE,
+        EMicroAppUuid.EDU_PHOTO,
+        EMicroAppUuid.BEAUTY_SUMMARY,
+        EMicroAppUuid.EDU_BEHAVIOR,
+      ].includes(item.microAppUuid as EMicroAppUuid),
     );
   }, [data]);
 
@@ -70,11 +59,11 @@ const List = () => {
       {microList?.map((item) => {
         // @ts-ignore
         const params: IChatRouter = {
-          microAppId: item.microAppId,
+          microAppUuid: item.microAppUuid,
         };
         const routerParams = transformRouterParams<IChatRouter>(params);
         return (
-          <Navigator url={`${PRE_PLUGIN_PATH}/chat/index?${routerParams}`} className="item" key={item.microAppId}>
+          <Navigator url={`${PRE_PLUGIN_PATH}/chat/chat?${routerParams}`} className="item" key={item.microAppUuid}>
             <View className="icon" style={item.icon ? { backgroundImage: `url(${item.icon})` } : {}} />
             <View className="text">
               <View className="name">{item.microAppName}</View>

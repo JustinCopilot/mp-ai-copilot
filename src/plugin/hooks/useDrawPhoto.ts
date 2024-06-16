@@ -1,4 +1,4 @@
-import type { ISynthesisImg } from '@plugin/pages/synthesis';
+import type { ISynthesisImg } from '@plugin/pages/synthesis/synthesis';
 import Taro from '@tarojs/taro';
 import { useRef, useState } from 'react';
 

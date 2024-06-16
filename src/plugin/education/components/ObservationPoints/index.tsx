@@ -1,11 +1,12 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { View, Image } from '@tarojs/components';
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
+import cloneDeep from 'lodash/cloneDeep';
 import { PRE_EDU_PATH } from '@plugin/constants';
 import { ECheckStatus } from '@plugin/components/ChatWrapper';
 import type { IAgentResponseData } from '@edu/request/type';
-import { /* getResource, */ getRandomNotesListApi, getSituationLabelList } from '@edu/request';
+import { getResource, /* getRandomNotesListApi, */ getNaviListApi, getSituationLabelList } from '@edu/request';
 import { ChooseGradeModal /* , SelectLabelPicker, Option */ } from '@edu/components';
 import Taro from '@tarojs/taro';
 import { useRequest } from 'ahooks';
@@ -28,7 +29,7 @@ export interface IObservationPointsProps {
 
 const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } }) => {
   const { putChat, isGlobalLastAnswer, globalCheckStatus, changeCurrentPlayContent } = useContext(UICardContext) || {};
-  const [loadMore, setLoadMore] = useState(false);
+  // const [loadMore, setLoadMore] = useState(false);
   const [jotdownVisible, setJotdownVisible] = useState<boolean>(false);
   const [gradeVisible, setGradeVisible] = useState<boolean>(false);
   const [observeSituationVisible, setObserveSituationVisible] = useState<boolean>(false);
@@ -53,6 +54,23 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
     situationName: '',
     situationId: 0,
   });
+
+  const [filterChooseStuentNum, setFilterChooseStudentNum] = useState<number>(0); // 选中第一列的学生id
+  const [filterChooseStuentList, setFilterChooseStudentList] = useState<any[]>([]);
+  const [resourceList, setResourceList] = useState<any[]>([]); // 第一列要渲染的数据
+  const [thirdStepChooseData, setThirdStepChooseData] = useState<number[]>([]);
+  const [copyThirdStepChooseData, setCopyThirdStepChooseData] = useState<number[]>([]);
+  const thirdStepChooseDataRef = useRef<number[] | null>(null);
+  // const [copyFirstStepChooseData, setCopyFirstStepChooseData] = useState<IObserveListRes[]>([]); // 第一步过程中的拷贝数据可能被用户操作变更
+  // const [secondStepChooseData, setSecondStepChooseData] = useState<IStudentListRes[]>([]);
+  // const [copySecondStepChooseData, setCopySecondStepChooseData] = useState<IStudentListRes[]>([]);
+
+  const [pageIndex, setPageIndex] = useState<number | string>(0); // 列表页码
+  const [totalRows, setTotalRows] = useState<number>(0);
+  const [scrollTop, setScrollTop] = useState<number>(0);
+  const [count, setCount] = useState(0);
+
+  const dataListRef = useRef<IGetRandomNotesListRes[] | null>(null);
 
   const disabledStatus = !isGlobalLastAnswer || globalCheckStatus === ECheckStatus.NEW_SESSION;
 
@@ -81,21 +99,24 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
   //     })) || [];
   //   setObserveOptions(options);
   // };
-  const getDataList = (source?: number | undefined, change?: boolean | undefined) => {
+  const getDataList = (source?: number | undefined, pageIndex?: number | string) => {
     const _source = source || tabsIndex || 2;
     let flag = false;
     if (flag) return;
     flag = true;
-    const data = dataList?.length
-      ? {
-          dateTime: dayjs(dataList[dataList.length - 1].observeDate)
-            .subtract(1, 'day')
-            .format('YYYY-MM-DD'),
-          source: _source === 1 ? 1 : 2,
-        }
-      : { source: _source === 1 ? 1 : 2 };
-    const param = change ? { source: _source === 1 ? 1 : 2 } : data;
-    getRandomNotesListApi(param).then((res) => {
+    // const data = dataList?.length
+    //   ? {
+    //       dateTime: dayjs(dataList[dataList.length - 1].observeDate)
+    //         .subtract(1, 'day')
+    //         .format('YYYY-MM-DD'),
+    //       source: _source === 1 ? 1 : 2,
+    //     }
+    //   : { source: _source === 1 ? 1 : 2 };
+    const param = { source: _source === 1 ? 1 : 2 };
+    const studentParam = thirdStepChooseDataRef?.current?.length
+      ? { studentId: thirdStepChooseDataRef?.current.join(',') }
+      : {};
+    getNaviListApi({ ...param, ...studentParam, pageIndex: Number(pageIndex) || 1, pageRows: 10 }).then((res) => {
       // console.log(
       //   'res',
       //   res,
@@ -106,31 +127,68 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
       //     : 1,
       // );
       flag = false;
-      setLoadMore(res?.length ? false : true);
-      console.log(dataList, '===========dataList===========>');
-      if (param?.dateTime) {
-        setDataList([...dataList, ...res]);
-      } else {
-        setDataList([...res]);
-      }
+      const { list = [], pager = {} } = res;
+      const { totalRows } = pager;
+      let newResourceList = cloneDeep(dataList);
+
+      list.forEach((item) => {
+        const findIndex = newResourceList.findIndex((resourceItem) => resourceItem.observeDate === item?.observeDate);
+        if (findIndex !== -1) {
+          newResourceList[findIndex].observeList.push(item);
+        } else {
+          newResourceList.push({ observeDate: item?.observeDate, observeList: [item] });
+        }
+      });
+      setDataList(() => {
+        dataListRef.current = newResourceList;
+        return dataListRef.current;
+      });
+      setDataList([...newResourceList]);
+      setTotalRows(() => totalRows);
+
+      // if (param?.dateTime) {
+      //   setDataList([...dataList, ...res]);
+      // } else {
+      //   setDataList([...res]);
+      // }
     });
   };
 
   const onTabsChange = (index: number) => {
-    setDataList([]);
+    // setDataList([]);
     setTabsIndex(index);
+    setStep(index === 2 ? 0 : 1);
+    // 切换的时候 清空筛选信息
+    setThirdStepChooseData(() => {
+      thirdStepChooseDataRef.current = [];
+      return thirdStepChooseDataRef.current;
+    });
+    setDataList(() => {
+      dataListRef.current = [];
+      return dataListRef.current;
+    });
+
+    setFilterChooseStudentNum(resourceList?.[0]?.classId);
+    setFilterChooseStudentList(resourceList?.[0]?.studentList || []);
+
+    // 清空选中学生列表
+    setCopyThirdStepChooseData([]);
+    setPageIndex(1);
+    setCount(() => count + 1);
   };
 
-  useEffect(() => {
-    if (jotdownVisible) {
-      setDataList([]);
-      getDataList(tabsIndex, true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tabsIndex]);
+  // useEffect(() => {
+  //   if (jotdownVisible) {
+  //     setDataList([]);
+  //     getDataList(tabsIndex, 1);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [tabsIndex]);
 
   const goDetail = (record: any) => {
-    Taro.navigateTo({ url: `${PRE_EDU_PATH}/observation_detail/index?observeId=${record?.observeId}` });
+    console.log('record', record);
+    const router = record.source === 2 ? 'jot_down_detail' : 'observation_detail';
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/${router}/index?observeId=${record?.observeId}&hideBtn=true` });
   };
 
   const chooseItem = (record: IObserveListRes) => {
@@ -139,7 +197,9 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
       record,
       firstStepChooseData.some((item) => item.observeId === record.observeId),
     );
-    setFirstStepChooseData([record]);
+    // 单选 可以取消反选
+    const newList = firstStepChooseData.find((item) => item.observeId === record.observeId) ? [] : [record];
+    setFirstStepChooseData([...newList]);
 
     // const { orgName, observeDate } = record;
     // const sourceText = source === 1 ? '幼儿观察记录' : '幼儿随手记';
@@ -189,38 +249,95 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
     putChat?.({ userParam }, { needPutAnsker: false });
   };
 
-  // 筛选幼儿接入
-  // const filterObserveList = () => {
-  //   if (resourceList?.length) {
-  //     setStep(tag === 'BehaviorAnalysisSuggestion' ? 2 : 1);
-  //   } else {
-  //     getResourceList();
-  //   }
-  // };
+  const onChangeResoureceNum = (record: any) => {
+    console.log('onChangeResoureceNum', record);
+    setFilterChooseStudentNum(record?.classId);
+    setFilterChooseStudentList(record?.studentList || []);
+  };
 
-  // const getResourceList = () => {
-  //   getResource().then((res) => {
-  //     console.log('getResourceList', res);
-  //     const { gradeList = [] } = res;
-  //     let classResourceList: any[] = [];
-  //     gradeList?.forEach((item) => {
-  //       const { classList } = item;
-  //       const newClassList = classList?.length ? classList : [];
-  //       classResourceList.push(...newClassList);
-  //     });
-  //     if (!classResourceList?.length) {
-  //       Taro.showToast({
-  //         title: '暂无可选项',
-  //       });
-  //       return;
-  //     }
-  //     console.log('classResourceList', classResourceList);
-  //     setFilterChooseStudentNum(classResourceList?.[0]?.classId);
-  //     setFilterChooseStudentList(classResourceList?.[0]?.studentList || []);
-  //     setResourceList(classResourceList?.length ? classResourceList : []);
-  //     setStep(copyFirstStepChooseData?.length ? 2 : 1);
-  //   });
-  // };
+  const filterObserveList = () => {
+    console.log(resourceList, '-------resourceList--------->');
+
+    if (resourceList?.length) {
+      const step = tag === 'BehaviorAnalysisSuggestion' ? 2 : 1;
+      setStep(step);
+    } else {
+      getResourceList();
+    }
+  };
+
+  const getResourceList = () => {
+    getResource().then((res) => {
+      console.log('getResourceList', res);
+      const { gradeList = [] } = res;
+      let classResourceList: any[] = [];
+      gradeList?.forEach((item) => {
+        const { classList } = item;
+        const newClassList = classList?.length ? classList : [];
+        classResourceList.push(...newClassList);
+      });
+      if (!classResourceList?.length) {
+        Taro.showToast({
+          title: '暂无可选项',
+        });
+        return;
+      }
+      console.log('classResourceList', classResourceList);
+      setFilterChooseStudentNum(classResourceList?.[0]?.classId);
+      setFilterChooseStudentList(classResourceList?.[0]?.studentList || []);
+      setResourceList(classResourceList?.length ? classResourceList : []);
+      const step = tag === 'BehaviorAnalysisSuggestion' ? 2 : 1;
+      setStep(step);
+      console.log(step, '-----------xx-x>');
+    });
+  };
+
+  const sureStudentListBtn = () => {
+    console.log('点击了sure--btn----->');
+
+    setThirdStepChooseData(() => {
+      thirdStepChooseDataRef.current = copyThirdStepChooseData;
+      return thirdStepChooseDataRef.current;
+    });
+    setFirstStepChooseData(() => []);
+    // setCopyFirstStepChooseData(() => []);
+    // setSecondStepChooseData(() => []);
+    // setCopySecondStepChooseData(() => []);
+    setDataList(() => {
+      dataListRef.current = [];
+      return dataListRef.current;
+    });
+
+    // console.log(tabsIndex, '-=========tabsIndex======.');
+    setScrollTop(() => 0);
+    const step = tabsIndex === 1 ? 1 : 0;
+    setPageIndex(1);
+    setCount(() => count + 1);
+    setStep(tag === 'BehaviorAnalysisSuggestion' ? step : 0);
+  };
+
+  useEffect(() => {
+    if (pageIndex) {
+      getDataList(tabsIndex, pageIndex);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageIndex, count]);
+
+  // 侧滑切换
+  const swiperChooseStep = (val: number) => {
+    // setTabsIndex(val === 1 ? 1 : 2);
+    setStep(val);
+  };
+
+  useEffect(() => {
+    if (!jotdownVisible) {
+      setCopyThirdStepChooseData([]);
+      setThirdStepChooseData(() => {
+        thirdStepChooseDataRef.current = [];
+        return thirdStepChooseDataRef.current;
+      });
+    }
+  }, [jotdownVisible]);
 
   return (
     <View className={disabledStatus ? 'observation-points disabled' : 'observation-points'}>
@@ -232,18 +349,23 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
             className="observation-value"
             onClick={() => {
               setJotdownVisible(true);
-              getDataList(tabsIndex, !!chooseStepData?.length);
+              setPageIndex(1);
+              setCount(() => count + 1);
+              setScrollTop(0);
+              // setCopyThirdStepChooseData([]);
               if (chooseStepData?.length) {
                 setDataList([]);
                 setTabsIndex(firstStepChooseData[0]?.source || 2);
-                setStep(firstStepChooseData[0]?.source === 1 ? 1 : 0);
+                const step = firstStepChooseData[0]?.source === 1 ? 1 : 0;
+                setStep(tag === 'BehaviorAnalysisSuggestion' ? step : 0);
                 setFirstStepChooseData([...chooseStepData]);
               } else {
                 setFirstStepChooseData([]);
+                setStep(0);
               }
             }}
           >
-            <View className={firstStepChooseData?.length ? 'text ellipsis active' : 'text'}>
+            <View className={chooseStepData?.length ? 'text ellipsis active' : 'text ellipsis'}>
               {chooseStepData?.length ? jotdownText : '点击选择随手记'}
             </View>
             <Image src="https://senior.cos.clife.cn/xiao-c/more-right@2x.png" className="observation-arrow" />
@@ -300,31 +422,37 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
 
       {jotdownVisible && (
         <ChooseModal
-          step={tag === 'BehaviorAnalysisSuggestion' ? step : 0}
+          step={step}
           show={jotdownVisible}
           dataList={dataList}
           firstText="确定"
           secondText="取消"
           goDetail={goDetail}
-          loadMore={loadMore}
+          firstStepTotalRows={totalRows}
+          currentPageAddOne={() => {
+            setPageIndex(() => Number(pageIndex) + 1);
+          }}
+          setScrollTop={(val) => {
+            setScrollTop(val);
+          }}
           showCancel={true}
-          getDataList={getDataList}
-          changeVisible={() => setJotdownVisible(false)}
+          changeVisible={() => {
+            setJotdownVisible(false);
+          }}
           showRecordList={tag === 'BehaviorAnalysisSuggestion'}
           onTabsChange={onTabsChange}
           tabsIndex={tabsIndex}
-          swiperChooseStep={(val) => setTabsIndex(val === 1 ? 1 : 2)}
+          swiperChooseStep={(val) => swiperChooseStep(val)}
           firstClick={() => {
-            if (!firstStepChooseData?.length) {
-              Taro.showToast({
-                title: '请选择随手记',
-                icon: 'none',
-                duration: 1500,
-              });
-              return;
-            }
-
-            const { orgName, observeDate, source } = firstStepChooseData[0];
+            // if (!firstStepChooseData?.length) {
+            //   Taro.showToast({
+            //     title: '请选择随手记',
+            //     icon: 'none',
+            //     duration: 1500,
+            //   });
+            //   return;
+            // }
+            const { orgName, observeDate, source } = firstStepChooseData[0] || {};
             const sourceText = source === 1 ? '幼儿观察记录' : '幼儿随手记';
             const jotdownText = `${orgName}${sourceText}  ${observeDate}`;
             setJotdownText(jotdownText);
@@ -334,7 +462,23 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
           }}
           firstStepChooseData={firstStepChooseData}
           chooseItem={chooseItem}
-          // filterObserveList={filterObserveList}
+          onChangeResoureceNum={(val) => onChangeResoureceNum(val)}
+          resourceList={resourceList}
+          filterObserveList={filterObserveList}
+          chooseResourceList={filterChooseStuentList}
+          chooseResourceNum={filterChooseStuentNum}
+          copyThirdStepChooseData={copyThirdStepChooseData}
+          chooseThirdStepData={(val) => {
+            const newList = copyThirdStepChooseData.includes(val)
+              ? copyThirdStepChooseData.filter((item) => item !== val)
+              : [...copyThirdStepChooseData, val];
+            console.log('newlist', newList);
+            setCopyThirdStepChooseData(newList);
+          }}
+          reset={() => setCopyThirdStepChooseData([])}
+          sureStudentListBtn={sureStudentListBtn}
+          thirdStepChooseData={thirdStepChooseData}
+          scrollTop={scrollTop}
         />
       )}
 
@@ -356,12 +500,10 @@ const ObservationPoints: React.FC<IObservationPointsProps> = ({ data: { tag } })
           handleSelect={handleSelectSituation}
           situationInfo={situationInfo}
           dataList={situationList}
-          // situationList={situationList}
           type="radio"
         />
       )}
     </View>
   );
 };
-
 export default ObservationPoints;

@@ -12,6 +12,7 @@ import { dealErrorStatus, type ITransformStreamProps } from './useTransformStrea
 const useCommonScenes = () => {
   const { transformStreamToArray } = useStreamToArray();
   const aiDataId = useRef<string>();
+  const chatContentRef = useRef<string>();
   const chatItemTag = useRef<EChatItemTag>();
 
   function getDefaultChatInfo(
@@ -23,11 +24,12 @@ const useCommonScenes = () => {
     // dataId是语音播报的唯一标识，在流式接口结束后会进行标记，所以需要暴露出去
     // const aiDataId = generateUUID();
     aiDataId.current = generateUUID();
+    chatContentRef.current = ''
     if (saveTag) {
       chatItemTag.current = saveTag;
     }
-    const NEW_ANSWER_INFO = { chatContent: '', chatUser: EChatUser.Ai, dataId: aiDataId.current };
-    const NEW_ASKER_INFO = { chatContent: params.query || '', chatUser: EChatUser.User, dataId: generateUUID(), banEdit };
+    const NEW_ANSWER_INFO = { chatContent: '', chatUser: EChatUser.Ai, uniqueId: aiDataId.current };
+    const NEW_ASKER_INFO = { chatContent: params.query || '', chatUser: EChatUser.User, uniqueId: generateUUID(), banEdit };
     const editChatInfo = [...chatList.slice(0, -2), NEW_ASKER_INFO, NEW_ANSWER_INFO];
     const refreshChatInfo = [...chatList.slice(0, -1), NEW_ANSWER_INFO];
     const normalChatInfo = !needPutAnsker
@@ -60,10 +62,11 @@ const useCommonScenes = () => {
       componentInParam = (data?.componentInParam && JSON.stringify(data.componentInParam)) || '';
       origin = { ...origin, ...data };
       if (finish) {
-        aiDataId.current = data?.dataId;
+        aiDataId.current = data?.uniqueId;
         if (chatItemTag.current) {
           lastChat.tag = chatItemTag.current;
-          setTagApi({ dataId: data!.dataId!, tag: chatItemTag.current });
+          setTagApi({ dataId: data!.uniqueId!, tag: chatItemTag.current });
+          chatItemTag.current = undefined
         }
       }
     });
@@ -72,13 +75,14 @@ const useCommonScenes = () => {
       setAnswerStatus(EAnswerStatus.ANSWERING);
     }
     if (lastChat.chatUser === EChatUser.Ai) {
-      const chatContent = `${lastChat.chatContent}${answerText}`;
+      const chatContent = `${chatContentRef.current}${answerText}`;
+      chatContentRef.current = chatContent;
       setChatList([
         ...copyChatList.current.slice(0, -1),
         {
-          ...origin,
           ...lastChat,
-          dataId: origin?.dataId || lastChat.dataId,
+          ...origin,
+          uniqueId: origin?.uniqueId || lastChat.uniqueId,
           chatContent,
           componentInParam,
           origin,

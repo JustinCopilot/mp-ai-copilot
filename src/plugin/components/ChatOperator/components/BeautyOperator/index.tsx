@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import Taro, { getCurrentPages } from '@tarojs/taro';
 import { View, Button } from '@tarojs/components';
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
-import type { EMicroAppIdITest, EMicroAppIdProd } from '@plugin/request/chat/type';
+import type { EMicroAppUuid } from '@plugin/request/chat/type';
 import { EAnswerStatus } from '@plugin/components/ChatWrapper';
 import type { IBeautySummaryReturnParams } from '@plugin/types';
 import { EOperateState } from '../..';
@@ -13,7 +13,7 @@ interface IBeautyOperatorProps {
 }
 
 const BeautyOperator: React.FC<IBeautyOperatorProps> = ({ handleNewSession }) => {
-  const { microAppId, operateState, answerStatus, summaryCallbackData } = useContext(ChatWrapperContext) || {};
+  const { microAppUuid, operateState, answerStatus, summaryCallbackData } = useContext(ChatWrapperContext) || {};
 
   const handleSummaryConfirm = () => {
     if (answerStatus !== EAnswerStatus.UN_ANSWER) {
@@ -26,7 +26,7 @@ const BeautyOperator: React.FC<IBeautyOperatorProps> = ({ handleNewSession }) =>
     const current = pages[pages.length - 1];
     const eventChannel = current.getOpenerEventChannel();
     const returnData: IBeautySummaryReturnParams = {
-      microAppId: microAppId as EMicroAppIdITest.BEAUTY_SUMMARY | EMicroAppIdProd.BEAUTY_SUMMARY,
+      microAppUuid: microAppUuid as EMicroAppUuid.BEAUTY_SUMMARY,
       data: summaryCallbackData,
     };
     eventChannel.emit('Return', returnData);

@@ -5,9 +5,11 @@ import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import Taro from '@tarojs/taro';
-import { PageContainer, View, Swiper, SwiperItem, Text, Image, RootPortal, ScrollView } from '@tarojs/components';
+import { AtFloatLayout } from 'taro-ui';
+import { useThrottleFn } from 'ahooks';
+import { View, Swiper, SwiperItem, Text, Image, RootPortal, ScrollView } from '@tarojs/components';
 
-import type { IObserveListRes, IGetRandomNotesListRes, IStudentListRes } from '../../../../request/type';
+import type { IObserveListRes, IStudentListRes } from '../../../../request/type';
 
 import './index.less';
 
@@ -23,12 +25,12 @@ export interface IshowModalProps {
   secondClick?: (record: IStudentListRes) => void; // swiper第二个item的方法
   secondStepChooseData?: IStudentListRes[]; // 第二步的选中数据
   swiperChooseStep?: (num: number) => void; // swiper切换步骤方法
-  dataList: IGetRandomNotesListRes[]; // 第一步要渲染的数据
+  dataList: any[]; // 第一步要渲染的数据
   chooseItem: (record: IObserveListRes, source?: number) => void; // 第一步选择
   goDetail: (record: IObserveListRes) => void; // 查看详情
   submit?: () => void; // 提交
-  getDataList: () => void; // 获取数据列表
-  loadMore: boolean; // 是否加载更多
+  // getDataList: () => void; // 获取数据列表
+  firstStepTotalRows: number; // 第一步的总条数
   showRecordList?: boolean;
   onTabsChange?: (index: number) => void;
   tabsIndex?: number;
@@ -42,6 +44,9 @@ export interface IshowModalProps {
   thirdStepChooseData?: number[];
   copyThirdStepChooseData?: number[];
   chooseThirdStepData?: (val: number) => void;
+  currentPageAddOne: () => void;
+  scrollTop?: number;
+  setScrollTop?: (val: number) => void;
 }
 const ChooseModal: React.FC<IshowModalProps> = ({
   show,
@@ -58,8 +63,7 @@ const ChooseModal: React.FC<IshowModalProps> = ({
   dataList,
   chooseItem,
   goDetail,
-  loadMore,
-  getDataList,
+  firstStepTotalRows,
   submit,
   showRecordList,
   onTabsChange,
@@ -74,6 +78,9 @@ const ChooseModal: React.FC<IshowModalProps> = ({
   thirdStepChooseData = [],
   copyThirdStepChooseData = [],
   chooseThirdStepData,
+  currentPageAddOne,
+  scrollTop = 0,
+  setScrollTop,
 }) => {
   const fullYear = new Date().getFullYear();
   const childList: IStudentListRes[] = useMemo(() => {
@@ -107,40 +114,45 @@ const ChooseModal: React.FC<IshowModalProps> = ({
 
   const onScrollToLower = () => {
     // console.log('onScrollToLower 到底了');
-    if (loadMore) {
+    const flatArray = dataList?.map((item) => item?.observeList).flat();
+    if (dataList?.length && flatArray?.length >= firstStepTotalRows) {
       Taro.showToast({
         title: '没有更多信息了',
         icon: 'none',
       });
       return;
     }
-    getDataList();
+    currentPageAddOne();
+    // getDataList();
   };
+
+  const { run: handleScroll } = useThrottleFn((val) => {
+    console.log('节流', val);
+    setScrollTop?.(val);
+  });
 
   // console.log(dataList, '---------------dataList------------>xxxxxxxxx');
   return (
     show && (
       <RootPortal>
-        <PageContainer show={show} onClickOverlay={handleClose} zIndex={100} round={true}>
+        <AtFloatLayout isOpened={show} className="points-behavior-modal jotDown-modal" onClose={handleClose}>
           <View className="modal">
             <View className="modal-title">
               {showRecordList && !!onTabsChange ? (
-                <View className="modal-change">
-                  <Text
-                    className={tabsIndex === 2 ? 'swiper-tabs active' : 'swiper-tabs'}
-                    onClick={() => onTabsChange(2)}
-                  >
-                    随手记
-                  </Text>
-                  <Text
-                    className={tabsIndex === 1 ? 'swiper-tabs active' : 'swiper-tabs'}
-                    onClick={() => onTabsChange(1)}
-                  >
-                    观察记录
-                  </Text>
-                </View>
+                (showRecordList && step !== 2) || (!showRecordList && step !== 1) ? (
+                  <View className="modal-change">
+                    <Text className={step === 0 ? 'swiper-tabs active' : 'swiper-tabs'} onClick={() => onTabsChange(2)}>
+                      随手记
+                    </Text>
+                    <Text className={step === 1 ? 'swiper-tabs active' : 'swiper-tabs'} onClick={() => onTabsChange(1)}>
+                      观察记录
+                    </Text>
+                  </View>
+                ) : (
+                  <Text>选择重点观察幼儿</Text>
+                )
               ) : (
-                <Text>{step === 0 ? '选择随手记' : step === 2 ? '选择观察情境' : '选择终端观察幼儿'}</Text>
+                <Text>{step === 0 ? '选择随手记' : step === 2 ? '选择观察情境' : '选择重点观察幼儿'}</Text>
               )}
 
               <Image
@@ -160,7 +172,15 @@ const ChooseModal: React.FC<IshowModalProps> = ({
             >
               <SwiperItem className="modal-body-item">
                 {dataList?.length ? (
-                  <ScrollView onScrollToLower={onScrollToLower} className="modal-body-scroll" scrollY>
+                  <ScrollView
+                    onScrollToLower={onScrollToLower}
+                    className="modal-body-scroll"
+                    scrollY
+                    scrollTop={scrollTop}
+                    onScroll={(e) => {
+                      handleScroll(e.detail.scrollTop);
+                    }}
+                  >
                     {dataList.map((item, index) => {
                       return (
                         <View key={index}>
@@ -334,6 +354,109 @@ const ChooseModal: React.FC<IshowModalProps> = ({
                     })
                   : null}
               </SwiperItem> */}
+
+              {showRecordList && (
+                <SwiperItem className="modal-body-item">
+                  <ScrollView onScrollToLower={onScrollToLower} className="modal-body-scroll" scrollY>
+                    {dataList.map((item, index) => {
+                      return (
+                        <View key={index}>
+                          <View className="modal-body-item-title">
+                            <Text className="modal-body-item-title-left">{item?.observeDate}</Text>
+                            <Text
+                              className={`${thirdStepChooseData?.length ? 'modal-body-item-title-rightchoose modal-body-item-title-right' : 'modal-body-item-title-right'} modal-body-item-title-right`}
+                              onClick={filterObserveList}
+                            >
+                              筛选幼儿
+                            </Text>
+                          </View>
+                          {item?.observeList?.length
+                            ? item?.observeList.map((item2, index2) => (
+                                <View className="modal-body-item-body" key={item2?.observeId || index2}>
+                                  <View className="modal-body-item-flex">
+                                    <Image
+                                      src={
+                                        firstChooseIds.includes(item2?.observeId)
+                                          ? 'https://senior.cos.clife.cn/xiao-c/check@2x.png'
+                                          : 'https://senior.cos.clife.cn/xiao-c/uncheck@2x.png'
+                                      }
+                                      className="modal-body-item-body-img"
+                                    />
+                                    <View className="modal-body-item-flex-right" onClick={() => chooseItem(item2)}>
+                                      <View className="modal-body-item-time">
+                                        <Text>{item2.observeTime.slice(11, 16)}</Text>
+                                        <Text
+                                          className="modal-body-item-time-click"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            goDetail(item2);
+                                          }}
+                                        >
+                                          查看详情
+                                        </Text>
+                                      </View>
+                                      <View
+                                        className={`modal-body-item-detail ${firstChooseIds.includes(item2?.observeId) ? 'modal-body-item-choosedetail' : ''}`}
+                                      >
+                                        <View className="modal-body-item-detail-flex">
+                                          <Text className="modal-body-item-detail-flex-left">观察情境:</Text>
+                                          <Text className="modal-body-item-detail-flex-right">
+                                            <Text
+                                              style={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                display: 'block',
+                                              }}
+                                            >
+                                              {item2?.situationList?.map((item3) => item3.situationName).join('、') ||
+                                                ''}
+                                            </Text>
+                                          </Text>
+                                        </View>
+                                        <View className="modal-body-item-detail-flex">
+                                          <Text className="modal-body-item-detail-flex-left">观察幼儿:</Text>
+                                          <Text className="modal-body-item-detail-flex-right">
+                                            <Text
+                                              style={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                display: 'block',
+                                              }}
+                                            >
+                                              {item2?.studentList?.map((item3) => item3.studentName).join('、') || ''}
+                                            </Text>
+                                          </Text>
+                                        </View>
+                                        <View className="modal-body-item-detail-flex">
+                                          <Text className="modal-body-item-detail-flex-left">观察内容：</Text>
+                                          <View className="modal-body-item-detail-flex-right">
+                                            <Text
+                                              style={{
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                                display: 'block',
+                                              }}
+                                            >
+                                              {item2.content}
+                                            </Text>
+                                          </View>
+                                        </View>
+                                      </View>
+                                    </View>
+                                  </View>
+                                </View>
+                              ))
+                            : null}
+                        </View>
+                      );
+                    })}
+                  </ScrollView>
+                </SwiperItem>
+              )}
+
               {resourceList?.length ? (
                 <SwiperItem className="modal-body-item" itemId="4">
                   <View className="modal-body-item-flex2">
@@ -424,105 +547,9 @@ const ChooseModal: React.FC<IshowModalProps> = ({
                   </View>
                 </View>
               </SwiperItem> */}
-              {showRecordList && (
-                <SwiperItem className="modal-body-item">
-                  <ScrollView onScrollToLower={onScrollToLower} className="modal-body-scroll" scrollY>
-                    {dataList.map((item, index) => {
-                      return (
-                        <View key={index}>
-                          <View className="modal-body-item-title">
-                            <Text className="modal-body-item-title-left">{item?.observeDate}</Text>
-                            <Text className="modal-body-item-title-right">筛选幼儿</Text>
-                          </View>
-                          {item?.observeList?.length
-                            ? item?.observeList.map((item2, index2) => (
-                                <View className="modal-body-item-body" key={item2?.observeId || index2}>
-                                  <View className="modal-body-item-flex">
-                                    <Image
-                                      src={
-                                        firstChooseIds.includes(item2?.observeId)
-                                          ? 'https://senior.cos.clife.cn/xiao-c/check@2x.png'
-                                          : 'https://senior.cos.clife.cn/xiao-c/uncheck@2x.png'
-                                      }
-                                      className="modal-body-item-body-img"
-                                    />
-                                    <View className="modal-body-item-flex-right" onClick={() => chooseItem(item2)}>
-                                      <View className="modal-body-item-time">
-                                        <Text>{item2.observeTime.slice(11, 16)}</Text>
-                                        <Text
-                                          className="modal-body-item-time-click"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            goDetail(item2);
-                                          }}
-                                        >
-                                          查看详情
-                                        </Text>
-                                      </View>
-                                      <View
-                                        className={`modal-body-item-detail ${firstChooseIds.includes(item2?.observeId) ? 'modal-body-item-choosedetail' : ''}`}
-                                      >
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察情境:</Text>
-                                          <Text className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2?.situationList?.map((item3) => item3.situationName).join('、') ||
-                                                ''}
-                                            </Text>
-                                          </Text>
-                                        </View>
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察幼儿:</Text>
-                                          <Text className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2?.studentList?.map((item3) => item3.studentName).join('、') || ''}
-                                            </Text>
-                                          </Text>
-                                        </View>
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察内容：</Text>
-                                          <View className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2.content}
-                                            </Text>
-                                          </View>
-                                        </View>
-                                      </View>
-                                    </View>
-                                  </View>
-                                </View>
-                              ))
-                            : null}
-                        </View>
-                      );
-                    })}
-                  </ScrollView>
-                </SwiperItem>
-              )}
             </Swiper>
             <View className="modal-bottom">
-              {step === 0 || showRecordList ? (
+              {(step === 0 || showRecordList) && step !== 2 ? (
                 <View className="modal-bottom-first">
                   {showCancel ? (
                     <View className="modal-bottom-first-cancel" onClick={handleClose}>
@@ -533,7 +560,7 @@ const ChooseModal: React.FC<IshowModalProps> = ({
                     {firstText}
                   </View>
                 </View>
-              ) : step === 1 && firstStepChooseData?.length ? (
+              ) : step === 1 && firstStepChooseData?.length && !onTabsChange ? (
                 <View className="modal-bottom-second">
                   <View className="modal-bottom-second-left" onClick={() => changeStep(0)}>
                     上一步
@@ -554,7 +581,7 @@ const ChooseModal: React.FC<IshowModalProps> = ({
               ) : null}
             </View>
           </View>
-        </PageContainer>
+        </AtFloatLayout>
       </RootPortal>
     )
   );

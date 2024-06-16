@@ -17,9 +17,9 @@ export interface IAnswerOperaterProps {
 }
 
 const AnswerOperater: React.FC<IAnswerOperaterProps> = ({ isLastAnswer, chatItem }) => {
-  const { answerStatus, operateState, microAppId } = useContext(ChatWrapperContext) || {};
+  const { answerStatus, operateState, microAppUuid, chatList } = useContext(ChatWrapperContext) || {};
   const { isBeautySummaryScenes, isEduKnowledgeScenes, isEduPhotoScenes, isEduBehaviorScenes } =
-    useGetScenes(microAppId);
+    useGetScenes(microAppUuid);
 
   /**
    * @description 语音按钮展示逻辑
@@ -92,10 +92,9 @@ const AnswerOperater: React.FC<IAnswerOperaterProps> = ({ isLastAnswer, chatItem
    */
   const showReGenerator = useMemo(() => {
     const edu_knowledge_scenes = isEduKnowledgeScenes;
-    const edu_photo_scenes = !isEduPhotoScenes;
+    const edu_photo_scenes = isEduPhotoScenes && false;
     const beauty_summary_scenes = isBeautySummaryScenes && chatItem.agentResponse;
-    const edu_behavior_scenes = isEduBehaviorScenes;
-
+    const edu_behavior_scenes = isEduBehaviorScenes && false;
     return (
       isLastAnswer &&
       !chatItem.hideReGenerator &&
@@ -116,7 +115,7 @@ const AnswerOperater: React.FC<IAnswerOperaterProps> = ({ isLastAnswer, chatItem
 
   return (
     <View
-      className={`operate-bar ${isLastAnswer ? 'show' : 'hide'} ${(showVoicePlay || showFeedback || showAdjustContent || showReGenerator) && 'operate-bar-divider'}`}
+      className={`operate-bar ${!chatList?.length || isLastAnswer ? 'show' : 'hide'} ${(showVoicePlay || showFeedback || showAdjustContent || showReGenerator) && 'operate-bar-divider'}`}
     >
       <View className="operate-bar-left">
         {showVoicePlay && <VoicePlay chatItem={chatItem} />}

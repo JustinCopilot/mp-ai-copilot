@@ -9,7 +9,7 @@ import { EBubbleKey, type IBubbleComponent, EChatUser } from '@plugin/request/ch
 import './index.less';
 
 export interface IChatRouter {
-  microAppId: number;
+  microAppUuid: number;
   params: any;
 }
 
@@ -50,12 +50,12 @@ const BeautyAnswerBubble = ({ bubbleList = [] }: IBeautyAnswerBubbleProps) => {
           {
             chatUser: EChatUser.User,
             chatContent: '没有联系上',
-            dataId: generateUUID(),
+            uniqueId: generateUUID(),
           },
           {
             chatUser: EChatUser.Ai,
             chatContent: '未联系上顾客暂时无法生成回访总结，建议您再次跟进回访计划～',
-            dataId: generateUUID(),
+            uniqueId: generateUUID(),
           },
         ],
       ]);
@@ -90,9 +90,14 @@ const BeautyAnswerBubble = ({ bubbleList = [] }: IBeautyAnswerBubbleProps) => {
         });
         changeSummaryUserParam?.(userParam);
       } else {
-        getAnswerResult?.({
-          query: bubble.bubbleInfo,
-        });
+        getAnswerResult?.(
+          {
+            query: bubble.bubbleInfo,
+          },
+          {
+            banEdit: true,
+          },
+        );
       }
     }
   };

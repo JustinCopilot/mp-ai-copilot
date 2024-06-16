@@ -21,9 +21,9 @@ export interface IFeedbackProps {
 
 const Feedback: React.FC<IFeedbackProps> = ({ chatItem }) => {
   const globalContext = useContext(GlobalContext);
-  const { microAppId } = useContext(ChatWrapperContext) || {};
+  const { microAppUuid } = useContext(ChatWrapperContext) || {};
 
-  const { dataId, like = null } = chatItem;
+  const { uniqueId, like = null } = chatItem;
 
   // 通过历史记录的点赞状态，返回默认的高亮状态值
   const getDefaultHightLight = (like: ELikeType | null) => {
@@ -72,10 +72,10 @@ const Feedback: React.FC<IFeedbackProps> = ({ chatItem }) => {
     },
   });
   const handlePutFeedback = (like: ELikeType | null, reason?: string) => {
-    if (dataId === undefined) return;
+    if (uniqueId === undefined) return;
     putFeedback({
-      dataId,
-      microAppId: microAppId!,
+      dataId: uniqueId,
+      microAppUuid: microAppUuid!,
       like,
       reason,
     });

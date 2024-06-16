@@ -10,10 +10,10 @@ import { PRE_EDU_PATH } from '@plugin/constants';
 import { getPageInstance } from '@plugin/utils';
 import { getObserveDetailApi, removeObserveApi } from '@plugin/education/request';
 import { EEduBehaviorTag } from '@plugin/education/interface';
-import { EMicroAppIdITest, EMicroAppIdProd } from '@plugin/request/chat/type';
+import { EMicroAppUuid } from '@plugin/request/chat/type';
 import { interruptSessionApi } from '@plugin/request';
 import { getToken } from '@plugin/utils/token';
-import { getBaseUrl, isProdEnv } from '@plugin/utils/https';
+import { getBaseUrl } from '@plugin/utils/https';
 import type { IGetAnswerResultParams } from '@plugin/stores/ChatWrapperContext';
 import useStreamToArray from '@plugin/components/ChatWrapper/hooks/useStreamToArray';
 
@@ -54,6 +54,7 @@ export interface IUserParams {
       sub: string[];
     }[];
   };
+  hideBtn?: boolean | string;
 }
 
 const Observationdetail = () => {
@@ -215,22 +216,17 @@ const Observationdetail = () => {
 
   const abortChatRequest = () => {
     chatRequestRef.current?.abort();
-    interruptSessionApi({ microAppId: EMicroAppIdITest.EDU_JOT_DOWN });
+    interruptSessionApi({ microAppUuid: EMicroAppUuid.EDU_JOT_DOWN });
   };
 
   const getAnswerResult = (params: IGetAnswerResultParams) => {
-    console.log(
-      '触发流式对话',
-      params,
-      isProdEnv() ? EMicroAppIdProd.EDU_OBSERVATION : EMicroAppIdITest.EDU_OBSERVATION,
-    );
     setAnalyzeStatus(EAnalyzeStatus.STAR_ANALYZE);
     chatRequestRef.current = Taro.request({
       method: 'POST',
       url: `${getBaseUrl()}/v1/microApp/chat`,
       enableChunked: true,
       responseType: 'text',
-      data: { microAppId: isProdEnv() ? EMicroAppIdProd.EDU_OBSERVATION : EMicroAppIdITest.EDU_OBSERVATION, ...params },
+      data: { microAppUuid: EMicroAppUuid.EDU_OBSERVATION, ...params },
       // timeout: CHAT_TIMEOUT,
       header: {
         Authorization: getToken(),
@@ -270,7 +266,7 @@ const Observationdetail = () => {
 
   return observeData ? (
     <View className="observation-detail">
-      <ObservationRecord detail={observeDataDetail} showBtn={false} analyzeStatus={analyzeStatus} />
+      <ObservationRecord detail={observeDataDetail} showBtn={false} analyzeStatus={analyzeStatus} showMore={false} />
       {analyzeStatus === EAnalyzeStatus.STAR_ANALYZE && (
         <View className="loading-error">
           <View className="text">分析建议加载中…</View>
@@ -313,14 +309,16 @@ const Observationdetail = () => {
             )}
           </View>
           <View className="operation">
-            <View className="operation-flex">
-              <View className="update left-btn" onClick={updateHandle}>
-                <View className="icon update-icon" />
+            {!router.params.hideBtn && (
+              <View className="operation-flex">
+                <View className="update left-btn" onClick={updateHandle}>
+                  <View className="icon update-icon" />
+                </View>
+                <View className="delete left-btn" onClick={() => setIsOpened(true)}>
+                  <View className="icon delete-icon" />
+                </View>
               </View>
-              <View className="delete left-btn" onClick={() => setIsOpened(true)}>
-                <View className="icon delete-icon" />
-              </View>
-            </View>
+            )}
 
             {/* <View className="refresh" onClick={refreshHandle}>
               <View className="icon refresh-icon" />

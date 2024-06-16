@@ -13,8 +13,8 @@ export default defineAppConfig({
     {
       root: "plugin/",
       pages: [
-        "pages/list/index",
-        "pages/chat/index",
+        "pages/list/list",
+        "pages/chat/chat",
         "pages/chat_extension/index",
 
         // @TODO: 行为观察抽离单独分包

@@ -26,6 +26,7 @@ const IntelligentInfoExtraction: React.FC<IIntelligentInfoExtractionProps> = ({ 
 
   const {
     globalAnswerStatus,
+    isGlobalLastAnswer,
     changeCurrentAnswerOperater,
     changeCurrentChatItemTag,
     putChat,
@@ -38,7 +39,7 @@ const IntelligentInfoExtraction: React.FC<IIntelligentInfoExtractionProps> = ({ 
     setTimeout(() => {
       setAnalysisContentVisible(true);
       setAnalysisLoading(false);
-    }, 2000);
+    }, 1000);
   };
   const supplementHandle = () => {
     if (globalAnswerStatus !== EAnswerStatus.UN_ANSWER) {
@@ -48,7 +49,7 @@ const IntelligentInfoExtraction: React.FC<IIntelligentInfoExtractionProps> = ({ 
     currentPage.setData({
       observationdetail: data,
     });
-    currentDataId.current = chatItem?.dataId;
+    currentDataId.current = chatItem?.uniqueId;
     Taro.navigateTo({ url: `${PRE_EDU_PATH}/information_supplement/index` });
   };
   useDidShow(() => {
@@ -72,16 +73,19 @@ const IntelligentInfoExtraction: React.FC<IIntelligentInfoExtractionProps> = ({ 
         );
         currentPage.setData({
           observationdetail: null,
+          from: null,
         });
       }
     }
   });
 
   useEffect(() => {
-    changeCurrentAnswerOperater?.({
-      hideReGenerator: !analysisContentVisible,
-    });
-  }, [analysisContentVisible]);
+    if (isGlobalLastAnswer) {
+      changeCurrentAnswerOperater?.({
+        hideReGenerator: !analysisContentVisible,
+      });
+    }
+  }, [analysisContentVisible, isGlobalLastAnswer]);
 
   useEffect(() => {
     changeCurrentPlayContent?.('诶哎智能提取信息如下');
@@ -108,7 +112,11 @@ const IntelligentInfoExtraction: React.FC<IIntelligentInfoExtractionProps> = ({ 
           智能分析
         </Button>
       )}
-      {analysisContentVisible && <RichText nodes={mdParser.render(`${data.content?.replace(/##/g, '####')}`)} />}
+      {analysisContentVisible && (
+        <View className="content">
+          <RichText nodes={mdParser.render(`${data.content?.replace(/##/g, '####')}`)} />
+        </View>
+      )}
     </View>
   );
 };

@@ -19,7 +19,7 @@ export enum EGuideType {
 interface IGuide {
   chatContent: string;
   type: EGuideType;
-  dataId: string;
+  uniqueId: string;
 }
 
 // const guideTitleMap = {
@@ -30,12 +30,12 @@ interface IGuide {
 //   [EGuideType.WATCH]: '这里是幼儿观察记录',
 // };
 
-const Guide: React.FC<IGuide> = ({ chatContent, type, dataId }) => {
-  const { microAppId } = useContext(ChatWrapperContext) || {};
+const Guide: React.FC<IGuide> = ({ chatContent, type, uniqueId }) => {
+  const { microAppUuid } = useContext(ChatWrapperContext) || {};
   const { isBeautySummaryScenes, isEduKnowledgeScenes, isEduPhotoScenes, isEduBehaviorScenes } =
-    useGetScenes(microAppId);
+    useGetScenes(microAppUuid);
   const guideInfo = useMemo(() => {
-    if (!microAppId) {
+    if (!microAppUuid) {
       return {};
     }
     if (isEduKnowledgeScenes || isEduPhotoScenes) {
@@ -56,7 +56,7 @@ const Guide: React.FC<IGuide> = ({ chatContent, type, dataId }) => {
       };
     }
     return {};
-  }, [isEduKnowledgeScenes, isBeautySummaryScenes, isEduPhotoScenes, isEduBehaviorScenes, microAppId]);
+  }, [isEduKnowledgeScenes, isBeautySummaryScenes, isEduPhotoScenes, isEduBehaviorScenes, microAppUuid]);
 
   const content = useMemo(() => {
     if (isBeautySummaryScenes) {
@@ -75,7 +75,7 @@ const Guide: React.FC<IGuide> = ({ chatContent, type, dataId }) => {
         {guideInfo.content && <View className="content">{guideInfo.content}</View>}
       </View>
       <View className="chat_list_chat_item_answer">
-        <Answer chatItem={{ chatContent: content, dataId, chatUser: EChatUser.Ai }} />
+        <Answer chatItem={{ chatContent: content, uniqueId, chatUser: EChatUser.Ai }} />
       </View>
     </View>
   );

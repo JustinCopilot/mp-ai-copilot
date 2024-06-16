@@ -13,8 +13,9 @@ interface IInputEnterProps {
 }
 
 const InputEnter: React.FC<IInputEnterProps> = ({ handleSend, externalQuestionStr, externalQuestionUUID }) => {
-  const { microAppId, changeOperateState, questionStrChange } = useContext(ChatWrapperContext) || {};
-  const { isBeautySummaryScenes } = useGetScenes(microAppId);
+  const { microAppUuid, changeOperateState, questionStrChange } = useContext(ChatWrapperContext) || {};
+  const { isBeautySummaryScenes } = useGetScenes(microAppUuid);
+  const [isNeedFocus, setIsNeedFocus] = useState(true);
 
   const inputRef = useRef(null);
   const [questionStr, setQuestionStr] = useState<string>(externalQuestionStr);
@@ -32,7 +33,13 @@ const InputEnter: React.FC<IInputEnterProps> = ({ handleSend, externalQuestionSt
   const handleSendMsg = () => {
     setQuestionStr('');
     handleSend(questionStr);
+    setIsNeedFocus(false);
   };
+
+  const handleFocus = () => {
+    changeOperateState?.(EOperateState.TEXT_ENTER);
+    setIsNeedFocus(true);
+  }
 
   useEffect(() => {
     if (externalQuestionStr) {
@@ -48,14 +55,14 @@ const InputEnter: React.FC<IInputEnterProps> = ({ handleSend, externalQuestionSt
       <View className="input-container">
         <Input
           placeholder="在这里输入你的问题~"
-          focus={true}
+          focus={isNeedFocus}
           maxlength={500}
           type="text"
-          onFocus={() => changeOperateState?.(EOperateState.TEXT_ENTER)}
+          onFocus={handleFocus}
           value={questionStr}
           onInput={handleInput}
         />
-        {microAppId && isBeautySummaryScenes && (
+        {microAppUuid && isBeautySummaryScenes && (
           <View className="upload_img">
             <ImageUpload />
           </View>

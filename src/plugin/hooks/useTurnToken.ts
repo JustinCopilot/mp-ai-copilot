@@ -15,6 +15,7 @@ export interface IRouterParams extends Omit<ITurnTokenReq, 'type'> {
 
 const useTurnToken = () => {
   const router = useRouter<Partial<IRouterParams>>();
+  console.log('%c [ useTurnToken router ]-18', 'font-size:13px; background:pink; color:#bf2c9f;', router);
   const { data: aiToken, run: turnTokenFn } = useRequest(turnTokenApi, { manual: true });
   useEffect(() => {
     const { token, type, mobile, env, mockFlag } = router.params;

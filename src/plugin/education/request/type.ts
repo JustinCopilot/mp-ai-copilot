@@ -17,6 +17,14 @@ export interface IGetRandomNotesListReq {
   studentId?: string;
   source?: number;
 }
+
+export interface IgetNaviListReq {
+  dateTime?: string;
+  studentId?: string;
+  source?: number;
+  pageIndex?: number;
+  pageRows?: number;
+}
 export interface IGetMonthDataListReq {
   month?: string;
   source?: number;
@@ -90,6 +98,7 @@ interface ISectorType {
 interface ISector {
   sectorId: number;
   sectorName: string;
+  module?: string
 }
 
 export interface IObserveDetailRes {

@@ -10,7 +10,7 @@ import './index.less';
 
 const ImageUpload = () => {
   const {
-    microAppId,
+    microAppUuid,
     answerStatus,
     changeAnswerStatus,
     chatList = [],
@@ -18,7 +18,7 @@ const ImageUpload = () => {
     imageUploader,
   } = useContext(ChatWrapperContext) || {};
 
-  const { isBeautySummaryScenes } = useGetScenes(microAppId);
+  const { isBeautySummaryScenes } = useGetScenes(microAppUuid);
 
   const handleChooseImg = () => {
     console.log('%c [ answerStatus ]', 'font-size:13px; background:pink; color:#bf2c9f;', answerStatus);
@@ -43,12 +43,12 @@ const ImageUpload = () => {
           chatContent: '',
           imageList: JSON.stringify(imageUploader.uploadedUrls),
           tempImageList: JSON.stringify(imageUploader.images),
-          dataId: generateUUID(),
+          uniqueId: generateUUID(),
         },
         {
           chatUser: EChatUser.Ai,
           chatContent: '是否还需要补充回访信息？',
-          dataId: generateUUID(),
+          uniqueId: generateUUID(),
           bubbleList: `[
             {"bubbleInfo": "需要", "key": "${EBubbleKey.NEED}"},
             {"bubbleInfo": "直接生成回访总结", "key": "${EBubbleKey.UNNEED}"}

@@ -7,10 +7,10 @@ import type { ChildProps } from '@edu/components/archive';
 import { getResource } from '@edu/request';
 import classNames from 'classnames';
 import Taro from '@tarojs/taro';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
 
 import './index.less';
 import ModuleTitle from '../module-title';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
 
 /** 观察幼儿 */
 export const ObserveChild: FC<ChildProps> = ({ state, dispatch, type = 'notable' }) => {
@@ -159,6 +159,7 @@ export const ObserveChild: FC<ChildProps> = ({ state, dispatch, type = 'notable'
               <AtButton
                 type="primary"
                 onClick={() => {
+                  if (!selectStudents?.length) return Taro.showToast({ title: '请至少选择一个幼儿', icon: 'none' });
                   const newList = selectStudents?.map((i) => ({
                     ...i,
                     ...(selectStudent?.find(({ studentId }) => i?.studentId === studentId) || {}),

@@ -55,7 +55,13 @@ export const ObserveSituation: FC<ChildProps> = ({ dispatch, state, type = 'nota
       data?.map(({ typeId, typeName, situationList }) => ({
         label: typeName,
         value: typeId,
-        children: situationList?.map(({ situationId: value, situationName: label }) => ({ value, label })) || [],
+        children:
+          situationList?.map(({ situationId: value, situationName: label, userId, situationId }) => ({
+            value,
+            label,
+            userId,
+            situationId,
+          })) || [],
       })) || [];
     dispatch('observeOptions', options);
   };
@@ -65,12 +71,16 @@ export const ObserveSituation: FC<ChildProps> = ({ dispatch, state, type = 'nota
       <SelectLabelPicker
         title="选择观察情境"
         maxLength={type === 'notable' ? 3 : undefined}
+        isObserveSituation
         options={options}
         value={observeSituation}
-        onChange={(val, rows) => {
+        onChange={(val, rows, isClick) => {
           setValue(rows);
           dispatch('observeSituation', val);
           dispatch('situationList', rows);
+          if (isClick) {
+            getOptions();
+          }
         }}
       >
         <CommonValue value={valueStr || '请选择'} holder={!valueStr} />

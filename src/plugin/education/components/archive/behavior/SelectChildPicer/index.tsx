@@ -3,12 +3,11 @@ import React, { FC } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import 'taro-ui/dist/style/components/float-layout.scss';
 import { AtFloatLayout } from 'taro-ui';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
 import { Props } from './config';
 import './index.less';
 
 export * from './config';
-const femaleDefaultAvatar = 'https://senior.cos.clife.cn/xiao-c/avatar-default.png';
-const maleDefaultAvatar = 'https://senior.cos.clife.cn/xiao-c/default-head.png';
 const closeImg = 'https://senior.cos.clife.cn/xiao-c/icon-close-tag-selecter.png';
 
 export const SelectChildPicer: FC<Props> = ({ studentList, onChange, children, show = false, onClose }) => {
@@ -36,7 +35,7 @@ export const SelectChildPicer: FC<Props> = ({ studentList, onChange, children, s
                 >
                   <View className="student-base-info">
                     <Image
-                      src={avatar || (sex === 1 ? maleDefaultAvatar : femaleDefaultAvatar)}
+                      src={avatar || (sex === 1 ? DEFAULT_AVATAR_BOY : DEFAULT_AVATAR_GIRL)}
                       className="student-item-avatar"
                     />
                     <Text className="student-item-name">{studentName}</Text>

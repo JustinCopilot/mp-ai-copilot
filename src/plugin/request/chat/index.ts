@@ -1,7 +1,6 @@
 import http from '@plugin/utils/https';
 import type {
-  EMicroAppIdITest,
-  EMicroAppIdProd,
+  EMicroAppUuid,
   IEduPhotoModelRes,
   IGetHistoryChatReq,
   IGetMicroListRes,
@@ -15,7 +14,7 @@ import type {
 } from './type';
 
 export const getMicroListApi = () => {
-  return http<IGetMicroListRes[]>({ method: 'GET', url: '/v1/microApp/list' });
+  return http<IGetMicroListRes[]>({ method: 'GET', url: '/v1/microApp/applet/list' });
 };
 
 export const getHistoryChatApi = (params: IGetHistoryChatReq) => {
@@ -54,7 +53,7 @@ export const createShareIdApi = (params) => {
 export const shareIdApi = (params: { id: string }) => {
   return http<string[]>({ method: 'GET', url: `/v1/photos/shareId/${params.id}` });
 };
-export const interruptSessionApi = (params: { microAppId: EMicroAppIdITest | EMicroAppIdProd }) => {
+export const interruptSessionApi = (params: { microAppUuid: EMicroAppUuid }) => {
   return http({ method: 'POST', url: `/v1/microApp/interruptSession`, params, showLoading: false });
 };
 export const setTagApi = (params: ISetTagReq) => {

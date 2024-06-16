@@ -21,7 +21,7 @@ const usePictureFrame = ({ setChatList, copyChatList, setAnswerStatus, getAnswer
         {
           chatContent: '',
           chatUser: EChatUser.Ai,
-          dataId: generateUUID(),
+          uniqueId: generateUUID(),
           pictureFrameList: [],
           hideAnswerOperater: true,
         },

@@ -5,7 +5,7 @@ import type { IExtraConfig, IGetAnswerResultParams } from '@plugin/stores/ChatWr
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
 import { useRequest } from 'ahooks';
 import { EChatMode, EChatUser, EBubbleKey, EBizType } from '@plugin/request/chat/type';
-import type { IChatListRes } from '@plugin/request/chat/type';
+import type { EMicroAppUuid, IChatListRes } from '@plugin/request/chat/type';
 import { getHistoryChatApi, getPresetApi, interruptSessionApi, putResetApi } from '@plugin/request';
 import { getBaseUrl } from '@plugin/utils/https';
 import { getToken } from '@plugin/utils/token';
@@ -24,13 +24,13 @@ import './index.less';
 import usePictureFrame from './hooks/usePictureFrame';
 
 interface IChatWrapper {
-  microAppId: number;
+  microAppUuid: EMicroAppUuid;
   params?: any;
 }
 export interface IChatItem extends Partial<IChatListRes> {
   chatUser: EChatUser;
   chatContent: string;
-  dataId: string;
+  uniqueId: string;
   pictureFrameList?: IPictureFrameList[];
   beautyUserInfo?: Record<string, any>;
   tempImageList?: string; // 本地临时图片地址渲染
@@ -46,7 +46,7 @@ export interface IChatItem extends Partial<IChatListRes> {
   origin?: Partial<IChatListRes>;
   checkDataReferenceSign?: string; // 幼教行为观察「查看数据引用详情跳转url标识」
   eduBehaviorUserParams?: Record<string, any>; // 幼教行为观察「查看数据引用详情传参」
-  banEdit: boolean; // 是否禁用点击内容进行重新编辑
+  banEdit?: boolean; // 是否禁用点击内容进行重新编辑
 }
 export enum EAnswerStatus {
   UN_ANSWER,
@@ -62,8 +62,9 @@ export enum ECheckStatus {
 
 export const UN_SUPPORT_TEXT = '小程序端暂不支持此类消息，请在app中查看';
 const guideDataId = generateUUID(); // 引导会话id，用于初始化会话时播放语音
+let hasPlayedVoice = false; // 在小程序生命周期内默认只播放一次
 
-const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
+const ChatWrapper: React.FC<IChatWrapper> = ({ microAppUuid, params }) => {
   const [questionUUID, setQuestionUUID] = useState('');
   const [questionStr, setQuestionStr] = useState('');
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -84,8 +85,8 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
     total: 0,
   });
 
-  const { isBeautySummaryScenes, isEduPhotoScenes } = useGetScenes(microAppId);
-  const { getDefaultChatInfo, transformStream } = useTransformStream(microAppId);
+  const { isBeautySummaryScenes, isEduPhotoScenes, isEduBehaviorScenes } = useGetScenes(microAppUuid);
+  const { getDefaultChatInfo, transformStream } = useTransformStream(microAppUuid);
   const {
     summaryStatus,
     setSummaryStatus,
@@ -102,7 +103,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
   // 当前播放的音频会话
   const [currentPlayingId, setCurrentPlayingId] = useState<string>();
   const [currentPlayingContent, setCurrentPlayingContent] = useState<string>();
-  const { data: presetData } = useRequest(() => getPresetApi({ microAppId }));
+  const { data: presetData } = useRequest(() => getPresetApi({ microAppUuid }));
   const { data: historyData, run: getHistoryChat } = useRequest(getHistoryChatApi, { manual: true });
 
   // 悬浮工具条
@@ -115,10 +116,6 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
 
   const concatHistoryChat = () => {
     if (historyData) {
-      if (isFirstLoad) {
-        changeIfPlayVoice(false);
-        setIsFirstLoad(false);
-      }
       const { records, total, pageNum, pageSize } = historyData;
       const recordsData = records
         .map((item) => {
@@ -141,13 +138,25 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
           return item;
         })
         .filter((item) => {
-          return !(item.chatUser === EChatUser.User && item.bubbleList);
+          return !(
+            item.chatUser === EChatUser.User &&
+            (item.bubbleList || item.bizType === EBizType.SYSTEM_TXT || (isEduBehaviorScenes && !item.chatContent))
+          );
         });
       setHistoryChatData([...historyChatData, ...recordsData]);
       setChatList([...recordsData.reverse(), ...chatList]);
-      if (isFirstLoad && records?.length === 0) {
-        changeCurrentPlayingId(guideDataId); // 初始化播放引导
-        setChatList([]);
+      if (isFirstLoad) {
+        setIsFirstLoad(false);
+        // 如果有历史会话，默认不需要播放语音；
+        // 如果没有历史会话，则默认播放一次；
+        if (records?.length === 0) {
+          changeCurrentPlayingId(guideDataId); // 初始化播放引导
+          setChatList([]);
+          changeIfPlayVoice(!hasPlayedVoice);
+          hasPlayedVoice = true;
+        } else {
+          changeIfPlayVoice(false);
+        }
       }
       setPagenation({
         total,
@@ -184,7 +193,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
       url: `${getBaseUrl()}/v1/microApp/chat`,
       enableChunked: true,
       responseType: 'text',
-      data: { microAppId, ...params },
+      data: { microAppUuid, ...params },
       // timeout: CHAT_TIMEOUT,
       header: {
         Authorization: getToken(),
@@ -192,9 +201,16 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
       complete() {
         setAnswerStatus(EAnswerStatus.UN_ANSWER);
         // dataId是语音播报的唯一标识，所以在设置初始化会话记录的时候需要赋值
-        changeCurrentPlayingId(aiDataId.current);
+        // if (ifPlayVoice) {
+        // ifCanPlayVoice 为true，即允许播放时，才去设置播放id，不然会造成第一次点击的时候没反应
+        setTimeout(() => {
+          // 等有内容时播报
+          changeCurrentPlayingId(aiDataId.current);
+        }, 100);
+        // }
       },
       fail(error) {
+        console.log('chat error', error);
         let chatContent = '请求异常';
         if (error.errMsg === 'request:fail abort') {
           chatContent = '你已停止生成回答';
@@ -217,7 +233,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
   };
   const abortChatRequest = () => {
     chatRequestRef.current?.abort();
-    interruptSessionApi({ microAppId });
+    interruptSessionApi({ microAppUuid });
     const lastChat = copyChatList.current[copyChatList.current.length - 1];
     if (lastChat.chatUser === EChatUser.Ai) {
       lastChat.chatContent = lastChat.chatContent || '你已停止生成回答';
@@ -243,14 +259,14 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
     }
     if (isBeautySummaryScenes) {
       getHistoryChat({
-        microAppId,
+        microAppUuid,
         ...{
           pageNumb: 9999,
           pageSize: 20,
         },
       });
     } else {
-      getHistoryChat({ microAppId, ...pagenation });
+      getHistoryChat({ microAppUuid, ...pagenation });
     }
   };
   const handleSend = (questionStr: string, mode: EChatMode) => {
@@ -273,7 +289,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
       setIsGetAllChat(true);
     } else {
       if (!isEduPhotoScenes) {
-        putResetApi({ microAppId });
+        putResetApi({ microAppUuid });
       }
       setCheckStatus(ECheckStatus.NEW_SESSION);
     }
@@ -290,7 +306,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
 
   const contextValue = useMemo(() => {
     return {
-      microAppId,
+      microAppUuid,
       questionStr,
       answerStatus,
       isVoice,
@@ -340,7 +356,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
       setChatSuspendedToolShare,
     };
   }, [
-    microAppId,
+    microAppUuid,
     questionStr,
     answerStatus,
     isVoice,
@@ -364,7 +380,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
   useEffect(() => {
     copyChatList.current = chatList;
     // @TODO: 美业暂时关闭重新编辑
-    // if (![EMicroAppIdProd.BEAUTY_SUMMARY, EMicroAppIdITest.BEAUTY_SUMMARY].includes(microAppId)) {
+    // if (![EMicroAppIdProd.BEAUTY_SUMMARY, EMicroAppIdITest.BEAUTY_SUMMARY].includes(microAppUuid)) {
     const lastChat = chatList[chatList.length - 1];
     if (isEduPhotoScenes) {
       setCheckStatus(lastChat?.componentInParam ? ECheckStatus.CHECKING : ECheckStatus.UN_CHECK);
@@ -381,7 +397,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
         setChatList([initItem]);
         setIsGetAllChat(true);
         setSummaryStatus(ESummaryStatus.SELECT_RETURN_VISIT_WAY);
-        changeCurrentPlayingId?.(initItem.dataId);
+        changeCurrentPlayingId?.(initItem.uniqueId);
       }, 500); // 延迟500ms，先渲染一次录音图标，防止变形
     }
     queryChatList();
@@ -392,7 +408,7 @@ const ChatWrapper: React.FC<IChatWrapper> = ({ microAppId, params }) => {
       // 如果是从更多操作页面back回来的，需要重新请求
       setIsFirstLoad(true);
       getHistoryChat({
-        microAppId,
+        microAppUuid,
         pageNumb: 1,
         pageSize: 20,
       });

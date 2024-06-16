@@ -43,7 +43,7 @@ const Operater: React.FC<IOperaterProps> = ({
   onOpenNewSession,
 }) => {
   const {
-    microAppId,
+    microAppUuid,
     operateState = EOperateState.VOICE_REST,
     changeOperateState,
     answerStatus,
@@ -58,7 +58,7 @@ const Operater: React.FC<IOperaterProps> = ({
     questionStrChange,
   } = useContext(ChatWrapperContext) || {};
 
-  const { isBeautySummaryScenes, isEduPhotoScenes, isEduBehaviorScenes } = useGetScenes(microAppId);
+  const { isBeautySummaryScenes, isEduPhotoScenes, isEduBehaviorScenes } = useGetScenes(microAppUuid);
 
   const handleSend = (content: string) => {
     if (answerStatus !== EAnswerStatus.UN_ANSWER) {
@@ -105,7 +105,7 @@ const Operater: React.FC<IOperaterProps> = ({
   }, [changeVoiceStatus, operateState]);
 
   useEffect(() => {
-    if (!microAppId) return;
+    if (!microAppUuid) return;
     if (isBeautySummaryScenes) {
       summaryStatus &&
         changeOperateState?.(
@@ -116,7 +116,7 @@ const Operater: React.FC<IOperaterProps> = ({
     } else {
       changeOperateState?.(checkStatus === ECheckStatus.CHECKING ? EOperateState.CHECK : EOperateState.VOICE_REST);
     }
-  }, [checkStatus, microAppId, summaryStatus, isBeautySummaryScenes]);
+  }, [checkStatus, microAppUuid, summaryStatus, isBeautySummaryScenes]);
 
   return (
     <View className="operator_container" style={operarotContainerStyle}>

@@ -6,10 +6,9 @@ import { Props } from '@edu/components/archive';
 import Taro, { useRouter } from '@tarojs/taro';
 import { saveOrUpdate, getObserveSetting, microAppTag } from '@edu/request';
 import './index.less';
-import { mockData, mockData2 } from './index.config';
 
 interface State extends Omit<Props, 'submit'> {
-  dataId: string;
+  uniqueId: string;
   observeId?: string;
   correlateId?: string;
 }
@@ -24,7 +23,7 @@ const initialState: State = {
   observeAnalysis: '',
   observeFollow: '',
   observePhoto: {},
-  dataId: '',
+  uniqueId: '',
   observeId: '',
   correlateId: '',
 };
@@ -32,10 +31,10 @@ export const ArchiveObservation = () => {
   const router = useRouter();
   const [state, dispatch] = useReducer<State>(initialState);
 
-  const { dataId, observeId, correlateId } = state || {};
+  const { uniqueId, observeId, correlateId } = state || {};
   useEffect(() => {
     const prePage = getPageInstance(-1);
-    const dataId = prePage?.data?.dataId;
+    const uniqueId = prePage?.data?.uniqueId;
 
     const observationdetail = prePage?.data?.observationdetail;
     // console.log('🚀🚀🚀🚀🚀🚀  observationdetail:', JSON.stringify(observationdetail));
@@ -102,7 +101,7 @@ export const ArchiveObservation = () => {
       sectorValue,
       observeContent: input,
       observePhoto: photo,
-      dataId,
+      uniqueId,
       correlateId,
       observeId,
     });
@@ -156,17 +155,17 @@ export const ArchiveObservation = () => {
       setTimeout(() => {
         Taro.navigateBack({ delta: 1 });
         const prePage = getPageInstance(-1);
-        const dataId = prePage?.data?.dataId;
+        const uniqueId = prePage?.data?.uniqueId;
         prePage?.setData({
           from: 'archive_observation',
-          dataId,
+          uniqueId,
         });
       }, 1000);
     };
     saveOrUpdate(opts).then((res) => {
       if (res) {
         if (!observeId) {
-          microAppTag({ dataId, tag: '已归档' }).then(onBack);
+          microAppTag({ dataId: uniqueId, tag: '已归档' }).then(onBack);
         } else onBack(2);
       }
     });

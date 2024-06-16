@@ -8,11 +8,11 @@ import dayjs from 'dayjs';
 import { getPageInstance } from '@plugin/utils';
 import { EPageFrom } from '@plugin/types';
 import { PRE_EDU_PATH } from '@plugin/constants';
-import { getBaseUrl, isProdEnv } from '@plugin/utils/https';
+import { getBaseUrl } from '@plugin/utils/https';
 import { getToken } from '@plugin/utils/token';
 import type { IGetAnswerResultParams } from '@plugin/stores/ChatWrapperContext';
 import { getHistoryChatApi, interruptSessionApi } from '@plugin/request';
-import { EMicroAppIdITest, EMicroAppIdProd } from '@plugin/request/chat/type';
+import { EMicroAppUuid } from '@plugin/request/chat/type';
 import { EEduBehaviorTag } from '@plugin/education/interface';
 import AlertModal from '@plugin/components/AlertModal';
 import useStreamToArray from '@plugin/components/ChatWrapper/hooks/useStreamToArray';
@@ -52,6 +52,7 @@ export interface IUserParams {
       sub: string[];
     }[];
   };
+  hideBtn?: boolean | string;
 }
 
 export const JotDownDetail = () => {
@@ -68,10 +69,11 @@ export const JotDownDetail = () => {
 
   const closeModal = () => setIsOpened(false);
   const linkHandle = () => {
-    const studentIds = observeData?.studentList.map((item) => item.studentId).join(',');
-    Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_reference_detail/index?studentIds=${studentIds}` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_reference_detail/index?observeId=${router.params.observeId}` });
   };
   const updateHandle = () => {
+    const prePage = getPageInstance(-1);
+    prePage.setData({ isRefresh: true });
     const currentPage = getPageInstance();
     currentPage.setData({
       observationdetail: userParams,
@@ -106,7 +108,7 @@ export const JotDownDetail = () => {
       url: `${getBaseUrl()}/v1/microApp/chat`,
       enableChunked: true,
       responseType: 'text',
-      data: { microAppId: isProdEnv() ? EMicroAppIdProd.EDU_JOT_DOWN : EMicroAppIdITest.EDU_JOT_DOWN, ...params },
+      data: { microAppUuid: EMicroAppUuid.EDU_JOT_DOWN, ...params },
       // timeout: CHAT_TIMEOUT,
       header: {
         Authorization: getToken(),
@@ -139,7 +141,7 @@ export const JotDownDetail = () => {
   };
   const abortChatRequest = () => {
     chatRequestRef.current?.abort();
-    interruptSessionApi({ microAppId: EMicroAppIdITest.EDU_JOT_DOWN });
+    interruptSessionApi({ microAppUuid: EMicroAppUuid.EDU_JOT_DOWN });
   };
 
   useDidShow(() => {
@@ -203,10 +205,8 @@ export const JotDownDetail = () => {
     }
   }, [router]);
   useEffect(() => {
-    const prePage = getPageInstance(-1);
-    prePage.setData({ isRefresh: true });
     getHistoryChatApi({
-      microAppId: EMicroAppIdITest.EDU_JOT_DOWN,
+      microAppUuid: EMicroAppUuid.EDU_JOT_DOWN,
       ...{
         pageNumb: 9999,
         pageSize: 10,
@@ -261,12 +261,16 @@ export const JotDownDetail = () => {
             )}
           </View>
           <View className="operation">
-            <View className="update" onClick={updateHandle}>
-              <View className="icon update-icon" />
-            </View>
-            <View className="delete" onClick={() => setIsOpened(true)}>
-              <View className="icon delete-icon" />
-            </View>
+            {!router.params.hideBtn && (
+              <>
+                <View className="update" onClick={updateHandle}>
+                  <View className="icon update-icon" />
+                </View>
+                <View className="delete" onClick={() => setIsOpened(true)}>
+                  <View className="icon delete-icon" />
+                </View>
+              </>
+            )}
             <View className="refresh" onClick={() => refreshHandle(userParams!)}>
               <View className="icon refresh-icon" />
               重新生成

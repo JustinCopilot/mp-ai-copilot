@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
-import { PageContainer, View, RootPortal } from '@tarojs/components';
+import { AtFloatLayout } from 'taro-ui';
+import { View, RootPortal } from '@tarojs/components';
 import './index.less';
 import type { IObservationGradeInfo } from '../../request/type';
 
@@ -25,7 +26,7 @@ export const ChooseGradeModal: React.FC<IshowModalProps> = ({ show, handleClose,
   }, []);
   return (
     <RootPortal>
-      <PageContainer show={show} onClickOverlay={handleClose} zIndex={100} round={true}>
+      <AtFloatLayout isOpened={show} className="points-behavior-modal" onClose={handleClose}>
         <View className="grade-modal">
           <View className="grade-modal-list">
             {gradeList.map((item: IObservationGradeInfo) => {
@@ -41,7 +42,7 @@ export const ChooseGradeModal: React.FC<IshowModalProps> = ({ show, handleClose,
             取消
           </View>
         </View>
-      </PageContainer>
+      </AtFloatLayout>
     </RootPortal>
   );
 };

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-
-import { PageContainer, View, Text, Image, Button, RootPortal } from '@tarojs/components';
+import { AtFloatLayout } from 'taro-ui';
+import { View, Text, Image, Button, RootPortal } from '@tarojs/components';
 import './index.less';
 
 import type { IObservationSituationInfo, SectorContent } from '../../request/type';
@@ -50,7 +50,7 @@ const ChooseObservationSituationModal: React.FC<IshowModalProps> = ({
 
   return (
     <RootPortal>
-      <PageContainer show={show} onClickOverlay={handleClose} zIndex={100} round={true}>
+      <AtFloatLayout isOpened={show} className="points-behavior-modal" onClose={handleClose}>
         <View className="observation-situation-modal">
           <View className="modal-title">
             <Text>选择观察情境</Text>
@@ -120,7 +120,7 @@ const ChooseObservationSituationModal: React.FC<IshowModalProps> = ({
             )}
           </View>
         </View>
-      </PageContainer>
+      </AtFloatLayout>
     </RootPortal>
   );
 };

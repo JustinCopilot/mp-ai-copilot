@@ -13,9 +13,13 @@ const ReGenerator: React.FC = () => {
     const params: {
       query: string;
       mode: EChatMode;
-      repeat: boolean;
+      // repeat: boolean;
       userParam?: Record<string, any>;
-    } = { query: questionStr || '', mode: EChatMode.REFRESH, repeat: true };
+    } = {
+      query: questionStr || '',
+      mode: EChatMode.REFRESH,
+      // repeat: true
+    };
     if (questionStr === '生成回访总结') {
       params.userParam = summaryUserParam;
     }

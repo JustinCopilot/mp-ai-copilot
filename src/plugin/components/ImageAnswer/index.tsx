@@ -37,13 +37,13 @@ const ImageAnswer = ({ bubbleList, imageList, chatContent, pictureFrameList }: I
       case EBubbleKey.POSTER:
         Taro.setStorageSync(EStorage.EDU_CHOOSE_IMG_LIST, imageList);
         Taro.navigateTo({
-          url: `${PRE_PLUGIN_PATH}/img_list/index?renderType=${EType.SELECT}`,
+          url: `${PRE_PLUGIN_PATH}/img_list/img_list?renderType=${EType.SELECT}`,
         });
         break;
       case EBubbleKey.SHARE: {
         const shareId = await createShareIdApi(imageList);
         Taro.navigateTo({
-          url: `${PRE_PLUGIN_PATH}/share_img/index?shareId=${shareId}`,
+          url: `${PRE_PLUGIN_PATH}/share_img/share_img?shareId=${shareId}`,
         });
         break;
       }

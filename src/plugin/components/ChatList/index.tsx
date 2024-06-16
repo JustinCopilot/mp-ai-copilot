@@ -1,14 +1,13 @@
 import React, { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { ScrollView, View } from '@tarojs/components';
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
-import { EChatUser, EMicroAppIdITest, EMicroAppIdProd, type IGetPresetRes } from '@plugin/request/chat/type';
+import { EChatUser, EMicroAppUuid, type IGetPresetRes } from '@plugin/request/chat/type';
 import { ESummaryStatus } from '@plugin/components/ChatWrapper/hooks/useBeautySummary';
 import useGetScenes from '@plugin/hooks/useGetScenes';
 import { TOP_BAR_HEIGHT, PRE_EDU_PATH } from '@plugin/constants';
 import { useThrottleFn } from 'ahooks';
 import type { SelectorQuery } from '@tarojs/taro';
 import Taro, { useReady } from '@tarojs/taro';
-import { getPageInstance } from '@plugin/utils';
 import './index.less';
 import Asker from '../Asker';
 import Answer from '../Answer';
@@ -28,19 +27,16 @@ interface IChatListProps {
 }
 
 const guideMap = {
-  [EMicroAppIdITest.EDU_KNOWLEDGE]: EGuideType.BASE,
-  [EMicroAppIdProd.EDU_KNOWLEDGE]: EGuideType.BASE,
-  [EMicroAppIdITest.EDU_PHOTO]: EGuideType.EDU_PHOTO,
-  [EMicroAppIdProd.EDU_PHOTO]: EGuideType.EDU_PHOTO,
-  [EMicroAppIdITest.EDU_BEHAVIOR]: EGuideType.EDU_BEHAVIOR,
-  [EMicroAppIdProd.EDU_BEHAVIOR]: EGuideType.EDU_BEHAVIOR,
+  [EMicroAppUuid.EDU_KNOWLEDGE]: EGuideType.BASE,
+  [EMicroAppUuid.EDU_PHOTO]: EGuideType.EDU_PHOTO,
+  [EMicroAppUuid.EDU_BEHAVIOR]: EGuideType.EDU_BEHAVIOR,
 };
 
 const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNewSession }) => {
   const scrollViewRef = useRef<SelectorQuery>();
   const isScrollToTop = useRef(false);
   const {
-    microAppId,
+    microAppUuid,
     isFirstLoad,
     isVoice,
     answerStatus,
@@ -57,7 +53,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
   const [scrollTop, setScrollTop] = useState(9999999999);
   const isAnswer = answerStatus !== EAnswerStatus.UN_ANSWER;
   const { chatTimeList } = useGetChatTimeList();
-  const { isBeautySummaryScenes, isEduBehaviorScenes } = useGetScenes(microAppId);
+  const { isBeautySummaryScenes, isEduBehaviorScenes } = useGetScenes(microAppUuid);
   const chatData = useMemo(() => {
     if (chatTimeList && chatList) {
       return chatList.map((item) => {
@@ -74,7 +70,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
     if ((checkStatus === ECheckStatus.NEW_SESSION || summaryStatus === ESummaryStatus.NEW_SESSION) && chatData) {
       const lastChat = chatData[chatData.length - 1];
       setNewSessionTag({
-        [lastChat.dataId]: true,
+        [lastChat.uniqueId]: true,
       });
     }
   }, [chatData, checkStatus, summaryStatus]);
@@ -82,7 +78,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
   // 聊天列表右下角是否显示「重新开始会话」
   const isShowRestartSession = useMemo(() => {
     return (
-      microAppId &&
+      microAppUuid &&
       operateState &&
       !isAnswer &&
       isBeautySummaryScenes &&
@@ -94,7 +90,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
         EOperateState.SELECT_COMMAND,
       ].includes(operateState)
     );
-  }, [microAppId, operateState, isAnswer, isBeautySummaryScenes]);
+  }, [microAppUuid, operateState, isAnswer, isBeautySummaryScenes]);
 
   const presetQuestionList = useMemo(() => {
     const lastChat = chatList?.[chatList.length - 1];
@@ -119,13 +115,12 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
   // 幼教行为观察查看数据引用详情
   const handleGoCheckDataWith = (chatItem: IChatItem) => {
     const { checkDataReferenceSign, eduBehaviorUserParams } = chatItem;
+    console.log('=eduBehaviorUserParams', eduBehaviorUserParams);
     const studentIds = eduBehaviorUserParams?.student?.map((item) => item.studentId).join(',');
     if (checkDataReferenceSign === 'jot_down_reference_detail') {
-      const currentPage = getPageInstance();
-      currentPage.setData({
-        observationdetail: eduBehaviorUserParams,
+      Taro.navigateTo({
+        url: `${PRE_EDU_PATH}/jot_down_reference_detail/index?observeId=${eduBehaviorUserParams?.observeId}`,
       });
-      Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_reference_detail/index?studentIds=${studentIds}` });
     } else if (checkDataReferenceSign === 'data_reference_detail') {
       const { detailData = [] } = JSON.parse(chatItem?.agentResponse || '{}')?.data || {};
       const top3IdList: number[] = [];
@@ -139,7 +134,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
         url: `${PRE_EDU_PATH}/data_reference_detail/index?source=1&studentIds=${studentIds}&observeDate=${eduBehaviorUserParams?.extractInfo?.date}&correlateId=${correlateId}`,
       });
     }
-  }
+  };
 
   useReady(() => {
     scrollViewRef.current = Taro.createSelectorQuery()
@@ -183,7 +178,7 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
           id="chat_list_scroll_view"
           className="chat_list_scroll_view"
           scrollY
-          scrollWithAnimation
+          scrollWithAnimation={false}
           scrollTop={scrollTop}
           upperThreshold={100}
           enhanced
@@ -192,19 +187,19 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
         >
           {isGetAllChat && (
             <Guide
-              type={guideMap[microAppId!] || EGuideType.BASE}
+              type={guideMap[microAppUuid!] || EGuideType.BASE}
               chatContent={presetData?.describe || ''}
-              dataId={guideDataId}
+              uniqueId={guideDataId}
             />
           )}
           {chatData?.map((chatItem, index) => {
             return (
               <View
-                key={chatItem.dataId + chatItem.chatUser}
+                key={chatItem.uniqueId + chatItem.chatUser}
                 className={`chat_list_chat_item ${index === chatData.length - 1 ? 'last' : ''}`}
               >
                 {chatItem.chatTimeLine && <View className="chat_list_chat_item_time">{chatItem.chatTimeLine}</View>}
-                {chatItem.chatUser === EChatUser.User && chatItem.chatContent && (
+                {chatItem.chatUser === EChatUser.User && (
                   <View className="chat_list_chat_item_asker">
                     <Asker chatItem={chatItem} />
                   </View>
@@ -219,14 +214,19 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
                     <ImageDisplay imageList={chatItem.tempImageList} />
                   </View>
                 )}
-                {chatItem.dataId && newSessionTag?.[chatItem.dataId] && (
+                {chatItem.uniqueId && newSessionTag?.[chatItem.uniqueId] && (
                   <View className="new_session">已开启新会话</View>
                 )}
-                {chatItem.checkDataReferenceSign && <View className={`check-data-reference ${index === chatData.length - 1 ? 'last' : ''}`} onClick={() => handleGoCheckDataWith(chatItem)}>
-                  <View className='left-icon' />
-                  <View>查看数据引用详情</View>
-                  <View className='right-icon' />
-                </View>}
+                {chatItem.checkDataReferenceSign && !isAnswer && (
+                  <View
+                    className={`check-data-reference ${index === chatData.length - 1 ? 'last' : ''}`}
+                    onClick={() => handleGoCheckDataWith(chatItem)}
+                  >
+                    <View className="left-icon" />
+                    <View>查看数据引用详情</View>
+                    <View className="right-icon" />
+                  </View>
+                )}
               </View>
             );
           })}
@@ -237,13 +237,14 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
           {isShowRestartSession && <RestartSession onOpenNewSession={onOpenNewSession} />}
           <View
             style={{
-              height: `${(operateState && [EOperateState.TEXT_REST, EOperateState.TEXT_ENTER].includes(operateState)
-                ? 90
-                : 125) +
+              height: `${
+                (operateState && [EOperateState.TEXT_REST, EOperateState.TEXT_ENTER].includes(operateState)
+                  ? 90
+                  : 125) +
                 (isShowRestartSession ? 40 : 0) +
                 (isEduBehaviorScenes ? 50 : 0) +
                 (TOP_BAR_HEIGHT! + 40)
-                }px`,
+              }px`,
             }}
           />
         </ScrollView>

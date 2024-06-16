@@ -21,13 +21,13 @@ const InfoExtractionBlock: React.FC<IIntelligentInfoExtractionProps> = ({
   const [showMoreVisible, setShowMoreVisible] = useState(false);
 
   const handleShowMore = () => {
-    setShowMoreVisible(!showMore);
+    setShowMoreVisible(!showMoreVisible);
   };
 
   const handlePreviewImage = (currentUrl: string) => {
     Taro.previewImage({
       current: currentUrl,
-      urls: generateImages(extractInfo?.photo).map((i) => i.url),
+      urls: images.map((i) => i.url),
     });
   };
 
@@ -46,17 +46,6 @@ const InfoExtractionBlock: React.FC<IIntelligentInfoExtractionProps> = ({
       ?.join('、');
   };
 
-  const generateImages = (photo?: IAgentResponseData['extractInfo']['photo']) => {
-    if (!photo) return [];
-    const { aiImgUrl = '', imgUrl = '' } = photo;
-    const fixUrls = (urls, type) =>
-      (urls || '')
-        .split(',')
-        .filter(i => i && i !== 'null')
-        .map((url) => ({ url, type }));
-    const imagesArr = [...fixUrls(aiImgUrl, 'ai'), ...fixUrls(imgUrl, '')];
-    return showMoreVisible ? imagesArr.slice(0, 3) : imagesArr;
-  };
   const previewVideoHandle = () => {
     Taro.previewMedia({
       sources: videoUrlList.map((item) => {
@@ -79,14 +68,33 @@ const InfoExtractionBlock: React.FC<IIntelligentInfoExtractionProps> = ({
       : [];
   }, [extractInfo?.photo]);
 
+  // 所有图片数据
+  const images = useMemo(() => {
+    if (!extractInfo?.photo) return [];
+    const fixUrls = (urls, type) => {
+      return (urls || '')
+        .split(',')
+        .filter(i => i && i !== 'null')
+        .map((url) => ({ url, type }));
+    }
+    const { aiImgUrl = '', imgUrl = '' } = extractInfo.photo;
+    const imagesArr = [...fixUrls(aiImgUrl, 'ai'), ...fixUrls(imgUrl, '')];
+    return imagesArr;
+  }, [extractInfo?.photo]);
+
+  // 渲染的图片列表
+  const renderImages = useMemo(() => {
+    return showMoreVisible && images.length > 3 ? images.slice(0, 3) : images;
+  }, [images, showMoreVisible])
+
+  // 组件传参指定了需要展示更多按钮，并且图片超过3张时才展示「展开查看更多图片」按钮
   useEffect(() => {
-    // 组件传参指定了需要展示更多按钮，并且图片超过3张时才展示「展开查看更多图片」按钮
-    if (showMore && extractInfo?.photo?.aiImgUrl && extractInfo?.photo?.aiImgUrl.split(',')?.length > 3) {
-      setShowMoreVisible(showMore);
+    if (showMore && images.length > 3) {
+      setShowMoreVisible(true);
     } else {
       setShowMoreVisible(false);
     }
-  }, [showMore, extractInfo]);
+  }, [showMore, images]);
 
   return (
     <View className="info-extraction-block">
@@ -124,7 +132,7 @@ const InfoExtractionBlock: React.FC<IIntelligentInfoExtractionProps> = ({
 
       <View className="observer-image-container">
         {(extractInfo?.photo?.aiImgUrl || extractInfo?.photo?.imgUrl) &&
-          generateImages(extractInfo?.photo).map((i) => (
+          renderImages.map((i) => (
             <View key={i.url} className="image-item">
               <Image
                 mode="aspectFill"

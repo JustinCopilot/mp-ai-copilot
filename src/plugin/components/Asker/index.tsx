@@ -13,23 +13,29 @@ interface IAskerProps {
 }
 
 const Asker: React.FC<IAskerProps> = ({ chatItem }) => {
-  const { microAppId, chatList, answerStatus, isVoice, checkStatus, questionStrChange, changeOperateState } =
+  const { microAppUuid, chatList, answerStatus, isVoice, checkStatus, questionStrChange, changeOperateState } =
     useContext(ChatWrapperContext) || {};
 
   const { isBeautySummaryScenes, isEduKnowledgeScenes, isEduPhotoScenes, isEduBehaviorScenes } =
-    useGetScenes(microAppId);
+    useGetScenes(microAppUuid);
   const isLastAsker = useMemo(() => {
     // 过滤出最后一个可编辑的 asker
     if (chatList) {
       const lastAsker = chatList.findLast(
         (item, index) => item.chatUser === EChatUser.User && !chatItem.imageList && index >= chatList.length - 1 - 1,
       );
-      return lastAsker?.dataId === chatItem.dataId;
+      return lastAsker?.uniqueId === chatItem.uniqueId;
     }
     return false;
   }, [chatList, chatItem]);
   const disablePress = useMemo(() => {
-    return answerStatus !== EAnswerStatus.UN_ANSWER || isVoice || !isLastAsker || checkStatus === ECheckStatus.CHECKING || chatItem.banEdit;
+    return (
+      answerStatus !== EAnswerStatus.UN_ANSWER ||
+      isVoice ||
+      !isLastAsker ||
+      checkStatus === ECheckStatus.CHECKING ||
+      chatItem.banEdit
+    );
   }, [answerStatus, isVoice, isLastAsker, checkStatus]);
 
   function longPressHandler() {

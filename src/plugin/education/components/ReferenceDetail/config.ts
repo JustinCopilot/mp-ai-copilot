@@ -37,8 +37,15 @@ export interface StudentInfo {
     observeTime?: string | null;
   }>;
 }
+export enum EModules {
+  BODY = 'body',
+  INTEREST = 'interest',
+  WATER = 'water',
+  SLEEP = 'sleep',
+}
 export interface Props {
   data: Array<StudentInfo>;
   type?: DataType;
   observationdetail?: IUserParams
+  modules?: EModules[]
 }

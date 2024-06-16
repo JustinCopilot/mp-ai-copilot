@@ -27,8 +27,8 @@ const useBeautySummary = () => {
     // 需要生成唯一的dataId，所以不能定义在全局
     // dataId是语音播报的唯一标识，在流式接口结束后会进行标记，所以需要暴露出去
     aiDataId.current = generateUUID();
-    const NEW_ANSWER_INFO = { chatContent: '', chatUser: EChatUser.Ai, dataId: aiDataId.current };
-    const NEW_ASKER_INFO = { chatContent: params.query || '', chatUser: EChatUser.User, dataId: generateUUID() };
+    const NEW_ANSWER_INFO = { chatContent: '', chatUser: EChatUser.Ai, uniqueId: aiDataId.current };
+    const NEW_ASKER_INFO = { chatContent: params.query || '', chatUser: EChatUser.User, uniqueId: generateUUID() };
     const editChatInfo = [...chatList.slice(0, -2), NEW_ASKER_INFO, NEW_ANSWER_INFO];
     const refreshChatInfo = [...chatList.slice(0, -1), NEW_ANSWER_INFO];
     const normalChatInfo = [...chatList, NEW_ASKER_INFO, NEW_ANSWER_INFO];
@@ -67,7 +67,7 @@ const useBeautySummary = () => {
       componentInParam = (data?.componentInParam && JSON.stringify(data.componentInParam)) || '[]';
       if (finish) {
         origin = data;
-        aiDataId.current = data?.dataId;
+        aiDataId.current = data?.uniqueId;
       }
     });
     const answerText = answerTextList.join('');
@@ -108,7 +108,7 @@ const useBeautySummary = () => {
         {
           ...origin,
           ...lastChat,
-          dataId: origin?.dataId || lastChat.dataId,
+          uniqueId: origin?.uniqueId || lastChat.uniqueId,
           origin,
         },
       ]);

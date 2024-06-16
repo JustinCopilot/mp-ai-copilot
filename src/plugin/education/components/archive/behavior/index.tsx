@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, FC, useMemo, useState } from 'react';
+import React, { useEffect, FC, useMemo } from 'react';
 import { Button, Image, Text, View } from '@tarojs/components';
 import {
   AtButton,
@@ -11,6 +11,7 @@ import {
   AtModalAction,
 } from 'taro-ui';
 import pick from 'lodash/pick';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
 import './index.less';
 import { ChildProps } from '../config';
 import ModuleTitle from '../module-title';
@@ -22,41 +23,16 @@ const maleDefaultAvatar = 'https://senior.cos.clife.cn/xiao-c/default-head.png';
 const medalImg = 'https://senior.cos.clife.cn/xiao-c/xiaoc-3.png';
 export const Behavior: FC<ChildProps> = (props) => {
   const { state, dispatch } = props;
-  const { selectStudent, childModal2, delEditModal, delModal, currentBehavior, currentStudent, currentSector } =
-    state || {};
-  // const list = [
-  //   {
-  //     birthday: '2014-01-01',
-  //     studentId: 17871017738241,
-  //     observeId: 858,
-  //     sex: 1,
-  //     studentName: '李昕怡',
-  //     className: '洋浦KB1',
-  //     age: '10岁5个月',
-  //     data: [
-  //       {
-  //         typeId: 1,
-  //         typeName: '健康与体能',
-  //         data: [
-  //           {
-  //             value: 1,
-  //             label: '身心状况',
-  //             data: [
-  //               { value: 1, label: '具有健康的体态', level: 1 },
-  //               { value: 2, label: '情绪安定愉快', level: 2 },
-  //             ],
-  //           },
-  //           { value: 2, label: '动作发展', data: [{ value: 4, label: '对运动感兴趣', level: 4 }] },
-  //         ],
-  //       },
-  //       {
-  //         typeId: 2,
-  //         typeName: '习惯与自理',
-  //         data: [{ value: 4, label: '学习习惯', data: [{ value: 11, label: '爱提问题', level: 5 }] }],
-  //       },
-  //     ],
-  //   },
-  // ];
+  const {
+    selectStudent,
+    childModal2,
+    delEditModal,
+    delModal,
+    cBehavior,
+    currentStudent,
+    cSector,
+    clear = true,
+  } = state || {};
   const newList = useMemo(() => {
     return selectStudent?.map((i) => ({
       ...i,
@@ -105,7 +81,7 @@ export const Behavior: FC<ChildProps> = (props) => {
       const behaviorName = [...new Set(names || [])]?.join('/');
       return {
         studentId,
-        behaviorId,
+        // behaviorId,
         behaviorName,
       };
     });
@@ -127,15 +103,17 @@ export const Behavior: FC<ChildProps> = (props) => {
   const onDelete = () => {
     const newList = selectStudent?.map((item) => {
       const { studentId, data } = item || {};
+      console.log('🚀🚀🚀🚀🚀🚀  data:', data);
+      console.log('cSector-----', cSector);
       if (studentId !== currentStudent?.studentId) return item;
       return {
         ...item,
         data: data?.map((subI) => {
-          if (subI?.typeName !== currentSector?.label) return subI;
+          if (subI?.typeName !== cSector?.label) return subI;
           return {
             ...subI,
             data: subI?.data?.map((subII) => {
-              const list = subII?.data?.filter((subIII) => subIII?.label !== currentBehavior?.title);
+              const list = subII?.data?.filter((subIII) => subIII?.label !== cBehavior?.title);
               return {
                 ...subII,
                 data: list,
@@ -161,7 +139,18 @@ export const Behavior: FC<ChildProps> = (props) => {
       <ModuleTitle
         title="表现行为"
         right={
-          <AtButton className="add-btn" onClick={() => dispatch('childModal2', true)}>
+          <AtButton
+            className="add-btn"
+            onClick={() =>
+              dispatch('state', {
+                childModal2: true,
+                currentStudent: undefined,
+                cSector: undefined,
+                cBehavior: undefined,
+                cBehaviorLevel: undefined,
+              })
+            }
+          >
             <View className="at-icon at-icon-add" />
             添加
           </AtButton>
@@ -175,7 +164,7 @@ export const Behavior: FC<ChildProps> = (props) => {
             return (
               <View className="behavior-student-item" key={studentId}>
                 <View className="student-base-info">
-                  <Image src={avatar || (sex === 1 ? maleDefaultAvatar : femaleDefaultAvatar)} />
+                  <Image src={avatar || (sex === 1 ? DEFAULT_AVATAR_BOY : DEFAULT_AVATAR_GIRL)} />
                   <Text className="info-name">{studentName || '--'}</Text>
                 </View>
                 <View className="behavior-info-list">
@@ -218,19 +207,33 @@ export const Behavior: FC<ChildProps> = (props) => {
       <SelectChildPicer
         studentList={selectStudent}
         show={childModal2}
-        onClose={() => dispatch('childModal2', false)}
+        onClose={() =>
+          dispatch('state', {
+            childModal2: false,
+            currentStudent: undefined,
+            currentSector: undefined,
+            currentBehavior: undefined,
+            currentBehaviorLevel: undefined,
+            cSector: undefined,
+            cBehavior: undefined,
+            cBehaviorLevel: undefined,
+          })
+        }
         onChange={(_, row) => dispatch('state', { currentStudent: row, behaviorModal: true })}
       />
       <SelectBehavior {...props} />
       <AtActionSheet
         isOpened={delEditModal}
-        onClose={() => dispatch('state', { delEditModal: false })}
+        onClose={() => {
+          dispatch('state', {
+            delEditModal: false,
+          });
+        }}
         cancelText="取消"
       >
         <AtActionSheetItem
           onClick={() => {
             dispatch('state', {
-              delEditModal: false,
               behaviorModal: true,
               isEdit: true,
             });
@@ -238,7 +241,7 @@ export const Behavior: FC<ChildProps> = (props) => {
         >
           编辑
         </AtActionSheetItem>
-        <AtActionSheetItem onClick={() => dispatch('state', { delEditModal: false, delModal: true })}>
+        <AtActionSheetItem onClick={() => dispatch('state', { delEditModal: false, clear: false, delModal: true })}>
           删除
         </AtActionSheetItem>
       </AtActionSheet>
@@ -247,7 +250,7 @@ export const Behavior: FC<ChildProps> = (props) => {
         <AtModalHeader>删除</AtModalHeader>
         <AtModalContent>确定删除该表现行为评价吗？</AtModalContent>
         <AtModalAction>
-          <Button>取消</Button> <Button onClick={onDelete}>确定</Button>
+          <Button onClick={() => dispatch('delModal', false)}>取消</Button> <Button onClick={onDelete}>确定</Button>
         </AtModalAction>
       </AtModal>
     </View>

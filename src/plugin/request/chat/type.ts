@@ -1,35 +1,46 @@
-export enum EMicroAppIdProd {
-  EDU_KNOWLEDGE = 125, // 知识问答
-  EDU_PHOTO = 147, // 智能相册
-  BEAUTY_SUMMARY = 142, // 美业回访总结
-  EDU_BEHAVIOR = 202, // 随手记
-  EDU_OBSERVATION = 273,
-  EDU_JOT_DOWN = 2711, // 随手记编辑
-}
-export enum EMicroAppIdITest {
-  EDU_KNOWLEDGE = 33,
-  EDU_PHOTO = 132,
-  BEAUTY_SUMMARY = 127,
-  EDU_BEHAVIOR = 201,
-  EDU_JOT_DOWN = 271,
-  EDU_OBSERVATION = 272,
+// export enum EMicroAppIdProd {
+//   EDU_KNOWLEDGE = 125, // 知识问答
+//   EDU_PHOTO = 147, // 智能相册
+//   BEAUTY_SUMMARY = 142, // 美业回访总结
+//   EDU_BEHAVIOR = 202, // 随手记
+//   EDU_OBSERVATION = 273,
+//   EDU_JOT_DOWN = 2711, // 随手记编辑
+// }
+// export enum EMicroAppIdITest {
+//   EDU_KNOWLEDGE = 33,
+//   EDU_PHOTO = 132,
+//   BEAUTY_SUMMARY = 127,
+//   EDU_BEHAVIOR = 201,
+//   EDU_JOT_DOWN = 271,
+//   EDU_OBSERVATION = 272,
+// }
+
+export enum EMicroAppUuid {
+  EDU_KNOWLEDGE = '1483c593-f9e4-44a6-8f4d-79c8739b4394',
+  EDU_PHOTO = 'f792c2cb-d14e-4eaa-aa82-4e09cb518844',
+  BEAUTY_SUMMARY = '1e6662e2-8174-4bea-9991-0c4dce21f643',
+  EDU_BEHAVIOR = 'd895dd7c-c736-4a15-a33f-5e8f0c2df180',
+  EDU_JOT_DOWN = 'c334ffe6-1ced-47fb-ba93-63248a003ce8',
+  EDU_OBSERVATION = 'd966b5d2-3cc8-4545-9be8-01416f77414c',
 }
 export interface IGetMicroListRes {
   microAppName: string;
-  microAppId: EMicroAppIdProd | EMicroAppIdITest;
+  // microAppId: EMicroAppIdProd | EMicroAppIdITest;
+  microAppId: number;
+  microAppUuid: EMicroAppUuid;
   describe: string;
   icon: string;
   time: number;
 }
 export interface IGetPresetReq {
-  microAppId: number;
+  microAppUuid: EMicroAppUuid;
 }
 export interface IGetPresetRes {
   describe: string;
   query: string[];
 }
 export interface IGetHistoryChatReq extends RequestPageType {
-  microAppId: number;
+  microAppUuid: EMicroAppUuid;
 }
 export enum EChatUser {
   User = 1,
@@ -56,8 +67,9 @@ export interface IChatComponentInParam {
 }
 
 export enum EBizType {
-  VIDEO = 'video',
-  POSTER = 'poster',
+  VIDEO = 'video', // 相册视频
+  POSTER = 'poster', // 相册海报
+  SYSTEM_TXT = 'system_txt', // 开启新会话
 }
 export interface IChatListRes {
   agentRole: null;
@@ -82,6 +94,7 @@ export interface IChatListRes {
   like: null | ELikeType;
   reason: null;
   dataId: string;
+  uniqueId: string;
   labels: null;
   labelList: string;
   componentUserInPutParam: null;
@@ -138,7 +151,7 @@ export interface IPutChatReq {
   param?: Common;
   inParamFlag?: boolean;
   repeat?: boolean;
-  microAppId: number;
+  microAppUuid: EMicroAppUuid;
   mode?: EChatMode;
   query?: string;
   imageList?: string;
@@ -171,6 +184,7 @@ export interface IChatData {
   callStartTime: number;
   content: string;
   dataId: string;
+  uniqueId: string;
   first: boolean;
   bubbleList: string;
   componentInParam: IChatComponentInParam[];
@@ -201,11 +215,11 @@ export enum ELikeType {
 export interface IPutFeedbackReq {
   dataId: string;
   like: ELikeType | null;
-  microAppId: number;
+  microAppUuid: EMicroAppUuid;
   reason?: string;
 }
 export interface IPutResetReq {
-  microAppId: number;
+  microAppUuid: EMicroAppUuid;
 }
 
 export interface IEduPhotoModelRes {

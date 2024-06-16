@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Taro from '@tarojs/taro';
 import type { SelectorQuery } from '@tarojs/taro';
-import { getPageInstance } from '@plugin/utils';
 import { View, ScrollView } from '@tarojs/components';
 import { useThrottleFn } from 'ahooks';
 import dayjs from 'dayjs';
 import { AtCalendar, AtNavBar } from 'taro-ui';
 import { TOP_BAR_HEIGHT } from '@plugin/constants';
+import { EStorage } from '@plugin/types';
 import NoData from '@plugin/components/NoData';
 import { getRandomNotesListApi, getMonthDataListApi } from '@edu/request';
 import { IGetRandomNotesListReq, IGetRandomNotesListRes, IGetMonthDataListReq } from '@edu/request/type';
@@ -45,31 +45,46 @@ const MyArchive = () => {
   const [renderDataList, setRenderDataList] = useState<IGetRandomNotesListRes[]>([]);
   // 筛选的幼儿数据
   const [selectedChildData, setSelectedChildData] = useState<number[]>([]);
+  // 列表标题项是否滑动到顶部
+  const [titleTop, setTitleTop] = useState<boolean[]>([true]);
+  // 列表滚动距离
+  const [scrollTop, setScrollTop] = useState(0);
+
   const scrollViewRef = useRef<SelectorQuery>();
+  const titleBlockRef = useRef<SelectorQuery>();
+  const titleTopRef = useRef<number[]>([]);
 
   /**
    * 请求数据列表
    * @param params 请求参数
    * @param nextPage 是否下一页
-   * @param setRenderList 是否直接设置renderList
    */
-  const getList = async (params?: IGetRandomNotesListReq, nextPage?: boolean, setRenderList?: boolean) => {
+  const getList = async (params?: IGetRandomNotesListReq, nextPage?: boolean) => {
     const res = await getRandomNotesListApi({
       source: currentNav,
       studentId: selectedChildData.join(),
       ...params,
     })
     if (res?.length > 0) {
-      if (setRenderList) {
-        setRenderDataList(res.slice(0, 1));
-      } else if (nextPage) {
+      if (nextPage) {
         setDataList([...dataList, ...res]);
       } else {
         setDataList(res);
       }
     } else {
       setIsGetAllData(true);
+      Taro.showToast({
+        title: '暂无更多数据',
+        icon: 'none',
+      });
+      if (!nextPage) {
+        setDataList([]);
+      }
     }
+    // 请求到数据时先保存每个日期的titleBlock的top值，确保日历中点击指定日期时能滚动到指定位置
+    titleBlockRef.current?.exec(res => {
+      titleTopRef.current = res[0].map(i => i.top);
+    })
   }
   const getMonthDataList = async (params?: IGetMonthDataListReq) => {
     const res = await getMonthDataListApi({
@@ -88,31 +103,41 @@ const MyArchive = () => {
     setTimeout(() => {
       setCalendarVisible(false);
     }, 200);
+
     const filterDataList = dataList.filter(i => i.observeDate === e.value)
     if (filterDataList.length > 0) {
       // 说明有在默认列表dataList中
-      setRenderDataList(filterDataList);
+      // setRenderDataList(filterDataList);
+      titleBlockRef.current?.exec(() => {
+        renderDataList.forEach((i, index) => {
+          if (e.value === i.observeDate) {
+            setScrollTop(titleTopRef.current?.[index] - TOP_BAR_HEIGHT! - 40);
+          }
+        });
+      })
     } else {
       // 说明只有标识，默认列表dataList中暂时没数据，需要请求接口获取
       getList({
         dateTime: e.value
-      }, false, true);
+      }, false);
+      handleScrollToTop();
     }
-    handleScrollToTop();
   };
 
   const handleMonthChange = async (e) => {
-    const res = await getMonthDataList({
-      month: e.slice(0, 7),
-    });
-    if (res.length > 0) {
-      setValidDates([...validDates, ...res.map(i => ({ value: i }))]);
+    if (selectedChildData.length === 0) {
+      // 切换月份，如果是有筛选幼儿，不需要获取打点数据，走触底刷新的逻辑去更新打点数据，否则打点数据中会存在不是该幼儿的有效打点
+      const res = await getMonthDataList({
+        month: e.slice(0, 7),
+      });
+      if (res.length > 0) {
+        setValidDates([...validDates, ...res.map(i => ({ value: i }))]);
+      }
     }
   };
 
   const handleClickNav = (value: ENavType) => {
     setCurrentNav(value);
-    setSelectedChildData([]);
   };
 
   const handleScrollToTop = () => {
@@ -121,6 +146,20 @@ const MyArchive = () => {
       scrollView?.scrollTo({ top: 0 });
     });
   }
+
+  const handleTriggerCalendar = (date: string) => {
+    if(!calendarVisible) {
+      setCurrentDate(date);
+    }
+    setCalendarVisible(!calendarVisible)
+  }
+
+  const { run: handleScroll } = useThrottleFn(() => {
+    titleBlockRef.current?.exec(res => {
+      // 设置标题们是否滑动到顶部
+      setTitleTop([true].concat(res[0]?.map(i => i.top - TOP_BAR_HEIGHT! < 65).slice(1)));
+    })
+  });
 
   const { run: handleScrollToLower } = useThrottleFn(() => {
     /**
@@ -135,22 +174,32 @@ const MyArchive = () => {
     }
   });
 
-  Taro.useDidShow(() => {
-    const currentPage = getPageInstance();
-    if (currentPage.data.isRefresh) {
-      currentPage.setData({ isRefresh: false });
-      getList();
-    }
-  });
 
   Taro.useReady(() => {
     Taro.eventCenter.on('selectedChildData', (selectedData: number[]) => {
+      setValidDates([]); // 如果有筛选幼儿，将有效日期置空，重新赋值该幼儿的有效日期
       setSelectedChildData(selectedData);
     });
+    // 详情编辑保存触发
+    Taro.eventCenter.on('detailEditSave', (source: ENavType) => {
+      setTimeout(() => {
+        // 加定时器是为了确保请求到更新后的内容
+        const data = Taro.getStorageSync(EStorage.EDU_SELECTED_CHILD_DATA);
+        getList({ source, studentId: data || '' });
+        if(data) {
+          Taro.removeStorageSync(EStorage.EDU_SELECTED_CHILD_DATA);
+        }
+      }, 1000);
+    });
+
     scrollViewRef.current = Taro.createSelectorQuery()
       .in(Taro.getCurrentInstance().page!)
       .select('#my_archive_list_scroll_view')
       .node();
+    titleBlockRef.current = Taro.createSelectorQuery()
+      .in(Taro.getCurrentInstance().page!)
+      .selectAll('.title-block')
+      .boundingClientRect();
   });
 
   useEffect(() => {
@@ -164,6 +213,11 @@ const MyArchive = () => {
     setCurrentDate(dataList[0]?.observeDate);
     setValidDates([...validDates, ...dataList.map((i) => ({ value: i.observeDate }))]);
   }, [dataList]);
+
+  // tab更改时置空打点数据
+  useEffect(() => {
+    setValidDates([]);
+  }, [currentNav]);
 
   return (
     <View className="my-archive" style={{ paddingTop: TOP_BAR_HEIGHT }}>
@@ -197,31 +251,40 @@ const MyArchive = () => {
         scrollWithAnimation
         lowerThreshold={500}
         enhanced
+        scrollTop={scrollTop}
         showScrollbar={true}
+        onScroll={handleScroll}
         onScrollToLower={handleScrollToLower}
       >
         {renderDataList?.map((dateItem, dateIndex) => (
           <View className="item-by-date" key={dateItem.observeDate}>
             <TitleBlock
+              ref={titleBlockRef}
               date={dateItem.observeDate}
-              isLatest={dateIndex === 0}
-              onTriggerCalendar={() => setCalendarVisible(!calendarVisible)}
+              isLatest={titleTop[dateIndex]}
+              onTriggerCalendar={(date: string) => handleTriggerCalendar(date)}
               selectedChildData={selectedChildData}
             />
             <View className="container" onClick={() => setCalendarVisible(false)}>
               {dateItem.observeList?.map((timeItem, timeIndex) => (
                 <ContentBlock
-                  isLatest={dateIndex === 0 && timeIndex === 0}
                   currentNav={currentNav}
                   key={timeItem.observeId}
                   showTimeLine={timeIndex !== dateItem.observeList?.length - 1}
                   contentItem={timeItem}
+                  selectedChildData={selectedChildData.join()}
                 />
               ))}
             </View>
           </View>
         ))}
-        {dataList?.length === 0 && <NoData />}
+        {dataList?.length === 0 && <View>
+          <TitleBlock
+            onlyShowFilterChild
+            selectedChildData={selectedChildData}
+          />
+          <NoData />
+        </View>}
       </ScrollView>
     </View>
   );

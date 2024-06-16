@@ -5,15 +5,8 @@ import { View } from '@tarojs/components';
 // import { getEcharts } from '@plugin/index';
 import * as echarts from '@utils/echarts';
 import dayjs from 'dayjs';
+import { IEchartsData } from './InterestEcharts';
 
-export interface IEchartsData {
-  timeLength: number;
-  week: string;
-  locationName: string;
-  dataTime: string;
-  sleepDuration: number;
-  waterAmount: number;
-}
 export interface ISleepEchartsProps {
   data: IEchartsData[];
 }

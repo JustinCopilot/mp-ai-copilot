@@ -17,11 +17,11 @@ interface IVoiceEnterProps {
 }
 
 const VoiceEnter: React.FC<IVoiceEnterProps> = ({ handleSend }) => {
-  const { operateState, microAppId, changeOperateState, answerStatus, imageUploader, abortChatRequest } =
+  const { operateState, microAppUuid, changeOperateState, answerStatus, imageUploader, abortChatRequest } =
     useContext(ChatWrapperContext) || {};
   const globalContext = useContext(GlobalContext);
 
-  const { isBeautySummaryScenes } = useGetScenes(microAppId);
+  const { isBeautySummaryScenes } = useGetScenes(microAppUuid);
 
   const handleStartVoicing = () => {
     if (answerStatus !== EAnswerStatus.UN_ANSWER) {
@@ -44,7 +44,7 @@ const VoiceEnter: React.FC<IVoiceEnterProps> = ({ handleSend }) => {
 
   return (
     <View className="voice-enter">
-      {operateState === EOperateState.VOICE_REST && microAppId && !imageUploader?.isUploading && (
+      {operateState === EOperateState.VOICE_REST && microAppUuid && !imageUploader?.isUploading && (
         <View className="upload_img_btn">{isBeautySummaryScenes && <ImageUpload />}</View>
       )}
 

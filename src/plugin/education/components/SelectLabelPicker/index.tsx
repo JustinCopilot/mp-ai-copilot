@@ -1,11 +1,11 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect, FC, useState } from 'react';
+import React, { useEffect, FC, useState, useRef } from 'react';
 import { View, Text, Image, Button } from '@tarojs/components';
 import { useReducer } from '@plugin/education/utils';
 import classNames from 'classnames';
 import cloneDeep from 'lodash/cloneDeep';
 import Taro from '@tarojs/taro';
 import 'taro-ui/dist/style/components/float-layout.scss';
+import { removeSituationApi } from '@plugin/education/request';
 import { AtFloatLayout } from 'taro-ui';
 import { State, Props, Children, Option } from './config';
 import './index.less';
@@ -21,6 +21,7 @@ const initialState: State = {
 export const SelectLabelPicker: FC<Props> = ({
   title,
   type = 'multiple',
+  isObserveSituation,
   maxLength = Number.MAX_SAFE_INTEGER,
   options,
   value = [],
@@ -32,6 +33,7 @@ export const SelectLabelPicker: FC<Props> = ({
   const [copySelectRows, setCopySelectRows] = useState<Children[]>([]);
   const [copySelectKeys, setCopySelectKeys] = useState<(number | string)[]>([]);
   const [copyOptions, setCopyOptions] = useState<Option[]>([]);
+  const situationIdsRef = useRef<number[]>([]);
 
   useEffect(() => {
     setCopyOptions(cloneDeep(options));
@@ -60,6 +62,7 @@ export const SelectLabelPicker: FC<Props> = ({
     }
   }, [value, options]);
   const handleClose = () => {
+    situationIdsRef.current = [];
     dispatch('show', false);
   };
   const cancelHandle = () => {
@@ -81,10 +84,6 @@ export const SelectLabelPicker: FC<Props> = ({
   }) => {
     const list = cloneDeep(selectRows || []);
     if (del) {
-      list.splice(
-        list.findIndex(({ value }) => value === val),
-        1,
-      );
       const lastOptionChidren = copyOptions[copyOptions.length - 1].children?.filter((item) => item.value !== val);
       setCopyOptions([
         ...copyOptions.slice(0, -1),
@@ -96,7 +95,7 @@ export const SelectLabelPicker: FC<Props> = ({
         list.findIndex(({ value }) => value === val),
         1,
       );
-    } else {
+    } else if (!del) {
       // 多选
       if (type === 'multiple') {
         if (list?.length >= maxLength) return Taro.showToast({ title: `最多选择${maxLength}个`, icon: 'none' });
@@ -133,19 +132,26 @@ export const SelectLabelPicker: FC<Props> = ({
                   <View className="situation-label-title">{label}</View>
                   <View className="situation-label-list">
                     {children?.map((subItem) => {
-                      const { value: val, label: lab, allowDel } = subItem || {};
+                      const { value: val, label: lab, allowDel, userId, situationId } = subItem || {};
                       const isChecked = selectKeys?.includes(val) || selectKeys?.includes(lab);
                       return (
                         <View
                           key={val}
-                          className={classNames('situation-label-name', { checked: isChecked, allowDel })}
+                          className={classNames('situation-label-name', {
+                            checked: isChecked,
+                            allowDel: isObserveSituation && (allowDel || userId !== 0),
+                          })}
                           onClick={() => toggleHandle({ val, label, subItem, isChecked })}
                         >
                           {lab}
                           <View
                             className="del"
-                            onClick={() => {
+                            onClick={(e) => {
                               // delHandle();
+                              e.stopPropagation();
+                              if (situationId) {
+                                situationIdsRef.current.push(situationId);
+                              }
                               toggleHandle({ val, label, subItem, isChecked, del: true });
                             }}
                           />
@@ -165,8 +171,11 @@ export const SelectLabelPicker: FC<Props> = ({
             <Button
               className="footer-btn confirm-btn"
               onClick={() => {
-                onChange?.(selectKeys, selectRows);
-                handleClose();
+                const promises = situationIdsRef.current.map((situationId) => removeSituationApi({ situationId }));
+                Promise.allSettled(promises).finally(() => {
+                  onChange?.(selectKeys, selectRows, true);
+                  handleClose();
+                });
               }}
             >
               确定

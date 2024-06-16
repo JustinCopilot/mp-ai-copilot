@@ -6,12 +6,13 @@ import { putResetApi } from '@plugin/request';
 import { PRE_EDU_PATH } from '@plugin/constants';
 import { AtModal, AtModalAction } from 'taro-ui';
 import { EPageFrom } from '@plugin/types';
+import { EMicroAppUuid } from '@plugin/request/chat/type';
 import { getPageInstance } from '@plugin/utils';
 import 'taro-ui/dist/style/components/modal.scss';
 import './index.less';
 
 export interface IChatExtensionRouter {
-  microAppId: number;
+  microAppUuid: EMicroAppUuid;
   microAppName: string;
   logo: string;
 }
@@ -36,10 +37,10 @@ const ChatExtension = () => {
     },
   ]);
 
-  const { isEduBehaviorScenes } = useGetScenes(Number(routerParams?.microAppId));
+  const { isEduBehaviorScenes } = useGetScenes(routerParams?.microAppUuid as EMicroAppUuid);
   const closeModal = () => setIsOpened(false);
   const clearHandle = () => {
-    putResetApi({ microAppId: Number(routerParams?.microAppId) })
+    putResetApi({ microAppUuid: routerParams?.microAppUuid as EMicroAppUuid })
       .then(() => {
         Taro.showToast({
           title: '已清除会话历史',

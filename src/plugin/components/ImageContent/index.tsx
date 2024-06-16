@@ -51,7 +51,7 @@ const ImageContent = ({ imageArray, renderType, maxShow = 9, wrapperClass = '', 
         if (restRenderNumber > 0 && index === imageList.length - 1) {
           Taro.setStorageSync(EStorage.EDU_CHOOSE_IMG_LIST, imageArray);
           Taro.navigateTo({
-            url: `${PRE_PLUGIN_PATH}/img_list/index?renderType=${EType.VIEW_ALL}`,
+            url: `${PRE_PLUGIN_PATH}/img_list/img_list?renderType=${EType.VIEW_ALL}`,
           });
           return;
         }

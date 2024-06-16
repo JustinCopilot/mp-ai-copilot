@@ -116,6 +116,7 @@ export const Archive: FC<Props> = (props) => {
           type="primary"
           onClick={() => {
             Taro.hideToast();
+            if (observeContent?.length <= 0) return Taro.showToast({ title: '观察内容不可为空', icon: 'none' });
             if (observeContent?.length > 5000) return Taro.showToast({ title: '观察内容不能超过5000字', icon: 'none' });
             if (observeAnalysis?.length > 5000)
               return Taro.showToast({ title: '观察分析不能超过5000字', icon: 'none' });
@@ -136,6 +137,7 @@ export const Archive: FC<Props> = (props) => {
                 'sectorList',
               ]),
             );
+            Taro.eventCenter.trigger('detailEditSave', type === 'observe' ? 1 : 2);
           }}
         >
           {isEdit ? '保存' : '确认归档'}

@@ -38,7 +38,7 @@ const VoicePlay: React.FC<IVoicePlayProps> = ({ chatItem }) => {
   } = useContext(ChatWrapperContext) || {};
   const [isPlaying, setIsPlaying] = useState(false);
 
-  const { dataId = '-1', chatContent, playContent, componentInParam } = chatItem;
+  const { uniqueId = '-1', chatContent, playContent, componentInParam } = chatItem;
 
   const textToSpeech = useMemo(() => {
     const playSegment = (segments, index = 0) => {
@@ -81,13 +81,13 @@ const VoicePlay: React.FC<IVoicePlayProps> = ({ chatItem }) => {
   // 切换播放和暂停状态（如果当前点击的回答项的id）
   const handleChangePlaying = () => {
     changeIfPlayVoice?.(true);
-    changeCurrentPlayingId?.(currentPlayingId && currentPlayingId === dataId ? undefined : dataId);
+    changeCurrentPlayingId?.(currentPlayingId && currentPlayingId === uniqueId ? undefined : uniqueId);
   };
 
   useEffect(() => {
     if (!ifPlayVoice) return; // 文字输入不需要播放语音
 
-    const doPlay = currentPlayingId === dataId && !isVoice;
+    const doPlay = currentPlayingId === uniqueId && !isVoice;
     if (doPlay) {
       setIsPlaying(true);
 

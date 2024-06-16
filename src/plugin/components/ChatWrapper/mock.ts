@@ -31,7 +31,7 @@ export function getChatList(len: number) {
         createDate: null,
         like: null,
         reason: null,
-        dataId: uuid,
+        uniqueId: uuid,
         labels: null,
         labelList: [
           '测试对话测试对话1',

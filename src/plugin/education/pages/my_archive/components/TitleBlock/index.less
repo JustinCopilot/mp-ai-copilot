@@ -3,22 +3,21 @@
 
 
 .title-block {
+  .mix-flexbox();
   height: 74px;
   background: @background-color;
-  .mix-flexbox();
   padding: 0 28px;
-
-  &.fixed {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 998;
-  }
+  position: sticky;
+  z-index: 998;
+  top: 0;
+  left: 0;
+  right: 0;
 
   .left {
     display: flex;
     align-items: center;
+    padding-right: 50px;
+    height: 100%;
 
     .date {
       font-weight: 500;

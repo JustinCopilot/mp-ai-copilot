@@ -13,6 +13,8 @@ export interface Option {
   children?: Children[];
   disabled?: boolean;
   allowDel?: boolean;
+  userId?: number;
+  situationId?: number;
 }
 export interface Props {
   /** 单选/多选 默认多选 */
@@ -25,6 +27,7 @@ export interface Props {
   options: Option[],
   /** 选中的值 */
   value?: Option['value'][],
-  onChange?: (value: Option['value'][], selectRows: Children[]) => void,
+  onChange?: (value: Option['value'][], selectRows: Children[], isClick?: boolean) => void,
   children?: React.ReactNode;
+  isObserveSituation?: boolean
 }

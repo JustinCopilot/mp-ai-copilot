@@ -7,8 +7,7 @@ import dayjs from 'dayjs';
 import { AtTabs } from 'taro-ui';
 import Taro from '@tarojs/taro';
 import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL, PRE_EDU_PATH } from '@plugin/constants';
-import { IUserParams } from '@plugin/education/pages/jot_down_detail';
-import { DataType } from './config';
+import { DataType, EModules } from './config';
 import type { State, Props, StudentInfo } from './config';
 import './index.less';
 import InterestEcharts from './InterestEcharts';
@@ -21,10 +20,15 @@ export * from './config';
 const initialState = {
   current: 0,
 };
-const CurrentContent: FC<{ data: StudentInfo; type: DataType; observationdetail?: IUserParams }> = ({
+
+export interface ICurrentContentProps extends Omit<Props, 'data'> {
+  data: StudentInfo;
+}
+const CurrentContent: FC<ICurrentContentProps> = ({
   data,
   type = DataType.notable,
   observationdetail,
+  modules = Object.values(EModules),
 }) => {
   const {
     avatar = '',
@@ -73,7 +77,7 @@ const CurrentContent: FC<{ data: StudentInfo; type: DataType; observationdetail?
           <View className="base-info">
             <View className="name">{studentName}</View>
             <View>
-              <Text className="age">{age || '--'}岁</Text>
+              <Text className="age">{age || '--'}</Text>
               <Text>{className || '--'}</Text>
             </View>
           </View>
@@ -104,45 +108,50 @@ const CurrentContent: FC<{ data: StudentInfo; type: DataType; observationdetail?
         </View>
       </View>
       {/* 在园数据-身高体重 */}
-      <View className="height-weight">
-        <View className="title-wrap">
-          <View className="module-title">在园数据-身高体重</View>
-          <View className="test-time">{testTime}</View>
-        </View>
+      {modules.includes(EModules.BODY) && (
+        <View className="height-weight">
+          <View className="title-wrap">
+            <View className="module-title">在园数据-身高体重</View>
+            <View className="test-time">{testTime}</View>
+          </View>
 
-        <View className="value-list">
-          {heightWeight?.map(({ label, value, unit, level }, key) => (
-            <View className="value-item" key={key}>
-              <View>
-                <View className="label">{label}</View>
-                <View className="value">
-                  {value}
-                  {!!unit && <Text className="unit">{unit}</Text>}
+          <View className="value-list">
+            {heightWeight?.map(({ label, value, unit, level }, key) => (
+              <View className="value-item" key={key}>
+                <View>
+                  <View className="label">{label}</View>
+                  <View className="value">
+                    {value || '--'}
+                    {!!unit && <Text className="unit">{unit}</Text>}
+                  </View>
+                  {level && <View className="level">等级：{level || '--'}</View>}
                 </View>
-                {level && <View className="level">等级：{level}</View>}
               </View>
-            </View>
-          ))}
+            ))}
+          </View>
         </View>
-      </View>
+      )}
 
       {[
         {
           title: '在园数据-幼儿兴趣',
           unit: '分钟',
           Chart: InterestEcharts,
+          show: modules.includes(EModules.INTEREST),
         },
         {
           title: '在园数据-幼儿饮水',
           unit: 'ml',
           Chart: WaterEcharts,
+          show: modules.includes(EModules.WATER),
         },
         {
           title: '在园数据-幼儿午睡',
           unit: '分钟',
           Chart: SleepEcharts,
+          show: modules.includes(EModules.SLEEP),
         },
-      ].map(({ title, unit, Chart }, key) => {
+      ].map(({ title, unit, Chart, show }, key) => {
         const data =
           dataList?.map(({ week, dataTime, ...rest }) => ({
             ...rest,
@@ -150,7 +159,7 @@ const CurrentContent: FC<{ data: StudentInfo; type: DataType; observationdetail?
             dataTime: dataTime?.slice(5),
           })) || [];
         return (
-          <View className="chart-wrap" key={key}>
+          <View className="chart-wrap" key={key} style={{ display: show ? 'block' : 'none' }}>
             <View className="chart-header">
               <View className="module-title">{title}</View>
               <View className="unit">({unit})</View>
@@ -162,7 +171,7 @@ const CurrentContent: FC<{ data: StudentInfo; type: DataType; observationdetail?
     </View>
   );
 };
-export const ReferenceDetail: FC<Props> = ({ data, type = DataType.notable, observationdetail }) => {
+export const ReferenceDetail: FC<Props> = ({ data, type = DataType.notable, observationdetail, modules }) => {
   const [state, dispatch] = useReducer<State>(initialState);
   const { current } = state || {};
   const tabs = useMemo(() => data?.map(({ studentName }) => ({ title: studentName?.slice(0, 4) || '--' })), [data]);
@@ -178,7 +187,7 @@ export const ReferenceDetail: FC<Props> = ({ data, type = DataType.notable, obse
           ))} */}
         </AtTabs>
       )}
-      <CurrentContent data={data[current]} type={type} observationdetail={observationdetail} />
+      <CurrentContent modules={modules} data={data[current]} type={type} observationdetail={observationdetail} />
     </View>
   );
 };

@@ -23,10 +23,10 @@ const useEducationPhoto = () => {
     const NEW_ANSWER_INFO = {
       chatContent: '',
       chatUser: EChatUser.Ai,
-      dataId: aiDataId.current,
+      uniqueId: aiDataId.current,
       hideReGenerator: true,
     };
-    const NEW_ASKER_INFO = { chatContent: params.query || '', chatUser: EChatUser.User, dataId: generateUUID() };
+    const NEW_ASKER_INFO = { chatContent: params.query || '', chatUser: EChatUser.User, uniqueId: generateUUID() };
     const editChatInfo = [...chatList.slice(0, -2), NEW_ASKER_INFO, NEW_ANSWER_INFO];
     const refreshChatInfo = [...chatList.slice(0, -1), NEW_ANSWER_INFO];
     const normalChatInfo = !needPutAnsker
@@ -65,7 +65,7 @@ const useEducationPhoto = () => {
       componentInParam = (data?.componentInParam && JSON.stringify(data.componentInParam)) || '';
       if (finish) {
         origin = data;
-        aiDataId.current = data?.dataId;
+        aiDataId.current = data?.uniqueId;
       }
     });
     const answerText = answerTextList.join('');
@@ -79,7 +79,7 @@ const useEducationPhoto = () => {
         {
           ...origin,
           ...lastChat,
-          dataId: origin?.dataId || lastChat.dataId,
+          uniqueId: origin?.uniqueId || lastChat.uniqueId,
           chatContent,
           labelList,
           imageList,

@@ -2,9 +2,9 @@ import React from 'react';
 import type { EAnswerStatus, ECheckStatus, IChatItem } from '@plugin/components/ChatWrapper';
 import type { EOperateState } from '@plugin/components/ChatOperator';
 import type { ESummaryStatus } from '@plugin/components/ChatWrapper/hooks/useBeautySummary';
-import type { EMicroAppIdITest, EMicroAppIdProd, IPutChatReq } from '@plugin/request/chat/type';
+import type { EMicroAppUuid, IPutChatReq } from '@plugin/request/chat/type';
 
-export interface IGetAnswerResultParams extends Omit<IPutChatReq, 'microAppId'> { }
+export interface IGetAnswerResultParams extends Omit<IPutChatReq, 'microAppUuid'> { }
 export interface IExtraConfig {
   isSave?: boolean;
   needPutAnsker?: boolean;
@@ -12,7 +12,8 @@ export interface IExtraConfig {
 }
 
 export interface IChatWrapperContext {
-  microAppId: EMicroAppIdProd | EMicroAppIdITest;
+  // microAppId: EMicroAppIdProd | EMicroAppIdITest;
+  microAppUuid: EMicroAppUuid,
   answerStatus: EAnswerStatus;
   isVoice: boolean;
   ifPlayVoice: boolean;

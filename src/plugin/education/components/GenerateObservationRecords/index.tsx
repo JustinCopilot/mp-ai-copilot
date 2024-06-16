@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useState, useRef, useEffect } from 'react';
-// import { useRequest } from 'ahooks';
 import dayjs from 'dayjs';
+import cloneDeep from 'lodash/cloneDeep';
 
 import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { PRE_EDU_PATH } from '@plugin/constants';
 import { ECheckStatus } from '@plugin/components/ChatWrapper';
-import { getResource, getRandomNotesListApi } from '@edu/request';
+import { getResource, getNaviListApi } from '@edu/request';
 
-import type { IObserveListRes, IStudentListRes, IGetRandomNotesListRes } from '../../request/type';
+import type { IObserveListRes, IStudentListRes } from '../../request/type';
 import ChooseModal from './components/ChooseModal';
 // import { UICardContext } from '../../../../plugin/stores/UICardContext';
 import './index.less';
@@ -20,16 +20,18 @@ export interface IGenerateObservationRecordsProps {}
 const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = () => {
   const { putChat, isGlobalLastAnswer, globalCheckStatus, changeCurrentPlayContent } = useContext(UICardContext) || {};
   const [visible, setVisible] = useState(false);
-  const [loadMore, setLoadMore] = useState(false);
   const [step, setStep] = useState<number>(0);
   const [filterChooseStuentNum, setFilterChooseStudentNum] = useState<number>(0); // 选中第一列的学生id
   const [filterChooseStuentList, setFilterChooseStudentList] = useState<any[]>([]);
   const [resourceList, setResourceList] = useState<any[]>([]); // 第一列要渲染的数据
 
+  const [pageIndex, setPageIndex] = useState<number | string>(0); // 列表页码
+  const [totalRows, setTotalRows] = useState<number>(0);
+
   // const { data: dataList = [], run } = useRequest(() => getRandomNotesListApi({}), { manual: true });
   // const { data: resourceList, run: getResourceList } = useRequest(() => getResource(), { manual: true });
   // console.log('resourceList', resourceList);
-  const [dataList, setDataList] = useState<IGetRandomNotesListRes[]>([]);
+  const [dataList, setDataList] = useState<any[]>([]);
   const [firstStepChooseData, setFirstStepChooseData] = useState<IObserveListRes[]>([]); // 第一步实际数据
   const [copyFirstStepChooseData, setCopyFirstStepChooseData] = useState<IObserveListRes[]>([]); // 第一步过程中的拷贝数据可能被用户操作变更
   const [secondStepChooseData, setSecondStepChooseData] = useState<IStudentListRes[]>([]);
@@ -37,8 +39,10 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
 
   const [thirdStepChooseData, setThirdStepChooseData] = useState<number[]>([]);
   const [copyThirdStepChooseData, setCopyThirdStepChooseData] = useState<number[]>([]);
+  const [getNum, setGetNum] = useState<number>(0);
+  const [scrollTop, setScrollTop] = useState<number>(0);
 
-  const dataListRef = useRef<IGetRandomNotesListRes[] | null>(null);
+  const dataListRef = useRef<any[] | null>(null);
   const thirdStepChooseDataRef = useRef<number[] | null>(null);
 
   const disabledStatus = !isGlobalLastAnswer || globalCheckStatus === ECheckStatus.NEW_SESSION;
@@ -46,6 +50,10 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
   useEffect(() => {
     changeCurrentPlayContent?.('选择【随手记】生成观察记录');
   }, []);
+
+  useEffect(() => {
+    getDataList(pageIndex);
+  }, [pageIndex, getNum]);
 
   const chooseItem = (record: IObserveListRes) => {
     if (copyFirstStepChooseData.some((item) => item.observeId === record.observeId)) {
@@ -65,45 +73,43 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
     }
   };
 
-  const getDataList = () => {
+  const getDataList = (pageIndex: number | string) => {
     let flag = false;
-    if (flag) return;
+    const newPageIndex = Number(pageIndex);
+    if (flag || !newPageIndex) return;
     flag = true;
-    // console.log({
-    //   thirdStepChooseData,
-    //   dataList,
-    //   dataListRef,
-    //   'dataListRef.current': dataListRef.current,
-    //   thirdStepChooseDataRef,
-    //   thirdStepChooseDataRefCurrent: thirdStepChooseDataRef.current,
-    // });
     const studentParam = thirdStepChooseDataRef?.current?.length
       ? { studentId: thirdStepChooseDataRef?.current.join(',') }
       : {};
-    const param = dataListRef?.current?.length
-      ? {
-          dateTime: dayjs(dataListRef?.current[dataListRef?.current.length - 1].observeDate)
-            .subtract(1, 'day')
-            .format('YYYY-MM-DD'),
-        }
-      : {};
-    getRandomNotesListApi({ ...param, ...studentParam }).then((res) => {
-      // console.log(
-      //   'res',
-      //   res,
-      //   dataList?.length
-      //     ? dayjs(dataList[dataList.length - 1].observeDate)
-      //         .subtract(1, 'day')
-      //         .format('YYYY-MM-DD')
-      //     : 1,
-      // );
+    getNaviListApi({ ...studentParam, pageIndex: newPageIndex, pageRows: 10 }).then((res) => {
       flag = false;
-      setLoadMore(res?.length ? false : true);
+      const { list = [], pager = {} } = res;
+      const { totalRows } = pager;
+      let newResourceList = cloneDeep(dataList);
+      list.forEach((item, index) => {
+        const findIndex = newResourceList.findIndex((resourceItem) => resourceItem.observeDate === item?.observeDate);
+        if (findIndex !== -1) {
+          newResourceList[findIndex].observeList.push(item);
+        } else {
+          newResourceList.push({ observeDate: item?.observeDate, observeList: [item] });
+        }
+      });
+      console.log('newResourceList', newResourceList);
+      // setDataList(() => {
+      //   return newResourceList;
+      // });
       setDataList(() => {
-        const newArray = dataListRef.current?.length ? dataListRef.current : [];
-        dataListRef.current = [...newArray, ...res];
+        // const newArray = dataListRef.current?.length ? dataListRef.current : [];
+        dataListRef.current = newResourceList;
         return dataListRef.current;
       });
+      setDataList(newResourceList);
+      setTotalRows(() => totalRows);
+      // setDataList(() => {
+      //   const newArray = dataListRef.current?.length ? dataListRef.current : [];
+      //   dataListRef.current = [...newArray, ...res];
+      //   return dataListRef.current;
+      // });
     });
   };
 
@@ -129,7 +135,7 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
 
   const goDetail = (record: any) => {
     // console.log('goDetail', record);
-    Taro.navigateTo({ url: `${PRE_EDU_PATH}/observation_detail/index?observeId=${record?.observeId}` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_detail/index?observeId=${record?.observeId}&hideBtn=true` });
   };
 
   const secondClick = (record: IStudentListRes) => {
@@ -217,9 +223,12 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
     });
 
     setStep(0);
-    setTimeout(() => {
-      getDataList();
-    }, 500);
+    setPageIndex('1');
+    setScrollTop(() => 0);
+    setGetNum(() => getNum + 1);
+    // setTimeout(() => {
+    //   getDataList();
+    // }, 500);
   };
 
   const getResourceList = () => {
@@ -256,10 +265,9 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
         <View className="observation-btn-right">
           <View
             onClick={() => {
-              console.log(123123);
               setModalVisible(true);
               // !dataList?.length && run();
-              !dataList?.length && getDataList();
+              !dataList?.length && setPageIndex(1);
             }}
             className="observation-btn-right-btn"
           >
@@ -307,9 +315,16 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
         <ChooseModal
           step={step}
           show={visible}
-          loadMore={loadMore}
           dataList={dataList}
-          getDataList={getDataList}
+          // getDataList={getDataList}
+          setScrollTop={(val) => {
+            setScrollTop(val);
+          }}
+          currentPageAddOne={() => {
+            setPageIndex(() => Number(pageIndex) + 1);
+          }}
+          scrollTop={scrollTop}
+          firstStepTotalRows={totalRows}
           firstText={`下一步(${copyFirstStepChooseData?.length}/3)`}
           secondText={`下一步(${copySecondStepChooseData?.length}/10)`}
           goDetail={goDetail}

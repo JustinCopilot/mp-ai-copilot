@@ -9,7 +9,7 @@ import ModuleTitle from '../module-title';
 import './index.less';
 
 /** 观察时间 */
-export const ObserveTime: FC<ChildProps> = ({ dispatch, state }) => {
+export const ObserveTime: FC<ChildProps> = ({ dispatch, state, type }) => {
   const { observeTime } = state || {};
   return (
     <View className="observe-time-container">
@@ -19,6 +19,7 @@ export const ObserveTime: FC<ChildProps> = ({ dispatch, state }) => {
         onChange={(val) => dispatch('observeTime', val)}
         value={observeTime}
         maxDate={dayjs().format('YYYY/MM/DD')}
+        type={type}
       >
         <CommonValue value={observeTime || '请选择'} holder={!observeTime} />
       </DatePicker>

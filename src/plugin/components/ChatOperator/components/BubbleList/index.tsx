@@ -23,13 +23,16 @@ const BubbleList = () => {
         icon: 'none',
       });
     }
-    getAnswerResult?.({ query: bubble }, {
-      banEdit: true
-    });
+    getAnswerResult?.(
+      { query: bubble },
+      {
+        banEdit: true,
+      },
+    );
   };
 
   return (
-    <ScrollView className="bubble-list" scrollX scrollWithAnimation enableFlex>
+    <ScrollView className="bubble-list" scrollX scrollWithAnimation={false} enableFlex showScrollbar={false} enhanced>
       <View className="item-container">
         {data.map((item) => (
           <View className="item" key={item.id} onClick={() => handleClickBubble(item.label)}>

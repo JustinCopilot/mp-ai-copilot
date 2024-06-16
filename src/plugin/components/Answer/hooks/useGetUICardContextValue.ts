@@ -23,32 +23,32 @@ const useGetUICardContextValue = ({ chatItem, isLastAnswer }: IUseGetUICardConte
   } = useContext(ChatWrapperContext) || {};
 
   // 在确认场景下，前后dataid一样，导致从前查找出现index错误
-  const currentChatItemIndex = chatList.findLastIndex((item) => item.dataId === chatItem.dataId);
+  const currentChatItemIndex = chatList.findLastIndex((item) => item.uniqueId === chatItem.uniqueId);
 
   const changeCurrentChatItemTag = (chatItemTag: EChatItemTag) => {
     chatList[currentChatItemIndex] = {
-      ...chatItem,
+      ...chatList[currentChatItemIndex],
       tag: chatItemTag,
     };
     setChatList?.([...chatList]);
   };
   const changeCurrentAnswerOperater = (config: IAnswerOperaterConfig) => {
     chatList[currentChatItemIndex] = {
-      ...chatItem,
+      ...chatList[currentChatItemIndex],
       ...config,
     };
     setChatList?.([...chatList]);
   };
   const changeCurrentCopyText = (text: string) => {
     chatList[currentChatItemIndex] = {
-      ...chatItem,
+      ...chatList[currentChatItemIndex],
       copyText: text,
     };
     setChatList?.([...chatList]);
   };
   const changeCurrentPlayContent = (text: string) => {
     chatList[currentChatItemIndex] = {
-      ...chatItem,
+      ...chatList[currentChatItemIndex],
       playContent: text,
     };
     setChatList?.([...chatList]);

@@ -1,31 +1,34 @@
 import React from 'react';
-import dayjs from 'dayjs';
+import type { SelectorQuery } from '@tarojs/taro';
 import { View, Navigator } from '@tarojs/components';
-import { TOP_BAR_HEIGHT, PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@plugin/constants';
+import dayjs from 'dayjs';
 import './index.less';
 
 export interface ITitleBlockProps {
-  isLatest: boolean;
-  date: string;
-  onTriggerCalendar: () => void;
-  selectedChildData: number[];
+  isLatest?: boolean;
+  onlyShowFilterChild?: boolean;
+  date?: string;
+  onTriggerCalendar?: (date: string) => void;
+  selectedChildData?: number[];
+  ref?: React.MutableRefObject<SelectorQuery | undefined>;
 }
 
-const TitleBlock: React.FC<ITitleBlockProps> = ({ isLatest, date, onTriggerCalendar, selectedChildData }) => {
+const TitleBlock: React.FC<ITitleBlockProps> = ({ onlyShowFilterChild, isLatest, date, onTriggerCalendar, selectedChildData }) => {
   const handleClickDate = () => {
-    if (!isLatest) return;
-    onTriggerCalendar();
+    if (!isLatest || !date) return;
+    onTriggerCalendar?.(date);
   };
 
   return (
-    <View className={`title-block ${isLatest ? 'fixed' : ''}`} style={{ top: isLatest ? TOP_BAR_HEIGHT! + 46 : 0 }}>
+    <View className='title-block'>
       <View className="left" onClick={handleClickDate}>
         <View className="date">{dayjs(date).format('YYYY年MM月DD日')}</View>
         {isLatest && <View className="arrow-right" />}
       </View>
-      {isLatest && (
+      {(isLatest || onlyShowFilterChild) && (
         <Navigator
-          url={`${PRE_EDU_PATH}/choose_child/index?selectedChildData=${selectedChildData.join()}`}
+          url={`${PRE_EDU_PATH}/choose_child/index?selectedChildData=${selectedChildData?.join()}`}
           className={`filter ${selectedChildData?.length ? 'active' : ''}`}
         >
           筛选幼儿

@@ -225,18 +225,29 @@ export const SelectBehavior: FC<ChildProps> = ({ dispatch, state }) => {
       cSector: undefined,
       cBehavior: undefined,
       cBehaviorLevel: undefined,
+      delEditModal: false,
+    });
+  };
+  const onCloseBehaviorModal = () => {
+    dispatch('state', {
+      behaviorModal: false,
+      currentSector: undefined,
+      currentBehavior: undefined,
+      currentBehaviorLevel: undefined,
+    });
+  };
+  const onCloseBehaviorModal2 = () => {
+    dispatch('state', {
+      behaviorModal2: false,
+      currentBehaviorLevel: undefined,
     });
   };
   return (
     <>
-      <AtFloatLayout
-        isOpened={behaviorModal}
-        className="behavior-modal"
-        onClose={() => dispatch('behaviorModal', false)}
-      >
+      <AtFloatLayout isOpened={behaviorModal} className="behavior-modal" onClose={onCloseBehaviorModal}>
         <View className="behavior-modal-container">
           <View className="modal-header">
-            <View className="cancel-btn" onClick={() => dispatch('behaviorModal', false)}>
+            <View className="cancel-btn" onClick={onCloseBehaviorModal}>
               取消
             </View>
             <View className="modal-title">{title}</View>
@@ -307,14 +318,10 @@ export const SelectBehavior: FC<ChildProps> = ({ dispatch, state }) => {
           </View>
         </View>
       </AtFloatLayout>
-      <AtFloatLayout
-        isOpened={behaviorModal2}
-        className="behavior-modal"
-        onClose={() => dispatch('behaviorModal2', false)}
-      >
+      <AtFloatLayout isOpened={behaviorModal2} className="behavior-modal" onClose={onCloseBehaviorModal2}>
         <View className="behavior-modal-container">
           <View className="modal-header">
-            <View className="cancel-btn" onClick={() => dispatch('behaviorModal2', false)}>
+            <View className="cancel-btn" onClick={onCloseBehaviorModal2}>
               取消
             </View>
             <View className="modal-title">{title}</View>
@@ -329,7 +336,7 @@ export const SelectBehavior: FC<ChildProps> = ({ dispatch, state }) => {
                   <View
                     className={classNames('list2-item', { active })}
                     key={contentId}
-                    onClick={() => dispatch('currentBehaviorLevel', record)}
+                    onClick={() => dispatch('state', { currentBehaviorLevel: record, cBehaviorLevel: undefined })}
                   >
                     <View className="content-title">
                       L{level}-表现行为{index + 1}

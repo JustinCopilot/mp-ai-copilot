@@ -1,6 +1,6 @@
 import type { RequestTask } from '@tarojs/taro';
 import type { IPutChatRes } from '@plugin/request/chat/type';
-import { EMicroAppIdITest, EMicroAppIdProd } from '@plugin/request/chat/type';
+import { EMicroAppUuid } from '@plugin/request/chat/type';
 import type { EAnswerStatus, IChatItem } from '..';
 import useEducationQuestion from './useEducationQuestion';
 import useEducationPhoto from './useEducationPhoto';
@@ -27,7 +27,7 @@ export function dealErrorStatus({ lastChat, streamDataArr, copyChatList, setChat
       {
         ...origin,
         ...lastChat,
-        dataId: data?.dataId || lastChat.dataId,
+        uniqueId: data?.uniqueId || lastChat.uniqueId,
         chatContent: '加载失败',
         origin,
       },
@@ -37,7 +37,7 @@ export function dealErrorStatus({ lastChat, streamDataArr, copyChatList, setChat
   return { isError: false };
 }
 
-const useTransformStream = (microAppId: number) => {
+const useTransformStream = (microAppUuid: EMicroAppUuid) => {
   const { getDefaultChatInfo, transformTextStream } = useCommonScenes();
   const {
     getDefaultChatInfo: getDefaultChatInfoByEduKnowledge,
@@ -48,27 +48,23 @@ const useTransformStream = (microAppId: number) => {
   const { getDefaultChatInfo: getDefaultChatInfoByBeauty, transformTextStream: transformTextStreamByBeauty } =
     useBeautySummary();
 
-  switch (microAppId) {
-    case EMicroAppIdITest.EDU_KNOWLEDGE:
-    case EMicroAppIdProd.EDU_KNOWLEDGE:
+  switch (microAppUuid) {
+    case EMicroAppUuid.EDU_KNOWLEDGE:
       return {
         getDefaultChatInfo: getDefaultChatInfoByEduKnowledge,
         transformStream: transformTextStreamByEduKnowledge,
       };
-    case EMicroAppIdITest.EDU_PHOTO:
-    case EMicroAppIdProd.EDU_PHOTO:
+    case EMicroAppUuid.EDU_PHOTO:
       return {
         getDefaultChatInfo: getDefaultChatInfoByEduPhoto,
         transformStream: transformTextStreamByEduPhoto,
       };
-    case EMicroAppIdITest.BEAUTY_SUMMARY:
-    case EMicroAppIdProd.BEAUTY_SUMMARY:
+    case EMicroAppUuid.BEAUTY_SUMMARY:
       return {
         getDefaultChatInfo: getDefaultChatInfoByBeauty,
         transformStream: transformTextStreamByBeauty,
       };
-    case EMicroAppIdITest.EDU_BEHAVIOR:
-    case EMicroAppIdProd.EDU_BEHAVIOR:
+    case EMicroAppUuid.EDU_BEHAVIOR:
       return {
         getDefaultChatInfo: getDefaultChatInfo,
         transformStream: transformTextStream,

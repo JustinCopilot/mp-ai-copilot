@@ -14,17 +14,23 @@ export interface IObservationRecordProps {
   detail?: any;
   showBtn: boolean;
   analyzeStatus?: number;
+  showMore?: boolean;
 }
 
-const ObservationRecord: React.FC<IObservationRecordProps> = ({ detail, showBtn, analyzeStatus = 0 }) => {
+const ObservationRecord: React.FC<IObservationRecordProps> = ({
+  detail,
+  showBtn,
+  analyzeStatus = 0,
+  showMore = true,
+}) => {
   const [visilbleNum, setVisilbleNum] = useState('');
   const [backUrl, setBackUrl] = useState('');
 
   const { chatItem, changeCurrentPlayContent, globalAnswerStatus } = useContext(UICardContext) || {};
   const data = detail || JSON.parse(chatItem?.agentResponse || '{}')?.data || {};
   const chatContent = chatItem?.chatContent || data.content;
-  const { tag, dataId } = chatItem || {};
-  // console.log('data', data, tag, chatItem);
+  const { tag, uniqueId } = chatItem || {};
+  // console.log('data', data, uniqueId, chatItem);
 
   useEffect(() => {
     changeCurrentPlayContent?.('AI智能提取信息如下');
@@ -33,7 +39,7 @@ const ObservationRecord: React.FC<IObservationRecordProps> = ({ detail, showBtn,
   useDidShow(() => {
     const currentPage = getPageInstance();
     console.log('currentPage', currentPage.data);
-    if (currentPage.data.from === 'archive_observation' && currentPage.data.dataId === dataId) {
+    if (currentPage.data.from === 'archive_observation' && currentPage.data.uniqueId === uniqueId) {
       setBackUrl(currentPage.data.from);
     }
   });
@@ -51,7 +57,8 @@ const ObservationRecord: React.FC<IObservationRecordProps> = ({ detail, showBtn,
     student,
   } = useMemo(() => {
     const { content, extractInfo, student } = data;
-    const { behavior = [] } = extractInfo;
+    let { behavior = [] } = extractInfo;
+    behavior = behavior?.filter((item) => item?.sectorList?.length);
     return {
       behavior,
       content,
@@ -61,7 +68,7 @@ const ObservationRecord: React.FC<IObservationRecordProps> = ({ detail, showBtn,
   }, [data]);
 
   const navigatorDetail = () => {
-    if (tag === '已归档') {
+    if (tag === '已归档' || backUrl === 'archive_observation') {
       return;
     }
     const currentPage = getPageInstance();
@@ -74,9 +81,10 @@ const ObservationRecord: React.FC<IObservationRecordProps> = ({ detail, showBtn,
       });
     });
     const correlateId = [...new Set(top3IdList)].join(',');
+    // console.log('uniqueId', chatItem?.uniqueId);
     currentPage.setData({
       observationdetail: { ...data, correlateId },
-      dataId: chatItem?.dataId,
+      uniqueId: chatItem?.uniqueId,
     });
     // console.log({ data, chatItem });
     // console.log('correlateId', correlateId);
@@ -91,7 +99,7 @@ const ObservationRecord: React.FC<IObservationRecordProps> = ({ detail, showBtn,
   return (
     <View className="observation-record" onClick={() => setVisilbleNum('')}>
       <View className="observation-title mb32">AI智能提取信息如下：</View>
-      <InfoExtractionBlock students={student} extractInfo={extractInfo} />
+      <InfoExtractionBlock students={student} extractInfo={extractInfo} showMore={showMore} />
       {behavior?.length ? (
         <>
           <View className="observation-title mt28">表现行为</View>

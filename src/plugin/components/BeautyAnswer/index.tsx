@@ -21,7 +21,7 @@ export const genBeautyInitAnswer = (beautyUserInfo: any, hasBubble?: boolean): I
   const ret: IChatItem = {
     chatContent: '请告诉我本次回访的方式：',
     chatUser: EChatUser.Ai,
-    dataId: generateUUID(),
+    uniqueId: generateUUID(),
     beautyUserInfo,
     hideFeedback: true,
     hideReGenerator: true,

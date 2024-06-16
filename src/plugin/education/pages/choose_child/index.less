@@ -76,10 +76,14 @@
         }
 
         .name {
+          max-width: 160px;
           font-weight: 500;
           font-size: 26px;
           color: @sub-color;
           margin-top: 20px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }

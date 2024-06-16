@@ -10,6 +10,7 @@ import type {
   Sector,
   SectorContent,
   IGetMonthDataListReq,
+  IgetNaviListReq
 } from './type';
 
 export const getListApi = () => {
@@ -20,11 +21,15 @@ export const getListApi = () => {
 export const getRandomNotesListApi = (params?: IGetRandomNotesListReq) => {
   return http<IGetRandomNotesListRes[]>({ method: 'POST', url: '/v1/edu/observe/getList', params });
 };
+
+export const getNaviListApi = (params?: IgetNaviListReq | undefined) => {
+  return http({ method: 'POST', url: '/v1/edu/observe/getNaviList', params });
+};
 // 根据月份获取有数据的日期
 export const getMonthDataListApi = (params?: IGetMonthDataListReq) => {
   return http<string[]>({ method: 'POST', url: '/v1/edu/observe/getMonthDataList', params });
 };
-export const getStuDataDetail = (params?: IGetStuDataDetailReq) => {
+export const getStuDataDetailApi = (params?: IGetStuDataDetailReq) => {
   return http<StudentInfo[]>({ method: 'POST', url: '/v1/edu/observe/getStuDataDetail', params });
 };
 export const removeObserveApi = (params: { observeId: number }) => {
@@ -58,4 +63,7 @@ export const microAppTag = (params: any) => {
 // 随手记-获取观察记录设置
 export const getObserveSetting = () => {
   return http<any>({ method: 'GET', url: '/v1/edu/observe/setting/get' });
+};
+export const removeSituationApi = (params: { situationId: number }) => {
+  return http({ method: 'POST', url: '/v1/edu/observe/situation/remove', params });
 };

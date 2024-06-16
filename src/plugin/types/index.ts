@@ -1,5 +1,5 @@
 import type { BaseEventOrig } from '@tarojs/components';
-import type { EMicroAppIdITest, EMicroAppIdProd } from '@plugin/request/chat/type';
+import type { EMicroAppUuid } from '@plugin/request/chat/type';
 
 export enum EStorage {
   MOBILE = 'mobile',
@@ -8,6 +8,7 @@ export enum EStorage {
   EDU_CHOOSE_IMG_LIST = 'edu_choose_img_list',
   EDU_FRAME_IMG_LIST = 'edu_frame_img_list',
   EDU_SYNTHESIS_IMG_LIST = 'edu_synthesis_img_list',
+  EDU_SELECTED_CHILD_DATA = 'edu_selected_child_data', // 我的归档筛选幼儿
 }
 
 export enum EEnv {
@@ -26,7 +27,7 @@ export type TFormEvents<T> = BaseEventOrig<{ value: T }>;
 export interface IBeautySummaryEnterParams {
   name: 'chat';
   params: {
-    microAppId: EMicroAppIdITest.BEAUTY_SUMMARY | EMicroAppIdProd.BEAUTY_SUMMARY;
+    microAppUuid: EMicroAppUuid.BEAUTY_SUMMARY,
     data: {
       user: {
         name: string;
@@ -41,7 +42,7 @@ export interface IBeautySummaryEnterParams {
 }
 
 export interface IBeautySummaryReturnParams {
-  microAppId: EMicroAppIdITest.BEAUTY_SUMMARY | EMicroAppIdProd.BEAUTY_SUMMARY;
+  microAppUuid: EMicroAppUuid.BEAUTY_SUMMARY,
   data: {
     type: 'mobile' | 'wechat'; // 回访方式
     summaryContent?: string; // 回访总结

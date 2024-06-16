@@ -28,4 +28,5 @@ export enum EResultType {
   NO_PERMISSION = '无权限查询提及的幼儿',
   IRRELEVANT = '无关问题',
   TARGET = '目标问题',
+  FEATURE = '未来事件',
 }

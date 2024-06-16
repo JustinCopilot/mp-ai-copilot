@@ -1,8 +1,10 @@
+/* eslint-disable complexity */
 import React, { useEffect, useMemo, useState, useContext } from 'react';
-import MarkdownIt from 'markdown-it';
-import { View, RichText } from '@tarojs/components';
+// import MarkdownIt from 'markdown-it';
+import { View, /* RichText, */ Text } from '@tarojs/components';
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
 import { UICardContext } from '@plugin/stores/UICardContext';
+import { EAnswerStatus } from '@plugin/components/ChatWrapper';
 import DuplicateNameConfirm from '@edu/components/DuplicateNameConfirm';
 import ObservationRecord from '@edu/components/ObservationRecord';
 import ObservationPoints from '@edu/components/ObservationPoints';
@@ -21,9 +23,10 @@ const EduAnswer: React.FC<IEduAnswerProps> = ({ chatItem }) => {
   const [chatCard, setChatCard] = useState<EEduBehaviorChatCard | null>(null);
 
   const { changeCheckStatus } = useContext(ChatWrapperContext) || {};
-  const { isGlobalLastAnswer, changeCurrentAnswerOperater, chatList } = useContext(UICardContext) || {};
+  const { isGlobalLastAnswer, changeCurrentAnswerOperater, changeCurrentPlayContent, globalAnswerStatus } =
+    useContext(UICardContext) || {};
 
-  const mdParser = new MarkdownIt();
+  // const mdParser = new MarkdownIt();
 
   const data: IAgentResponseData = useMemo(() => {
     return JSON.parse(chatItem.agentResponse || '{}')?.data || {};
@@ -32,7 +35,7 @@ const EduAnswer: React.FC<IEduAnswerProps> = ({ chatItem }) => {
   const getUserParams = (data: IAgentResponseData) => {
     const { tag, resultType, observeId, student, extractInfo } = data;
     return { tag, resultType, observeId, student, extractInfo };
-  }
+  };
 
   useEffect(() => {
     // 卡片展示逻辑
@@ -45,18 +48,13 @@ const EduAnswer: React.FC<IEduAnswerProps> = ({ chatItem }) => {
     } else if (data.tag === EEduBehaviorTag.BehaviorRecord) {
       if (data.contentType) {
         setChatCard(EEduBehaviorChatCard.ObservationRecord);
-        // const index = chatList?.findIndex(i => i.dataId === chatItem.dataId)
-        // if (chatList && index && index !== -1) {
-        //   chatList[index].checkDataReferenceSign = 'data_reference_detail';
-        //   chatList[index].eduBehaviorUserParams = getUserParams(data);
-        // }
         chatItem.checkDataReferenceSign = 'data_reference_detail';
         chatItem.eduBehaviorUserParams = getUserParams(data);
       } else {
         setChatCard(EEduBehaviorChatCard.GenerateObservationRecords);
       }
     } else if ([EEduBehaviorTag.BehaviorKeyPoint, EEduBehaviorTag.BehaviorAnalysisSuggestion].includes(data.tag)) {
-      if (!data.contentType && !data.content) {
+      if (!data.contentType && !data.content && globalAnswerStatus === EAnswerStatus.UN_ANSWER) {
         setChatCard(EEduBehaviorChatCard.ObservationPoints);
       }
     }
@@ -68,7 +66,8 @@ const EduAnswer: React.FC<IEduAnswerProps> = ({ chatItem }) => {
         EEduBehaviorTag.BehaviorKeyPoint,
         EEduBehaviorTag.BehaviorAnalysisSuggestion,
       ].includes(data.tag) &&
-        !data.content) ||
+        !data.content &&
+        !chatItem.chatContent.trim()) ||
       chatItem.componentInParam
     ) {
       if (isGlobalLastAnswer) {
@@ -81,14 +80,27 @@ const EduAnswer: React.FC<IEduAnswerProps> = ({ chatItem }) => {
         }
       }
     }
-  }, [data]);
 
-  const chatContent = mdParser.render(data.content || chatItem.chatContent || '');
+    // 语音播报处理（后端未将内容放在 chatItem 的 chatContent 中，需单独处理）
+    // chatItem.playContent !== data.content 防止渲染多次
+    if (
+      [EResultType.FEATURE, EResultType.NO_PERMISSION, EResultType.IRRELEVANT].includes(
+        data.resultType as EResultType,
+      ) &&
+      data.content &&
+      chatItem.playContent !== data.content
+    ) {
+      changeCurrentPlayContent?.(data.content);
+    }
+  }, [data, chatItem, globalAnswerStatus, isGlobalLastAnswer]);
+
+  // const chatContent = mdParser.render(data.content || chatItem.chatContent || '');
 
   return (
     <View>
       {data.tag !== EEduBehaviorTag.BehaviorRecord && data.resultType !== EResultType.TARGET && (
-        <RichText nodes={chatContent} />
+        // <RichText nodes={chatContent} />
+        <Text decode>{chatItem.chatContent || data.content || ''}</Text>
       )}
 
       {/* 「幼儿随手记」技能 */}
