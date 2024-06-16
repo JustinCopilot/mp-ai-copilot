@@ -28,14 +28,6 @@ export default defineAppConfig({
         "education/pages/observation_detail/index"
       ],
     },
-    // 测试独立分包
-    {
-      root: "sub-packages/",
-      pages: [
-        "pages/bar/index",
-        "pages/foo/index"
-      ],
-    },
   ],
   plugins: {
     WechatSI: {
