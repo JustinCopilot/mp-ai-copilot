@@ -1,7 +1,7 @@
 {
   "miniprogramRoot": "./",
-  "projectname": "mp-ai-copilot",
-  "appid": "testAppId",
+  "projectname": "mp-ai-helper",
+  "appid": "wx1ec47e0d2923ce68",
   "setting": {
     "es6": false,
     "minified": false

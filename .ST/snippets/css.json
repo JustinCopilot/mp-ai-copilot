@@ -1,0 +1,9 @@
+{
+  "snp_imp": {
+    "prefix": "snp_imp",
+    "body": [
+      "@import '@assets/styles/variables.less';"
+    ],
+    "description": "引入全局样式变量"
+  }
+}

@@ -1,0 +1,85 @@
+{
+  "snp_interface": {
+    "prefix": "snp_interface",
+    "body": [
+      "export interface I$1 {",
+      "  ",
+      "}"
+    ],
+    "description": "接口"
+  },
+  "snp_type": {
+    "prefix": "snp_type",
+    "body": [
+      "export type T$1 = {",
+      "  ",
+      "}"
+    ],
+    "description": "类型别名"
+  },
+  "snp_enum": {
+    "prefix": "snp_enum",
+    "body": [
+      "",
+      "export enum E$1 {",
+      "  ",
+      "}"
+    ],
+    "description": "枚举"
+  },
+  "snp_req": {
+    "prefix": "snp_req",
+    "body": [
+      "",
+      "export interface I$1Req {",
+      "  ",
+      "}"
+    ],
+    "description": "接口入参"
+  },
+  "snp_res": {
+    "prefix": "snp_res",
+    "body": [
+      "",
+      "export interface I$1Res {",
+      "  ",
+      "}"
+    ],
+    "description": "接口返回值"
+  },
+  "snp_props": {
+    "prefix": "snp_props",
+    "body": [
+      "",
+      "export interface I$1Props {",
+      "  ",
+      "}"
+    ],
+    "description": "组件入参类型"
+  },
+  "snp_handle": {
+    "prefix": "snp_handle",
+    "body": [
+      "const $1Handle = () => {",
+      "  ",
+      "}"
+    ],
+    "description": "事件监听事件"
+  },
+  "snp_api": {
+    "prefix": "snp_api",
+    "body": [
+      "export const $1Api = (params: $4) => {",
+      "  return http<$5>({ method: '$2', url: '$3', params });",
+      "};"
+    ],
+    "description": "接口方法"
+  },
+  "snp_log": {
+    "prefix": "snp_log",
+    "body": [
+      "console.log('$1==',$2)"
+    ],
+    "description": "接口方法"
+  }
+}

@@ -1,8 +1,8 @@
 {
-  "name": "mp-ai-copilot",
-  "version": "1.0.0",
+  "name": "mp-ai-helper",
+  "version": "1.0.4",
   "private": true,
-  "description": "",
+  "description": "AI Plugin",
   "templateInfo": {
     "name": "default",
     "typescript": true,
@@ -37,14 +37,28 @@
     "dev:jd": "npm run build:jd -- --watch",
     "dev:quickapp": "npm run build:quickapp -- --watch",
     "dev:harmony-hybrid": "npm run build:harmony-hybrid -- --watch",
-    "test": "jest"
+    "test": "jest",
+    "lint": "lint-staged",
+    "prepare": "husky",
+    "start": "npm run dev:weapp"
   },
+  "author": "",
+  "license": "MIT",
   "browserslist": [
     "last 3 versions",
     "Android >= 4.1",
     "ios >= 8"
   ],
-  "author": "",
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --parser=typescript --write"
+    ]
+  },
   "dependencies": {
     "@babel/runtime": "^7.21.5",
     "@tarojs/components": "3.6.24",
@@ -85,6 +99,7 @@
     "@types/node": "^18.15.11",
     "@types/react": "^18.0.0",
     "@types/webpack-env": "^1.13.6",
+    "@types/webpack-sources": "^3.2.3",
     "@typescript-eslint/eslint-plugin": "^6.2.0",
     "@typescript-eslint/parser": "^6.2.0",
     "babel-preset-taro": "3.6.24",

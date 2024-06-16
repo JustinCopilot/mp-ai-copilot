@@ -1,0 +1,8 @@
+.eslintrc.js
+.prettierrc.js
+config/*
+rm-libpag-wasm-br.js
+slots-support.js
+fix-taro-react-echarts.js
+src/plugin/utils/echarts.js
+src/plugin/utils/decode.js
