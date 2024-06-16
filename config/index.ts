@@ -2,6 +2,8 @@ import path from 'path';
 // import fs from 'fs';
 import { defineConfig, type UserConfigExport } from '@tarojs/cli';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
+import CopyWebpackPlugin from 'copy-webpack-plugin';
+import WxssImportPlugin from './WxssImportPlugin';
 import devConfig from './dev';
 import prodConfig from './prod';
 
@@ -12,61 +14,72 @@ import prodConfig from './prod';
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
 export default defineConfig(async (merge, { command, mode }) => {
-  const packMode = process.env.PACK_MODE;
+  const packSubName = process.env.PACK_SUB_NAME;
   const baseConfig: UserConfigExport = {
-    projectName: 'mp-ai-copilot',
-    date: '2024-6-7',
+    projectName: 'mp-ai-helper',
+    date: '2024-6-17',
     designWidth: 750,
     deviceRatio: {
+      375: 2,
       640: 2.34 / 2,
       750: 1,
-      375: 2,
-      828: 1.81 / 2
+      828: 1.81 / 2,
     },
-    sourceRoot: packMode ? `src/${packMode}` : 'src',
-    outputRoot: packMode ? `dist/xiao-c/${packMode}` : 'dist',
-    plugins: [path.join(process.cwd(), '/plugin-mv/index.js')],
-    defineConstants: {
-    },
+    sourceRoot: packSubName ? `src/${packSubName}` : 'src',
+    outputRoot: packSubName ? `dist/xiao-c/${packSubName}` : 'dist',
+    plugins: [
+      path.join(process.cwd(), '/plugins/fix-taro-react-echarts.js'), // 修复 echarts 缺陷
+      path.join(process.cwd(), '/plugins/move-dist-to-host-miniapp.js'), // 移动构建产物到宿主小程序
+    ],
     copy: {
       patterns: [
         // { from: 'node_modules/libpag-miniprogram/lib', to: 'dist' }
       ],
-      options: {
-      }
+      options: {},
     },
     framework: 'react',
-    compiler: 'webpack5',
+    compiler: {
+      type: 'webpack5',
+      prebundle: {
+        enable: false,
+      },
+    },
     cache: {
       enable: false // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
+    },
+    defineConstants: {},
+    sass: {
+      resource: path.resolve(__dirname, '..', 'src/plugin/assets/styles/sass-variables.scss'),
     },
     mini: {
       miniCssExtractPluginOption: {
         ignoreOrder: true
       },
       output: {
-        chunkLoadingGlobal: `WebpackJsonp-${process.env.PACK_MODE}`,
+        chunkLoadingGlobal: `WebpackJsonp-${process.env.PACK_SUB_NAME}`,
       },
       postcss: {
+        autoprefixer: {
+          enable: true,
+          config: {},
+        },
         pxtransform: {
           enable: true,
-          config: {
-
-          }
+          config: {},
         },
         url: {
           enable: true,
           config: {
-            limit: 1024 // 设定转换尺寸上限
-          }
+            limit: 10240, // 设定转换尺寸上限
+          },
         },
         cssModules: {
-          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
+          enable: true, // 默认为 false，如需使用 css modules 功能，则设为 true
           config: {
             namingPattern: 'module', // 转换模式，取值为 global/module
-            generateScopedName: '[name]__[local]___[hash:base64:5]'
-          }
-        }
+            generateScopedName: '[name]__[local]___[hash:base64:5]',
+          },
+        },
       },
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin)
@@ -90,26 +103,18 @@ export default defineConfig(async (merge, { command, mode }) => {
       postcss: {
         autoprefixer: {
           enable: true,
-          config: {}
+          config: {},
         },
         cssModules: {
           enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
           config: {
             namingPattern: 'module', // 转换模式，取值为 global/module
-            generateScopedName: '[name]__[local]___[hash:base64:5]'
-          }
-        }
+            generateScopedName: '[name]__[local]___[hash:base64:5]',
+          },
+        },
       },
       webpackChain(chain) {
         chain.resolve.plugin('tsconfig-paths').use(TsconfigPathsPlugin)
-      }
-    },
-    rn: {
-      appName: 'taroDemo',
-      postcss: {
-        cssModules: {
-          enable: false, // 默认为 false，如需使用 css modules 功能，则设为 true
-        }
       }
     },
     alias: {
@@ -122,7 +127,28 @@ export default defineConfig(async (merge, { command, mode }) => {
       '@edu': path.resolve(__dirname, '..', 'src/plugin/education'),
       '@sub-pag': path.resolve(__dirname, '..', 'src/sub-pag'),
     },
-  }
+    plugin: {
+      // 插件配置...
+      webpackChain(chain) {
+        chain.plugin('WxssImportPlugin').use(WxssImportPlugin);
+        // chain.plugin('copyWebpackPlugin').use(CopyWebpackPlugin, [
+        //   {
+        //     patterns: [
+        //       {
+        //         from: 'node_modules/libpag-miniprogram/lib/',
+        //         to: 'sub/utils/',
+        //         globOptions: {
+        //           ignore: ['**/*.map', '**/*.wasm', '**/*.js'],
+        //         },
+        //       },
+        //     ],
+        //   },
+        // ]);
+        // chain.plugin('analyzer').use(require('webpack-bundle-analyzer').BundleAnalyzerPlugin, []);
+      },
+    },
+  };
+
   if (process.env.NODE_ENV === 'development') {
     // 本地开发构建配置（不混淆压缩）
     return merge({}, baseConfig, devConfig)

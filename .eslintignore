@@ -1,8 +1,7 @@
 .eslintrc.js
 .prettierrc.js
 config/*
-rm-libpag-wasm-br.js
-slots-support.js
+move-dist-to-host-miniapp.js
 fix-taro-react-echarts.js
 src/plugin/utils/echarts.js
 src/plugin/utils/decode.js
