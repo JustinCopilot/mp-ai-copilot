@@ -1,5 +1,5 @@
 import { ConcatSource } from 'webpack-sources';
-const Regexp = /(?<=plugin\/(components|pages|education\/pages))\/.+\.wxss/g;
+const Regexp = /(?<=(plugin|sub-edu-behavior)\/(components|pages\/pages))\/.+\.wxss/g;
 class WxssImportPlugin {
   apply(compiler) {
     compiler.hooks.emit.tapAsync('WxssImportPlugin', (compilation, callback) => {

@@ -49,7 +49,7 @@ export default defineConfig(async (merge, { command, mode }) => {
     },
     defineConstants: {},
     sass: {
-      resource: path.resolve(__dirname, '..', 'src/plugin/assets/styles/sass-variables.scss'),
+      resource: path.resolve(__dirname, '..', 'src/common/assets/styles/sass-variables.scss'),
     },
     mini: {
       miniCssExtractPluginOption: {
@@ -118,14 +118,14 @@ export default defineConfig(async (merge, { command, mode }) => {
       }
     },
     alias: {
-      '@pages': path.resolve(__dirname, '..', 'src/pages'),
+      '@common': path.resolve(__dirname, '..', 'src/common'),
+      '@assets': path.resolve(__dirname, '..', 'src/common/assets'),
       '@plugin': path.resolve(__dirname, '..', 'src/plugin'),
-      '@components': path.resolve(__dirname, '..', 'src/plugin/components'),
-      '@utils': path.resolve(__dirname, '..', 'src/plugin/utils'),
-      '@assets': path.resolve(__dirname, '..', 'src/plugin/assets'),
-      '@hooks': path.resolve(__dirname, '..', 'src/plugin/hooks'),
-      '@edu': path.resolve(__dirname, '..', 'src/plugin/education'),
+      '@sub-edu-behavior': path.resolve(__dirname, '..', 'src/sub-edu-behavior'),
       '@sub-pag': path.resolve(__dirname, '..', 'src/sub-pag'),
+      '@pages': path.resolve(__dirname, '..', 'src/pages'),
+      '@components': path.resolve(__dirname, '..', 'src/plugin/components'),
+      '@hooks': path.resolve(__dirname, '..', 'src/plugin/hooks'),
     },
     plugin: {
       // 插件配置...
