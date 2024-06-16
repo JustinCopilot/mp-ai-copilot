@@ -18,10 +18,11 @@ const envUrlList = {
   [EEnv.ITEST]: 'https://itest.clife.net/assistant',
   [EEnv.PROD]: 'https://cms.clife.cn/assistant',
 };
-export const isProduction = process.env.NODE_ENV === 'production' && process.env.TARO_APP_API_ENV === 'production';
-console.log('isProduction', isProduction);
 export const isProdEnv = () => {
-  return Taro.getStorageSync(EStorage.HOST_ENV) === EEnv.PROD;
+  return (
+    Taro.getStorageSync(EStorage.HOST_ENV) === EEnv.PROD || // 宿主传参控制生产域名
+    process.env.TARO_APP_API_ENV === EEnv.PROD // 打包模式下构建出生产域名
+  )
 };
 console.log('isProdEnv', isProdEnv());
 // export const BASE_URL = 'https://itest.clife.net/assistant';
@@ -98,7 +99,7 @@ const http = <T = any>({
           icon: 'error',
           duration: 2000,
         });
-        if (code === 401 && !isProduction) {
+        if (code === 401 && !isProdEnv()) {
           setTimeout(() => {
             Taro.navigateTo({ url: '/pages/index/index' });
           }, 2000);

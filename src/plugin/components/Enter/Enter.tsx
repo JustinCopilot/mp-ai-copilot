@@ -41,8 +41,8 @@ const Enter: React.FC<EnterProps> = ({
   const isProd = process.env.NODE_ENV === 'production';
   /**
    * @description 初始化赋值逻辑：
-   * 生产环境每次都是false，每次都需要初始化；
-   * 测试环境初始化后存token，后续判断有token则不需要再初始化；
+   * 打包后，每次都是false，每次都需要初始化；
+   * 开发模式下，初始化后存token，后续判断有token则不需要再初始化；
    */
   const [initSuccess, setInitSuccess] = useState(!isProd && token);
   const { data: aiToken, run: turnTokenFn } = useRequest(turnTokenApi, { manual: true });
