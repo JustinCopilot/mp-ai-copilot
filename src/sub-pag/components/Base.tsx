@@ -6,8 +6,6 @@ import { PAGInit } from 'libpag-miniprogram';
 import type { PAGView } from 'libpag-miniprogram/types/pag-view';
 import type { PAG } from 'libpag-miniprogram/types/types'
 
-console.log('%c [ LoadingText ]-5', 'font-size:13px; background:pink; color:#bf2c9f;');
-
 interface IPagIconProps {
   pagSrc: string;
   width: number;
