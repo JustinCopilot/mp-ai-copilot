@@ -2,7 +2,7 @@ import React from 'react';
 import type { FC } from 'react';
 import { View } from '@tarojs/components';
 import ModuleTitle from '@edu/components/archive/module-title';
-import type { ChildProps } from '@edu/components';
+import type { ChildProps } from '@edu/components/archive';
 import { AtTextarea } from 'taro-ui';
 import './index.less';
 

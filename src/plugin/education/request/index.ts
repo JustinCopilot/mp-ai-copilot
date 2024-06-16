@@ -1,5 +1,6 @@
 import http from '@plugin/utils/https';
-import type { StudentInfo, Grade } from '@edu/components';
+import type { StudentInfo } from '@edu/components';
+import type { Grade } from '@edu/components/archive';
 import type {
   IGetListRes,
   IGetRandomNotesListReq,

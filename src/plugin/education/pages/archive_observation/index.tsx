@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { Archive } from '@edu/components';
 import { getPageInstance } from '@plugin/utils';
 import { useReducer } from '@plugin/education/utils';
-import { Props } from '@edu/components/archive';
+import { Archive, Props } from '@edu/components/archive';
 import Taro, { useRouter } from '@tarojs/taro';
 import { saveOrUpdate, getObserveSetting, microAppTag } from '@edu/request';
 import './index.less';

@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { FC, useEffect, useMemo } from 'react';
 import { Image, Video, View } from '@tarojs/components';
-import type { ChildProps } from '@edu/components';
+import type { ChildProps } from '@edu/components/archive';
 import useImageUploader from '@plugin/hooks/useImageUploader';
 import Taro from '@tarojs/taro';
 import './index.less';
@@ -29,12 +29,12 @@ export const AnalysePhoto: FC<ChildProps> = ({ dispatch, state }) => {
   }, [ais, imgs]);
   const videoUrlList = videoUrl
     ? [
-        {
-          type: EPhotoType.VIDEO,
-          url: videoUrl,
-          coverUrl: videoCoverUrl,
-        },
-      ]
+      {
+        type: EPhotoType.VIDEO,
+        url: videoUrl,
+        coverUrl: videoCoverUrl,
+      },
+    ]
     : [];
   const all = [ais, imgs].flat(2)?.filter(Boolean);
   // console.log('🚀🚀🚀🚀🚀🚀  all:', all);
