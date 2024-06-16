@@ -1,4 +1,4 @@
-import http from '@plugin/utils/https';
+import http from '@common/utils/https';
 import type { IGetCosAuthReq, IGetCosAuthRes, ITurnTokenReq, ITurnTokenRes } from './type';
 
 export const turnTokenApi = (params: ITurnTokenReq) => {

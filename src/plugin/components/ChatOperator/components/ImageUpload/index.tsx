@@ -5,7 +5,7 @@ import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
 import { EAnswerStatus } from '@plugin/components/ChatWrapper';
 import { EChatUser, EBubbleKey } from '@plugin/request/chat/type';
 import useGetScenes from '@plugin/hooks/useGetScenes';
-import { generateUUID } from '@plugin/utils';
+import { generateUUID } from '@common/utils';
 import './index.less';
 
 const ImageUpload = () => {

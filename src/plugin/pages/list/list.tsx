@@ -4,7 +4,7 @@ import type { IRouterParams } from '@plugin/hooks/useTurnToken';
 import useTurnToken from '@plugin/hooks/useTurnToken';
 import { getMicroListApi } from '@plugin/request';
 import { useRequest } from 'ahooks';
-import { transformRouterParams } from '@plugin/utils/router';
+import { transformRouterParams } from '@common/utils/router';
 import { useDidShow, useRouter } from '@tarojs/taro';
 import { PRE_PLUGIN_PATH } from '@plugin/constants';
 import { EMicroAppUuid } from '@plugin/request/chat/type';

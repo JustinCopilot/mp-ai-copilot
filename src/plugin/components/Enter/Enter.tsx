@@ -3,7 +3,7 @@ import Taro from '@tarojs/taro';
 import type { ETurnTokenType } from '@plugin/request/common/type';
 import { getMobileVerifyCodeApi, loginApi } from '@plugin/request/login';
 import { EEnv, EStorage } from '@plugin/types';
-import { getToken, setToken } from '@plugin/utils/token';
+import { getToken, setToken } from '@common/utils/token';
 import { useRequest } from 'ahooks';
 import React, { useEffect, useState } from 'react';
 

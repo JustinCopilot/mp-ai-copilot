@@ -1,7 +1,7 @@
 import { useRef } from 'react';
 import { EChatUser } from '@plugin/request/chat/type';
 import type { IExtraConfig, IGetAnswerResultParams } from '@plugin/stores/ChatWrapperContext';
-import { generateUUID } from '@plugin/utils';
+import { generateUUID } from '@common/utils';
 import { EAnswerStatus } from '..';
 import type { IChatItem } from '..';
 import useStreamToArray from './useStreamToArray';

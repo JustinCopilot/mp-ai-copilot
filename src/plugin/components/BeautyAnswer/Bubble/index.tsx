@@ -3,7 +3,7 @@ import { useRouter } from '@tarojs/taro';
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
 import type { IChatItem } from '@plugin/components/ChatWrapper';
 import { ESummaryStatus } from '@plugin/components/ChatWrapper/hooks/useBeautySummary';
-import { generateUUID } from '@plugin/utils';
+import { generateUUID } from '@common/utils';
 import { Button, View } from '@tarojs/components';
 import { EBubbleKey, type IBubbleComponent, EChatUser } from '@plugin/request/chat/type';
 import './index.less';

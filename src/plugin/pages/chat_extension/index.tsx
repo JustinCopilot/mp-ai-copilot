@@ -7,7 +7,7 @@ import { PRE_EDU_PATH } from '@plugin/constants';
 import { AtModal, AtModalAction } from 'taro-ui';
 import { EPageFrom } from '@plugin/types';
 import { EMicroAppUuid } from '@plugin/request/chat/type';
-import { getPageInstance } from '@plugin/utils';
+import { getPageInstance } from '@common/utils';
 import 'taro-ui/dist/style/components/modal.scss';
 import './index.less';
 

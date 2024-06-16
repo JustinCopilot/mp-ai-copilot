@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import { EChatItemTag, EChatUser } from '@plugin/request/chat/type';
 import type { IGetAnswerResultParams } from '@plugin/stores/ChatWrapperContext';
 import type { IUIExtraConfig } from '@plugin/stores/UICardContext';
-import { generateUUID } from '@plugin/utils';
+import { generateUUID } from '@common/utils';
 import { setTagApi } from '@plugin/request/chat';
 import { EAnswerStatus } from '..';
 import type { IChatItem } from '..';

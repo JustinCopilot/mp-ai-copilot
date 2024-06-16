@@ -7,7 +7,7 @@ import { View } from '@tarojs/components';
 import { AtNavBar } from 'taro-ui';
 import { PRE_PLUGIN_PATH, TOP_BAR_HEIGHT } from '@plugin/constants';
 import useGetScenes from '@plugin/hooks/useGetScenes';
-import { transformRouterParams } from '@plugin/utils/router';
+import { transformRouterParams } from '@common/utils/router';
 import type { IChatExtensionRouter } from '@plugin/pages/chat_extension';
 
 import 'taro-ui/dist/style/components/nav-bar.scss';

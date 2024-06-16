@@ -1,10 +1,9 @@
 
-import { eduBehaviorPages, pluginPages } from '../app.config';
+import { pluginPages } from '../app.config';
 
 export default defineAppConfig({
   pages: [
     ...pluginPages,
-    ...eduBehaviorPages, // @TODO: 行为观察抽离单独分包
   ],
   plugins: {
     WechatSI: {

@@ -9,14 +9,14 @@ export const pluginPages = [
 ]
 
 export const eduBehaviorPages = [
-  "education/pages/my_archive/index",
-  "education/pages/jot_down_reference_detail/index",
-  "education/pages/data_reference_detail/index",
-  "education/pages/choose_child/index",
-  "education/pages/jot_down_detail/index",
-  "education/pages/archive_observation/index",
-  "education/pages/information_supplement/index",
-  "education/pages/observation_detail/index"
+  "pages/my_archive/index",
+  "pages/jot_down_reference_detail/index",
+  "pages/data_reference_detail/index",
+  "pages/choose_child/index",
+  "pages/jot_down_detail/index",
+  "pages/archive_observation/index",
+  "pages/information_supplement/index",
+  "pages/observation_detail/index"
 ]
 
 export default defineAppConfig({
@@ -30,12 +30,25 @@ export default defineAppConfig({
     navigationBarTextStyle: 'black'
   },
   subPackages: [
-    // AI通用组件分包
+    // AI主流程分包
     {
       root: "plugin/",
       pages: [
         ...pluginPages,
-        ...eduBehaviorPages, // @TODO: 行为观察抽离单独分包
+      ],
+    },
+    // 幼教行为观察分包
+    {
+      root: "sub-edu-behavior/",
+      pages: [
+        ...eduBehaviorPages,
+      ],
+    },
+    // 动效组件分包
+    {
+      root: "sub-pag/",
+      pages: [
+        "pages/index",
       ],
     },
   ],

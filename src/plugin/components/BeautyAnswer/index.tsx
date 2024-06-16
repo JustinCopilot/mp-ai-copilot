@@ -2,7 +2,7 @@ import React from 'react';
 import { Text, View } from '@tarojs/components';
 import { EBubbleKey, type IBubbleComponent, EChatUser } from '@plugin/request/chat/type';
 import type { IChatItem } from '@plugin/components/ChatWrapper';
-import { generateUUID } from '@plugin/utils';
+import { generateUUID } from '@common/utils';
 import UserInfo from './UserInfo';
 import Bubble from './Bubble';
 import Summary from './Summary';

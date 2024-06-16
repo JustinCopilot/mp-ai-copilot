@@ -2,7 +2,7 @@ import { useRef } from 'react';
 import type { IPutChatRes } from '@plugin/request/chat/type';
 // import { TextDecoder } from 'text-encoding-shim';
 import type { RequestTask } from '@tarojs/taro';
-import TextDecoder from '@utils/decode';
+import TextDecoder from '@common/utils/decode';
 
 const useStreamToArray = () => {
   const preChunkAnswer = useRef<string>('');

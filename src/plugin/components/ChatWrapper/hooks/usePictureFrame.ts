@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { EBizType, EChatUser } from '@plugin/request/chat/type';
 import { EStorage } from '@plugin/types';
-import { generateUUID } from '@plugin/utils';
+import { generateUUID } from '@common/utils';
 import useBase64Uploader from '@plugin/hooks/useBase64Uploader';
 import useDrawPicture from '@plugin/hooks/useDrawPhoto';
 import { EAnswerStatus } from '..';

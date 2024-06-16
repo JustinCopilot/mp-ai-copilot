@@ -1,4 +1,4 @@
-import { generateUUID } from '@plugin/utils';
+import { generateUUID } from '@common/utils';
 
 export function getChatList(len: number) {
   const res = Array.from(

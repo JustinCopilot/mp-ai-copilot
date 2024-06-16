@@ -1,4 +1,4 @@
-import http from '@plugin/utils/https';
+import http from '@common/utils/https';
 import type { IGetMobileVerifyCodeReq, ILoginReq, ILoginRes } from './type';
 
 export const getMobileVerifyCodeApi = (params: IGetMobileVerifyCodeReq) => {

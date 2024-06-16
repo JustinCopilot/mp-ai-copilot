@@ -3,7 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro';
 import { useRequest } from 'ahooks';
 import { turnTokenApi } from '@plugin/request';
 import type { ITurnTokenReq } from '@plugin/request/common/type';
-import { setToken } from '@plugin/utils/token';
+import { setToken } from '@common/utils/token';
 import type { EEnv } from '@plugin/types';
 import { EStorage } from '@plugin/types';
 
