@@ -56,7 +56,7 @@ export default defineConfig(async (merge, { command, mode }) => {
         ignoreOrder: true
       },
       output: {
-        chunkLoadingGlobal: `WebpackJsonp-${process.env.PACK_SUB_NAME}`,
+        chunkLoadingGlobal: `${packSubName ? packSubName.replace(/-/g, '') : ''}WebpackJsonp`,
       },
       postcss: {
         autoprefixer: {
