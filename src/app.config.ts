@@ -45,12 +45,12 @@ export default defineAppConfig({
       ],
     },
     // 动效组件分包
-    {
-      root: "sub-pag/",
-      pages: [
-        "pages/index/index",
-      ],
-    },
+    // {
+    //   root: "sub-pag/",
+    //   pages: [
+    //     "pages/index/index",
+    //   ],
+    // },
   ],
   plugins: {
     WechatSI: {
