@@ -4,7 +4,7 @@ import MarkdownIt from 'markdown-it';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { IAgentResponseData } from '@sub-edu-behavior/request/type';
 import Taro, { useDidShow } from '@tarojs/taro';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { EPageFrom } from '@plugin/types';
 import { getPageInstance } from '@common/utils';
 import { setTagApi } from '@plugin/request/chat';

@@ -3,7 +3,7 @@ import type { IImageItem, EType } from '@plugin/components/ImageContent';
 import { EStorage } from '@plugin/types';
 import Taro from '@tarojs/taro';
 import React, { useEffect, useState } from 'react';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_PLUGIN_PATH } from '@common/constants';
 import './index.less';
 
 export interface IParams {

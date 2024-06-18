@@ -1,7 +1,7 @@
 import React from 'react';
 import type { SelectorQuery } from '@tarojs/taro';
 import { View, Navigator } from '@tarojs/components';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import dayjs from 'dayjs';
 import './index.less';
 

@@ -7,7 +7,7 @@ import { useRequest } from 'ahooks';
 import dayjs from 'dayjs';
 import { getPageInstance } from '@common/utils';
 import { EPageFrom } from '@plugin/types';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { getBaseUrl } from '@common/utils/https';
 import { getToken } from '@common/utils/token';
 import type { IGetAnswerResultParams } from '@plugin/stores/ChatWrapperContext';

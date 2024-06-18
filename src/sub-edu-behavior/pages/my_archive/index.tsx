@@ -5,7 +5,7 @@ import { View, ScrollView } from '@tarojs/components';
 import { useThrottleFn } from 'ahooks';
 import dayjs from 'dayjs';
 import { AtCalendar, AtNavBar } from 'taro-ui';
-import { TOP_BAR_HEIGHT } from '@plugin/constants';
+import { TOP_BAR_HEIGHT } from '@common/constants';
 import { EStorage } from '@plugin/types';
 import NoData from '@plugin/components/NoData';
 import { getRandomNotesListApi, getMonthDataListApi } from '@sub-edu-behavior/request';

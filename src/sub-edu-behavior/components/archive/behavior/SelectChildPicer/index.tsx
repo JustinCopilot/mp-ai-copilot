@@ -3,7 +3,7 @@ import React, { FC } from 'react';
 import { View, Text, Image } from '@tarojs/components';
 import 'taro-ui/dist/style/components/float-layout.scss';
 import { AtFloatLayout } from 'taro-ui';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@sub-edu-behavior/constants';
 import { Props } from './config';
 import './index.less';
 

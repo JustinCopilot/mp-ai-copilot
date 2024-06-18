@@ -3,7 +3,7 @@ import { UICardContext } from '@plugin/stores/UICardContext';
 import { View, Image } from '@tarojs/components';
 // import dayjs from 'dayjs';
 import cloneDeep from 'lodash/cloneDeep';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { ECheckStatus } from '@plugin/components/ChatWrapper';
 import type { IAgentResponseData } from '@sub-edu-behavior/request/type';
 import { getResource, /* getRandomNotesListApi, */ getNaviListApi, getSituationLabelList } from '@sub-edu-behavior/request';

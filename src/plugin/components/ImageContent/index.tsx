@@ -3,7 +3,7 @@ import { Button, Image, Swiper, SwiperItem, Text, View } from '@tarojs/component
 import Taro from '@tarojs/taro';
 import React, { useEffect, useMemo, useState } from 'react';
 import { EStorage } from '@plugin/types';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_PLUGIN_PATH } from '@common/constants';
 import BottomOperator from '../BottomOperator';
 import './index.less';
 

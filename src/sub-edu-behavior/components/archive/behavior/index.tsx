@@ -11,7 +11,7 @@ import {
   AtModalAction,
 } from 'taro-ui';
 import pick from 'lodash/pick';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@sub-edu-behavior/constants';
 import './index.less';
 import { ChildProps } from '../config';
 import ModuleTitle from '../module-title';

@@ -6,7 +6,7 @@ import dayjs from 'dayjs';
 
 import { View, Button, Text, Image } from '@tarojs/components';
 import Taro, { useRouter, useDidShow } from '@tarojs/taro';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { getPageInstance } from '@common/utils';
 import { getObserveDetailApi, removeObserveApi } from '@sub-edu-behavior/request';
 import { EEduBehaviorTag } from '@sub-edu-behavior/interface';

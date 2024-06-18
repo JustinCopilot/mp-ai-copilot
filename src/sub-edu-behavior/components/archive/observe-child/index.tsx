@@ -7,7 +7,7 @@ import type { ChildProps } from '@sub-edu-behavior/components/archive';
 import { getResource } from '@sub-edu-behavior/request';
 import classNames from 'classnames';
 import Taro from '@tarojs/taro';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@sub-edu-behavior/constants';
 
 import './index.less';
 import ModuleTitle from '../module-title';

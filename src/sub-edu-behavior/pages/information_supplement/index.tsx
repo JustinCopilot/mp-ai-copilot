@@ -5,7 +5,7 @@ import { EPageFrom } from '@plugin/types';
 import Taro from '@tarojs/taro';
 import { EEduBehaviorTag } from '@sub-edu-behavior/interface';
 import Archive, { State } from '@sub-edu-behavior/components/archive';
-import { TOP_BAR_HEIGHT } from '@plugin/constants';
+import { TOP_BAR_HEIGHT } from '@common/constants';
 import AlertModal from '@plugin/components/AlertModal';
 import { AtNavBar } from 'taro-ui';
 import 'taro-ui/dist/style/components/nav-bar.scss';

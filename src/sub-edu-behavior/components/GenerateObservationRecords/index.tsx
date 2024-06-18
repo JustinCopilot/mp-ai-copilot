@@ -6,7 +6,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import Taro from '@tarojs/taro';
 import { View, Image, Text } from '@tarojs/components';
 import { UICardContext } from '@plugin/stores/UICardContext';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { ECheckStatus } from '@plugin/components/ChatWrapper';
 import { getResource, getNaviListApi } from '@sub-edu-behavior/request';
 

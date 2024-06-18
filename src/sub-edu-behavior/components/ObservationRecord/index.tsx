@@ -2,7 +2,7 @@ import React, { useMemo, useContext, useState, useEffect } from 'react';
 import { View, Text } from '@tarojs/components';
 import Taro, { useDidShow } from '@tarojs/taro';
 import { getPageInstance } from '@common/utils';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { EAnswerStatus } from '@plugin/components/ChatWrapper';
 // import { UICardContext } from '@plugin/stores/UICardContext';

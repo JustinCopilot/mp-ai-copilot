@@ -6,7 +6,7 @@ import { getMicroListApi } from '@plugin/request';
 import { useRequest } from 'ahooks';
 import { transformRouterParams } from '@common/utils/router';
 import { useDidShow, useRouter } from '@tarojs/taro';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_PLUGIN_PATH } from '@common/constants';
 import { EMicroAppUuid } from '@plugin/request/chat/type';
 import type { IChatRouter } from '../chat/chat';
 import './list.less';

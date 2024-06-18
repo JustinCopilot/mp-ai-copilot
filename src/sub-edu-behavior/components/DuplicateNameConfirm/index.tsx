@@ -2,7 +2,7 @@ import React, { useState, useMemo, useContext } from 'react';
 import { View, Image } from '@tarojs/components';
 import { UICardContext } from '@plugin/stores/UICardContext';
 import { ECheckStatus } from '@plugin/components/ChatWrapper';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@sub-edu-behavior/constants';
 import './index.less';
 
 export interface IDuplicateNameConfirmProps { }

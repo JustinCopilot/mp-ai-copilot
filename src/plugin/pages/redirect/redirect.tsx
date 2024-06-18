@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { View } from '@tarojs/components';
 import useTurnToken from '@plugin/hooks/useTurnToken';
 import Taro from '@tarojs/taro';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_PLUGIN_PATH } from '@common/constants';
 
 const Redirect = () => {
   const { aiToken } = useTurnToken();

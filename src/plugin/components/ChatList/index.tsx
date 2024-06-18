@@ -4,7 +4,7 @@ import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
 import { EChatUser, EMicroAppUuid, type IGetPresetRes } from '@plugin/request/chat/type';
 import { ESummaryStatus } from '@plugin/components/ChatWrapper/hooks/useBeautySummary';
 import useGetScenes from '@plugin/hooks/useGetScenes';
-import { TOP_BAR_HEIGHT, PRE_EDU_PATH } from '@plugin/constants';
+import { TOP_BAR_HEIGHT, PRE_EDU_PATH } from '@common/constants';
 import { useThrottleFn } from 'ahooks';
 import type { SelectorQuery } from '@tarojs/taro';
 import Taro, { useReady } from '@tarojs/taro';
@@ -237,14 +237,13 @@ const ChatList: React.FC<IChatListProps> = ({ presetData, guideDataId, onOpenNew
           {isShowRestartSession && <RestartSession onOpenNewSession={onOpenNewSession} />}
           <View
             style={{
-              height: `${
-                (operateState && [EOperateState.TEXT_REST, EOperateState.TEXT_ENTER].includes(operateState)
-                  ? 90
-                  : 125) +
+              height: `${(operateState && [EOperateState.TEXT_REST, EOperateState.TEXT_ENTER].includes(operateState)
+                ? 90
+                : 125) +
                 (isShowRestartSession ? 40 : 0) +
                 (isEduBehaviorScenes ? 50 : 0) +
                 (TOP_BAR_HEIGHT! + 40)
-              }px`,
+                }px`,
             }}
           />
         </ScrollView>

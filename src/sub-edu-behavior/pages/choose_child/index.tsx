@@ -3,7 +3,7 @@ import { useRequest } from 'ahooks';
 import Taro, { useRouter } from '@tarojs/taro';
 import { View, Image } from '@tarojs/components';
 import { getResource } from '@sub-edu-behavior/request';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@sub-edu-behavior/constants';
 import './index.less';
 
 export interface IChooseChildRouter {

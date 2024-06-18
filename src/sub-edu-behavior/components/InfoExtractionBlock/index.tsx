@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Taro from '@tarojs/taro';
 import { View, Image, Video } from '@tarojs/components';
 import type { IAgentResponseData } from '@sub-edu-behavior/request/type';
-import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@plugin/constants';
+import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@sub-edu-behavior/constants';
 import './index.less';
 
 export interface IIntelligentInfoExtractionProps {

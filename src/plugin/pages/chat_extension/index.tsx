@@ -3,7 +3,7 @@ import Taro, { useRouter } from '@tarojs/taro';
 import { Button, View } from '@tarojs/components';
 import useGetScenes from '@plugin/hooks/useGetScenes';
 import { putResetApi } from '@plugin/request';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { AtModal, AtModalAction } from 'taro-ui';
 import { EPageFrom } from '@plugin/types';
 import { EMicroAppUuid } from '@plugin/request/chat/type';

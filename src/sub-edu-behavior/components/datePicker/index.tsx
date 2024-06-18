@@ -3,7 +3,7 @@ import type { FC } from 'react';
 import { PageContainer, View } from '@tarojs/components';
 import { useReducer } from '@sub-edu-behavior/utils';
 import { AtCalendar } from 'taro-ui';
-import { TOP_BAR_HEIGHT } from '@plugin/constants';
+import { TOP_BAR_HEIGHT } from '@common/constants';
 import 'taro-ui/dist/style/components/calendar.scss';
 import './index.less';
 

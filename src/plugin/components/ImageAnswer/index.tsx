@@ -6,7 +6,7 @@ import { EStorage } from '@plugin/types';
 import type { IPictureFrameList } from '@plugin/hooks/useDrawPhoto';
 import { createShareIdApi } from '@plugin/request';
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
-import { PRE_PLUGIN_PATH } from '@plugin/constants';
+import { PRE_PLUGIN_PATH } from '@common/constants';
 import ImageContent, { EType } from '../ImageContent';
 import './index.less';
 import { EAnswerStatus } from '../ChatWrapper';

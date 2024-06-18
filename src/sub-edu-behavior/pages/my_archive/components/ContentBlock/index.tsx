@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import Taro from '@tarojs/taro';
 import { EStorage } from '@plugin/types';
 import dayjs from 'dayjs';
-import { PRE_EDU_PATH } from '@plugin/constants';
+import { PRE_EDU_PATH } from '@common/constants';
 import { View, Image, type ITouchEvent, Video } from '@tarojs/components';
 import type { IObserveListRes } from '@sub-edu-behavior/request/type';
 import './index.less';
