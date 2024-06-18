@@ -2,7 +2,7 @@ import path from 'path';
 // import fs from 'fs';
 import { defineConfig, type UserConfigExport } from '@tarojs/cli';
 import TsconfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+// import CopyWebpackPlugin from 'copy-webpack-plugin';
 import WxssImportPlugin from './WxssImportPlugin';
 import devConfig from './dev';
 import prodConfig from './prod';
@@ -13,8 +13,8 @@ import prodConfig from './prod';
 // }
 
 // https://taro-docs.jd.com/docs/next/config#defineconfig-辅助函数
+const PackSubName = process.env.PACK_SUB_NAME;
 export default defineConfig(async (merge, { command, mode }) => {
-  const packSubName = process.env.PACK_SUB_NAME;
   const baseConfig: UserConfigExport = {
     projectName: 'mp-ai-helper',
     date: '2024-6-17',
@@ -25,15 +25,17 @@ export default defineConfig(async (merge, { command, mode }) => {
       750: 1,
       828: 1.81 / 2,
     },
-    sourceRoot: packSubName ? `src/${packSubName}` : 'src',
-    outputRoot: packSubName ? `dist/xiao-c/${packSubName}` : 'dist',
+    sourceRoot: PackSubName ? `src/${PackSubName}` : 'src',
+    outputRoot: PackSubName ? `dist/xiao-c/${PackSubName}` : 'dist',
     plugins: [
+      'taro-plugin-compiler-optimization',
       path.join(process.cwd(), '/plugins/fix-taro-react-echarts.js'), // 修复 echarts 缺陷
       path.join(process.cwd(), '/plugins/move-dist-to-host-miniapp.js'), // 移动构建产物到宿主小程序
     ],
     copy: {
       patterns: [
-        // { from: 'node_modules/libpag-miniprogram/lib', to: 'dist' }
+        { from: 'src/sub-pag/utils', to: `dist${PackSubName ? '/xiao-c' : ''}/sub-pag/utils` },
+        { from: 'src/sub-pag/native-pages/index', to: `dist${PackSubName ? '/xiao-c' : ''}/sub-pag/pages/index1` },
       ],
       options: {},
     },
@@ -45,7 +47,7 @@ export default defineConfig(async (merge, { command, mode }) => {
       },
     },
     cache: {
-      enable: false // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
+      enable: true // Webpack 持久化缓存配置，建议开启。默认配置请参考：https://docs.taro.zone/docs/config-detail#cache
     },
     defineConstants: {},
     sass: {
@@ -56,7 +58,7 @@ export default defineConfig(async (merge, { command, mode }) => {
         ignoreOrder: true
       },
       output: {
-        chunkLoadingGlobal: `${packSubName ? packSubName.replace(/-/g, '') : ''}WebpackJsonp`,
+        chunkLoadingGlobal: `${PackSubName ? PackSubName.replace(/-/g, '') : ''}WebpackJsonp`,
       },
       postcss: {
         autoprefixer: {

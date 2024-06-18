@@ -1,8 +1,9 @@
 
 export default defineAppConfig({
-  pages: ['pages/index'],
+  pages: ['pages/index/index'],
   components: [
-    'components/StaticVoice',
-    'components/LoadingText'
+    // 'components/StaticVoice',
+    // 'components/LoadingText',
+    // 'components/LoadingImg'
   ]
 })

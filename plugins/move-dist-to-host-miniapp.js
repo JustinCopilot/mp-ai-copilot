@@ -2,13 +2,15 @@ const fs = require('fs-extra')
 const path = require('path')
 
 export default (ctx, options) => {
-  ctx.onBuildFinish(() => {
+  ctx.onBuildFinish(async () => {
 
     // Taro v3.1.4
-    const blended = ctx.runOpts.newBlended || ctx.runOpts.options.newBlended
-    if (!blended || !process.env.PACK_SUB_NAME) return
+    const blended = ctx.runOpts.newBlended || ctx.runOpts.options.newBlended;
+    if (!blended || !process.env.PACK_SUB_NAME) return;
 
-    console.log('编译结束！')
+    if (ctx.runOpts.config?.outputRoot.includes('sub-pag')) {
+      await handleFixPagSubSource();
+    }
 
     // 根路径
     const rootPath = path.resolve(__dirname, '../..')
@@ -36,4 +38,42 @@ export default (ctx, options) => {
 
     console.log('拷贝结束！')
   })
+}
+
+async function handleFixPagSubSource() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      // 根路径
+      const rootPath = path.resolve(__dirname, '../..');
+      // 要处理的资源路径
+      const sourcePath = path.resolve(__dirname, '../dist/xiao-c/sub-pag');
+
+      // 删除 sourcePath 下的所有非文件夹的文件
+      const files = await fs.readdir(sourcePath);
+      for (const file of files) {
+        const filePath = path.join(sourcePath, file);
+        const stats = await fs.stat(filePath);
+        if (stats.isFile() && file !== 'app.json') {
+          await fs.remove(filePath);
+        }
+      }
+
+      // 删除 pagesPath 下的名为 'index' 的文件夹
+      const pagesPath = path.join(sourcePath, 'pages');
+      const indexFolder = path.join(pagesPath, 'index');
+      if (await fs.pathExists(indexFolder)) {
+        await fs.remove(indexFolder);
+      }
+
+      // 将 'index1' 文件夹重命名为 'index'
+      const index1Folder = path.join(pagesPath, 'index1');
+      if (await fs.pathExists(index1Folder)) {
+        await fs.rename(index1Folder, indexFolder);
+      }
+
+      resolve();
+    } catch (error) {
+      reject(error);
+    }
+  });
 }

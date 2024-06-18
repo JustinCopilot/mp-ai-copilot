@@ -1,10 +1,9 @@
-import React, { useEffect, useContext, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Taro from '@tarojs/taro';
 import { Canvas, Image, View } from '@tarojs/components';
-import { GlobalContext } from '@plugin/stores/GlobalContext';
 import { PAGInit } from 'libpag-miniprogram';
 import type { PAGView } from 'libpag-miniprogram/types/pag-view';
-import type { PAG } from 'libpag-miniprogram/types/types'
+import type { PAG } from 'libpag-miniprogram/types/types';
 
 interface IPagIconProps {
   pagSrc: string;
@@ -28,35 +27,27 @@ const getPagInitPromise = async (): Promise<PAG> => {
   if (initLock) return pagInitPromise;
   initLock = true;
   pagInitPromise = PAGInit({
-    locateFile: (file) => {
-      console.log('%c [ filedddddddddddddd ]-31', 'font-size:13px; background:pink; color:#bf2c9f;', file);
-      return 'utils/' + file
-    },
+    locateFile: (file) => `${process.env.TARO_APP_PACK_INDEPENDENT_SUB ? 'xiao-c/' : ''}sub-pag/utils/` + file,
   });
   return pagInitPromise;
 };
 
 const PagIcon: React.FC<IPagIconProps> = (props) => {
-  console.log('%c [ props ]-42', 'font-size:13px; background:pink; color:#bf2c9f;', props);
-  const globalContext = useContext(GlobalContext);
   const { pagSrc, width, height, canvasId, play = true, style, imageSrc, imageStyle } = props;
-  const query = Taro.createSelectorQuery().in(globalContext?.scope);
+  const query = Taro.createSelectorQuery().in(Taro.getCurrentInstance());
   const pagViewRef = useRef<PAGView | undefined>();
   const [pagViewRefState, setPagViewRefState] = useState(false);
   const [hasPagFile, setHasPagFile] = useState(true);
 
   useEffect(() => {
-    console.log('%c [ query.select(', 'font-size:13px; background:pink; color:#bf2c9f;', query.select(`#${canvasId}`));
     query
       .select(`#${canvasId}`)
       ?.node()
       ?.exec(async (res) => {
-        console.log('%c [ res========== ]-53', 'font-size:13px; background:pink; color:#bf2c9f;', res);
         const canvas = res[0]?.node;
         if (!canvas || !pagSrc) return;
 
         const buffer = await loadFileByRequest(pagSrc) as ArrayBuffer;
-        console.log('%c [ buffer ]-55', 'font-size:13px; background:pink; color:#bf2c9f;', buffer);
         const pag = await getPagInitPromise();
         const pagFile = await pag?.PAGFile?.load(buffer);
         if (pagFile) {

@@ -48,7 +48,7 @@ export default defineAppConfig({
     {
       root: "sub-pag/",
       pages: [
-        "pages/index",
+        "pages/index/index",
       ],
     },
   ],

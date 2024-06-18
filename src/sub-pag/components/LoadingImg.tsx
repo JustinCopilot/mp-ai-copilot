@@ -1,3 +1,4 @@
+import React from 'react';
 import PagIcon from './Base';
 
 // 图片加载

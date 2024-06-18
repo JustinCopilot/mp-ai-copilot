@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useRef, useState } from 'react';
 import Taro from '@tarojs/taro';
 import { Canvas, Image, View } from '@tarojs/components';
-import { GlobalContext } from '@plugin/stores/GlobalContext';
 import { PAGInit } from 'libpag-miniprogram';
 import type { PAG } from 'libpag-miniprogram/types/types';
 import type { PAGView } from 'libpag-miniprogram/types/pag-view';
@@ -28,15 +27,14 @@ const pagInit = async (): Promise<PAG> => {
   if (initLock) return pagInitPromise;
   initLock = true;
   pagInitPromise = PAGInit({
-    locateFile: (file) => 'utils/' + file,
+    locateFile: (file) => `${process.env.TARO_APP_PACK_INDEPENDENT_SUB ? 'xiao-c/' : ''}sub-pag/utils/` + file,
   });
   return pagInitPromise;
 };
 
 const PagIcon: React.FC<IPagIconProps> = (props) => {
-  const globalContext = useContext(GlobalContext);
   const { pagSrc, width, height, canvasId, play = true, style, imageSrc, imageStyle } = props;
-  const query = Taro.createSelectorQuery().in(globalContext?.scope);
+  const query = Taro.createSelectorQuery().in(Taro.getCurrentInstance().page!);
   const pagViewRef = useRef<PAGView | undefined>();
   const [pagViewRefState, setPagViewRefState] = useState(false);
   const [hasPagFile, setHasPagFile] = useState(true);

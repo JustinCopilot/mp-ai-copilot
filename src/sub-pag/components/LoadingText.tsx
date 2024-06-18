@@ -1,3 +1,4 @@
+import React from 'react';
 import PagIcon from './Base';
 
 // 对话加载

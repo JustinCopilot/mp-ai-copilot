@@ -1,3 +1,4 @@
+import React from 'react';
 import PagIcon from './Base';
 
 // 语音图标静默状态
