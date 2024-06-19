@@ -40,7 +40,6 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
   const [thirdStepChooseData, setThirdStepChooseData] = useState<number[]>([]);
   const [copyThirdStepChooseData, setCopyThirdStepChooseData] = useState<number[]>([]);
   const [getNum, setGetNum] = useState<number>(0);
-  const [scrollTop, setScrollTop] = useState<number>(0);
 
   const dataListRef = useRef<any[] | null>(null);
   const thirdStepChooseDataRef = useRef<number[] | null>(null);
@@ -95,21 +94,11 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
         }
       });
       console.log('newResourceList', newResourceList);
-      // setDataList(() => {
-      //   return newResourceList;
-      // });
       setDataList(() => {
-        // const newArray = dataListRef.current?.length ? dataListRef.current : [];
         dataListRef.current = newResourceList;
         return dataListRef.current;
       });
-      setDataList(newResourceList);
       setTotalRows(() => totalRows);
-      // setDataList(() => {
-      //   const newArray = dataListRef.current?.length ? dataListRef.current : [];
-      //   dataListRef.current = [...newArray, ...res];
-      //   return dataListRef.current;
-      // });
     });
   };
 
@@ -135,7 +124,7 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
 
   const goDetail = (record: any) => {
     // console.log('goDetail', record);
-    Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_detail/index?observeId=${record?.observeId}&hideBtn=true` });
+    Taro.navigateTo({ url: `${PRE_EDU_PATH}/jot_down_detail?observeId=${record?.observeId}&hideBtn=true` });
   };
 
   const secondClick = (record: IStudentListRes) => {
@@ -224,7 +213,6 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
 
     setStep(0);
     setPageIndex('1');
-    setScrollTop(() => 0);
     setGetNum(() => getNum + 1);
     // setTimeout(() => {
     //   getDataList();
@@ -317,13 +305,9 @@ const GenerateObservationRecords: React.FC<IGenerateObservationRecordsProps> = (
           show={visible}
           dataList={dataList}
           // getDataList={getDataList}
-          setScrollTop={(val) => {
-            setScrollTop(val);
-          }}
           currentPageAddOne={() => {
             setPageIndex(() => Number(pageIndex) + 1);
           }}
-          scrollTop={scrollTop}
           firstStepTotalRows={totalRows}
           firstText={`下一步(${copyFirstStepChooseData?.length}/3)`}
           secondText={`下一步(${copySecondStepChooseData?.length}/10)`}

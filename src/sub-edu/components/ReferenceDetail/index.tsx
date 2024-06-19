@@ -10,7 +10,7 @@ import { DEFAULT_AVATAR_BOY, DEFAULT_AVATAR_GIRL } from '@sub-edu/constants';
 import { PRE_EDU_PATH } from '@common/constants';
 import { DataType, EModules } from './config';
 import type { State, Props, StudentInfo } from './config';
-import './index.less';
+import styles from './index.module.less';
 import InterestEcharts from './InterestEcharts';
 import SleepEcharts from './SleepEcharts';
 import WaterEcharts from './WaterEcharts';
@@ -178,7 +178,7 @@ export const ReferenceDetail: FC<Props> = ({ data, type = DataType.notable, obse
   const tabs = useMemo(() => data?.map(({ studentName }) => ({ title: studentName?.slice(0, 4) || '--' })), [data]);
 
   return (
-    <View className="container">
+    <View className={styles['container']}>
       {data?.length > 1 && (
         <AtTabs current={current} scroll tabList={tabs} onClick={(val) => dispatch('current', val)}>
           {/* {data.map((item, index) => (

@@ -5,9 +5,7 @@ import React, { useMemo } from 'react';
 import dayjs from 'dayjs';
 
 import Taro from '@tarojs/taro';
-import { AtFloatLayout } from 'taro-ui';
-import { useThrottleFn } from 'ahooks';
-import { View, Swiper, SwiperItem, Text, Image, RootPortal, ScrollView } from '@tarojs/components';
+import { View, Swiper, SwiperItem, Text, Image, RootPortal, ScrollView, PageContainer } from '@tarojs/components';
 
 import type { IObserveListRes, IStudentListRes } from '../../../../request/type';
 
@@ -45,8 +43,6 @@ export interface IshowModalProps {
   copyThirdStepChooseData?: number[];
   chooseThirdStepData?: (val: number) => void;
   currentPageAddOne: () => void;
-  scrollTop?: number;
-  setScrollTop?: (val: number) => void;
 }
 const ChooseModal: React.FC<IshowModalProps> = ({
   show,
@@ -79,8 +75,6 @@ const ChooseModal: React.FC<IshowModalProps> = ({
   copyThirdStepChooseData = [],
   chooseThirdStepData,
   currentPageAddOne,
-  scrollTop = 0,
-  setScrollTop,
 }) => {
   const fullYear = new Date().getFullYear();
   const childList: IStudentListRes[] = useMemo(() => {
@@ -126,16 +120,12 @@ const ChooseModal: React.FC<IshowModalProps> = ({
     // getDataList();
   };
 
-  const { run: handleScroll } = useThrottleFn((val) => {
-    console.log('节流', val);
-    setScrollTop?.(val);
-  });
-
   // console.log(dataList, '---------------dataList------------>xxxxxxxxx');
   return (
     show && (
       <RootPortal>
-        <AtFloatLayout isOpened={show} className="points-behavior-modal jotDown-modal" onClose={handleClose}>
+        {/* <AtFloatLayout isOpened={show} className="points-behavior-modal jotDown-modal" onClose={handleClose}> */}
+        <PageContainer show={show} onClickOverlay={handleClose} zIndex={100} round={true} onAfterLeave={handleClose}>
           <View className="modal">
             <View className="modal-title">
               {showRecordList && !!onTabsChange ? (
@@ -172,15 +162,7 @@ const ChooseModal: React.FC<IshowModalProps> = ({
             >
               <SwiperItem className="modal-body-item">
                 {dataList?.length ? (
-                  <ScrollView
-                    onScrollToLower={onScrollToLower}
-                    className="modal-body-scroll"
-                    scrollY
-                    scrollTop={scrollTop}
-                    onScroll={(e) => {
-                      handleScroll(e.detail.scrollTop);
-                    }}
-                  >
+                  <ScrollView onScrollToLower={onScrollToLower} className="modal-body-scroll" scrollY>
                     {dataList.map((item, index) => {
                       return (
                         <View key={index}>
@@ -199,88 +181,88 @@ const ChooseModal: React.FC<IshowModalProps> = ({
                           </View>
                           {item?.observeList?.length
                             ? item?.observeList.map((item2, index2) => (
-                                <View
-                                  className="modal-body-item-body"
-                                  key={item2?.observeId || index2}
-                                  onClick={() => chooseItem(item2)}
-                                >
-                                  <View className="modal-body-item-flex">
-                                    <Image
-                                      src={
-                                        firstChooseIds.includes(item2?.observeId)
-                                          ? 'https://senior.cos.clife.cn/xiao-c/check@2x.png'
-                                          : 'https://senior.cos.clife.cn/xiao-c/uncheck@2x.png'
-                                      }
-                                      className="modal-body-item-body-img"
-                                    />
-                                    <View className="modal-body-item-flex-right">
-                                      <View className="modal-body-item-time">
-                                        <Text>{item2.observeTime.slice(11, 16)}</Text>
-                                        <Text
-                                          className="modal-body-item-time-click"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            goDetail(item2);
-                                          }}
-                                        >
-                                          查看详情
+                              <View
+                                className="modal-body-item-body"
+                                key={item2?.observeId || index2}
+                                onClick={() => chooseItem(item2)}
+                              >
+                                <View className="modal-body-item-flex">
+                                  <Image
+                                    src={
+                                      firstChooseIds.includes(item2?.observeId)
+                                        ? 'https://senior.cos.clife.cn/xiao-c/check@2x.png'
+                                        : 'https://senior.cos.clife.cn/xiao-c/uncheck@2x.png'
+                                    }
+                                    className="modal-body-item-body-img"
+                                  />
+                                  <View className="modal-body-item-flex-right">
+                                    <View className="modal-body-item-time">
+                                      <Text>{item2.observeTime.slice(11, 16)}</Text>
+                                      <Text
+                                        className="modal-body-item-time-click"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          goDetail(item2);
+                                        }}
+                                      >
+                                        查看详情
+                                      </Text>
+                                    </View>
+                                    <View
+                                      className={`modal-body-item-detail ${firstChooseIds.includes(item2?.observeId) ? 'modal-body-item-choosedetail' : ''}`}
+                                    >
+                                      <View className="modal-body-item-detail-flex">
+                                        <Text className="modal-body-item-detail-flex-left">观察情境:</Text>
+                                        <Text className="modal-body-item-detail-flex-right">
+                                          <Text
+                                            style={{
+                                              overflow: 'hidden',
+                                              textOverflow: 'ellipsis',
+                                              whiteSpace: 'nowrap',
+                                              display: 'block',
+                                            }}
+                                          >
+                                            {item2?.situationList?.map((item3) => item3.situationName).join('、') ||
+                                              ''}
+                                          </Text>
                                         </Text>
                                       </View>
-                                      <View
-                                        className={`modal-body-item-detail ${firstChooseIds.includes(item2?.observeId) ? 'modal-body-item-choosedetail' : ''}`}
-                                      >
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察情境:</Text>
-                                          <Text className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2?.situationList?.map((item3) => item3.situationName).join('、') ||
-                                                ''}
-                                            </Text>
+                                      <View className="modal-body-item-detail-flex">
+                                        <Text className="modal-body-item-detail-flex-left">观察幼儿:</Text>
+                                        <Text className="modal-body-item-detail-flex-right">
+                                          <Text
+                                            style={{
+                                              overflow: 'hidden',
+                                              textOverflow: 'ellipsis',
+                                              whiteSpace: 'nowrap',
+                                              display: 'block',
+                                            }}
+                                          >
+                                            {item2?.studentList?.map((item3) => item3.studentName).join('、') || ''}
                                           </Text>
-                                        </View>
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察幼儿:</Text>
-                                          <Text className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2?.studentList?.map((item3) => item3.studentName).join('、') || ''}
-                                            </Text>
+                                        </Text>
+                                      </View>
+                                      <View className="modal-body-item-detail-flex">
+                                        <Text className="modal-body-item-detail-flex-left">观察内容：</Text>
+                                        <View className="modal-body-item-detail-flex-right">
+                                          <Text
+                                            style={{
+                                              overflow: 'hidden',
+                                              textOverflow: 'ellipsis',
+                                              whiteSpace: 'nowrap',
+                                              display: 'block',
+                                              height: 30,
+                                            }}
+                                          >
+                                            {item2.content}
                                           </Text>
-                                        </View>
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察内容：</Text>
-                                          <View className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                                height: 30,
-                                              }}
-                                            >
-                                              {item2.content}
-                                            </Text>
-                                          </View>
                                         </View>
                                       </View>
                                     </View>
                                   </View>
                                 </View>
-                              ))
+                              </View>
+                            ))
                             : null}
                         </View>
                       );
@@ -372,83 +354,83 @@ const ChooseModal: React.FC<IshowModalProps> = ({
                           </View>
                           {item?.observeList?.length
                             ? item?.observeList.map((item2, index2) => (
-                                <View className="modal-body-item-body" key={item2?.observeId || index2}>
-                                  <View className="modal-body-item-flex">
-                                    <Image
-                                      src={
-                                        firstChooseIds.includes(item2?.observeId)
-                                          ? 'https://senior.cos.clife.cn/xiao-c/check@2x.png'
-                                          : 'https://senior.cos.clife.cn/xiao-c/uncheck@2x.png'
-                                      }
-                                      className="modal-body-item-body-img"
-                                    />
-                                    <View className="modal-body-item-flex-right" onClick={() => chooseItem(item2)}>
-                                      <View className="modal-body-item-time">
-                                        <Text>{item2.observeTime.slice(11, 16)}</Text>
-                                        <Text
-                                          className="modal-body-item-time-click"
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            goDetail(item2);
-                                          }}
-                                        >
-                                          查看详情
+                              <View className="modal-body-item-body" key={item2?.observeId || index2}>
+                                <View className="modal-body-item-flex">
+                                  <Image
+                                    src={
+                                      firstChooseIds.includes(item2?.observeId)
+                                        ? 'https://senior.cos.clife.cn/xiao-c/check@2x.png'
+                                        : 'https://senior.cos.clife.cn/xiao-c/uncheck@2x.png'
+                                    }
+                                    className="modal-body-item-body-img"
+                                  />
+                                  <View className="modal-body-item-flex-right" onClick={() => chooseItem(item2)}>
+                                    <View className="modal-body-item-time">
+                                      <Text>{item2.observeTime.slice(11, 16)}</Text>
+                                      <Text
+                                        className="modal-body-item-time-click"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          goDetail(item2);
+                                        }}
+                                      >
+                                        查看详情
+                                      </Text>
+                                    </View>
+                                    <View
+                                      className={`modal-body-item-detail ${firstChooseIds.includes(item2?.observeId) ? 'modal-body-item-choosedetail' : ''}`}
+                                    >
+                                      <View className="modal-body-item-detail-flex">
+                                        <Text className="modal-body-item-detail-flex-left">观察情境:</Text>
+                                        <Text className="modal-body-item-detail-flex-right">
+                                          <Text
+                                            style={{
+                                              overflow: 'hidden',
+                                              textOverflow: 'ellipsis',
+                                              whiteSpace: 'nowrap',
+                                              display: 'block',
+                                            }}
+                                          >
+                                            {item2?.situationList?.map((item3) => item3.situationName).join('、') ||
+                                              ''}
+                                          </Text>
                                         </Text>
                                       </View>
-                                      <View
-                                        className={`modal-body-item-detail ${firstChooseIds.includes(item2?.observeId) ? 'modal-body-item-choosedetail' : ''}`}
-                                      >
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察情境:</Text>
-                                          <Text className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2?.situationList?.map((item3) => item3.situationName).join('、') ||
-                                                ''}
-                                            </Text>
+                                      <View className="modal-body-item-detail-flex">
+                                        <Text className="modal-body-item-detail-flex-left">观察幼儿:</Text>
+                                        <Text className="modal-body-item-detail-flex-right">
+                                          <Text
+                                            style={{
+                                              overflow: 'hidden',
+                                              textOverflow: 'ellipsis',
+                                              whiteSpace: 'nowrap',
+                                              display: 'block',
+                                            }}
+                                          >
+                                            {item2?.studentList?.map((item3) => item3.studentName).join('、') || ''}
                                           </Text>
-                                        </View>
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察幼儿:</Text>
-                                          <Text className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2?.studentList?.map((item3) => item3.studentName).join('、') || ''}
-                                            </Text>
+                                        </Text>
+                                      </View>
+                                      <View className="modal-body-item-detail-flex">
+                                        <Text className="modal-body-item-detail-flex-left">观察内容：</Text>
+                                        <View className="modal-body-item-detail-flex-right">
+                                          <Text
+                                            style={{
+                                              overflow: 'hidden',
+                                              textOverflow: 'ellipsis',
+                                              whiteSpace: 'nowrap',
+                                              display: 'block',
+                                            }}
+                                          >
+                                            {item2.content}
                                           </Text>
-                                        </View>
-                                        <View className="modal-body-item-detail-flex">
-                                          <Text className="modal-body-item-detail-flex-left">观察内容：</Text>
-                                          <View className="modal-body-item-detail-flex-right">
-                                            <Text
-                                              style={{
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                display: 'block',
-                                              }}
-                                            >
-                                              {item2.content}
-                                            </Text>
-                                          </View>
                                         </View>
                                       </View>
                                     </View>
                                   </View>
                                 </View>
-                              ))
+                              </View>
+                            ))
                             : null}
                         </View>
                       );
@@ -464,14 +446,14 @@ const ChooseModal: React.FC<IshowModalProps> = ({
                       <ScrollView scrollY>
                         {resourceList?.length
                           ? resourceList.map((item, idx) => (
-                              <View
-                                className={`${chooseResourceNum === item?.classId ? 'select-choose-item' : ''} select-item`}
-                                key={item?.classId || idx}
-                                onClick={() => onChangeResoureceNum(item)}
-                              >
-                                {item?.className?.length > 5 ? item?.className?.slice(0, 5) + '...' : item?.className}
-                              </View>
-                            ))
+                            <View
+                              className={`${chooseResourceNum === item?.classId ? 'select-choose-item' : ''} select-item`}
+                              key={item?.classId || idx}
+                              onClick={() => onChangeResoureceNum(item)}
+                            >
+                              {item?.className?.length > 5 ? item?.className?.slice(0, 5) + '...' : item?.className}
+                            </View>
+                          ))
                           : null}
                       </ScrollView>
                     </View>
@@ -581,7 +563,8 @@ const ChooseModal: React.FC<IshowModalProps> = ({
               ) : null}
             </View>
           </View>
-        </AtFloatLayout>
+          {/* </AtFloatLayout> */}
+        </PageContainer>
       </RootPortal>
     )
   );
