@@ -5,6 +5,9 @@ export default defineAppConfig({
   pages: [
     ...pluginPages,
   ],
+  components: [
+    'components/Enter/Enter',
+  ],
   plugins: {
     WechatSI: {
       version: '0.3.5',

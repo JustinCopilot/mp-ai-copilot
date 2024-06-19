@@ -1,90 +1,90 @@
-import { turnTokenApi } from '@plugin/request';
+import React, { useEffect, useState } from 'react';
 import Taro from '@tarojs/taro';
-import type { ETurnTokenType } from '@plugin/request/common/type';
+import { useRequest } from 'ahooks';
+import { turnTokenApi } from '@plugin/request';
 import { getMobileVerifyCodeApi, loginApi } from '@plugin/request/login';
+import type { ETurnTokenType } from '@plugin/request/common/type';
 import { EEnv, EStorage } from '@plugin/types';
 import { getToken, setToken } from '@common/utils/token';
-import { useRequest } from 'ahooks';
-import React, { useEffect, useState } from 'react';
+import { PRE_PLUGIN_PATH } from '@common/constants';
 
-interface EnterRedirectBase {
+interface IEnterRedirectBase {
   name: string;
   params: any;
 }
 
 interface EnterProps {
-  env?: EEnv; // 环境：itest或prod
-  mobile: string; // 用户手机号
-  appType: ETurnTokenType; // 教育 1 美业 2
-  redirect?: EnterRedirectBase; // 进入什么页面，默认技能列表，进入技能详情页请传 {name:'chat',params:{microAppUuid:'xxx'}}
+  env: EEnv; // 环境：itest或prod
+  mobile?: string; // 用户手机号
+  appType?: ETurnTokenType; // 教育 1 美业 2
+  redirect?: IEnterRedirectBase; // 进入什么页面，默认技能列表，进入技能详情页请传 {name:'chat',params:{microAppUuid:'xxx'}}
   requestAppUserCode?: () => Promise<{ code: string }>; // 请求宿主系统授权code的方法，需返回promise
   children?: any;
   onChangeStatu?: Function;
   mode?: 'auto' | 'mobileVerifyCode'; // 自动授权模式 和 手机验证码模式,仅在独立调试时需要使用验证码模式
-  onNavigate: Function; // 需要集成方在此方法内调用navigateTo方法，navigateTo的参数将此回调的入参原样传入即可
-  onLisenReturn: (data: any) => { microAppUuid: string; data: any }; // 监听返回值
+  onNavigate?: Function; // 需要集成方在此方法内调用navigateTo方法，navigateTo的参数将此回调的入参原样传入即可
+  onLisenReturn?: (data: any) => { microAppUuid: string; data: any }; // 监听返回值
 }
 
-const Enter: React.FC<EnterProps> = ({
-  env = EEnv.PROD,
-  appType = null,
-  mobile = null,
-  onChangeStatu,
-  requestAppUserCode,
-  redirect,
-  mode = 'auto',
-  onNavigate,
-  onLisenReturn,
-  children,
-}) => {
+const Enter: React.FC<EnterProps> = (props) => {
+  console.log('%c [ xiaoc enter props1 ]', 'font-size:13px; background:pink; color:#bf2c9f;', props);
+  const {
+    env = EEnv.PROD,
+    appType = null,
+    mobile = null,
+    onChangeStatu,
+    requestAppUserCode,
+    redirect,
+    mode = 'auto',
+    onNavigate,
+    onLisenReturn,
+    children,
+  } = props;
   const token = getToken();
-  const isProd = process.env.NODE_ENV === 'production';
+  const isBuild = process.env.NODE_ENV === 'production';
   /**
    * @description 初始化赋值逻辑：
    * 打包后，每次都是false，每次都需要初始化；
    * 开发模式下，初始化后存token，后续判断有token则不需要再初始化；
    */
-  const [initSuccess, setInitSuccess] = useState(!isProd && token);
+  const [initSuccess, setInitSuccess] = useState(!isBuild && token);
   const { data: aiToken, run: turnTokenFn } = useRequest(turnTokenApi, { manual: true });
 
   const handeClick = () => {
     if (!initSuccess) {
-      Taro.showToast({
+      return Taro.showToast({
         title: 'AI组件初始化中，请稍后',
         icon: 'none',
       });
-      return;
     }
-    if (redirect && redirect.name === 'chat' && redirect.params?.microAppUuid) {
-      let paramsJSON = redirect.params ? '&params=' + encodeURIComponent(JSON.stringify(redirect.params)) : '';
-      onNavigate &&
-        onNavigate({
-          url: `/plugin/pages/chat/chat?microAppUuid=${redirect.params?.microAppUuid}${paramsJSON}`,
-          events: {
-            Return: (data) => {
-              console.log('return', data);
-              onLisenReturn && onLisenReturn(data);
-            },
+    if (redirect?.name === 'chat' && redirect?.params?.microAppUuid) {
+      const paramsJSON = `&params=${encodeURIComponent(JSON.stringify(redirect.params))}`;
+      onNavigate?.({
+        url: `${PRE_PLUGIN_PATH}/chat/chat?microAppUuid=${redirect.params?.microAppUuid}${paramsJSON}`,
+        events: {
+          Return: (data) => {
+            console.log('returnData', data);
+            onLisenReturn?.(data);
           },
-          success: (res) => {
-            console.log('success', res.eventChannel);
-            res.eventChannel.emit('Return', { data: 'test' });
-          },
-        });
+        },
+        success: (res) => {
+          console.log('success', res.eventChannel);
+          res.eventChannel.emit('Return', { data: 'test' });
+        },
+      });
     } else {
-      onNavigate &&
-        onNavigate({
-          url: '/plugin/pages/list/list?mockFlag=Y',
-          events: {
-            Return: (data) => {
-              console.log('return', data);
-            },
+      onNavigate?.({
+        url: `${PRE_PLUGIN_PATH}/list/list`,
+        events: {
+          Return: (data) => {
+            console.log('return', data);
           },
-          success: (res) => {
-            console.log('success', res.eventChannel);
-            res.eventChannel.emit('Return', { data: 'test' });
-          },
-        });
+        },
+        success: (res) => {
+          console.log('success', res.eventChannel);
+          res.eventChannel.emit('Return', { data: 'test' });
+        },
+      });
     }
   };
 
