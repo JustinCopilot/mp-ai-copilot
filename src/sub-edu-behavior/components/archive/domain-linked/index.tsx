@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, FC, useMemo } from 'react';
 import { View } from '@tarojs/components';
-import { Children, SelectLabelPicker } from '@sub-edu-behavior/components';
+import { Children, SelectLabelPicker } from '@sub-edu-behavior/components/SelectLabelPicker';
 import { CommonValue } from '@sub-edu-behavior/components/archive/observe-time';
 import { getSectorListApi } from '@sub-edu-behavior/request';
 import './index.less';

@@ -1,5 +1,5 @@
 import http from '@common/utils/https';
-import type { StudentInfo } from '@sub-edu-behavior/components';
+import type { StudentInfo } from '@sub-edu-behavior/components/ReferenceDetail';
 import type { Grade } from '@sub-edu-behavior/components/archive';
 import type {
   IGetListRes,

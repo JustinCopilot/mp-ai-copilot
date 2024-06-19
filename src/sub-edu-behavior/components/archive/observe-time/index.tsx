@@ -1,7 +1,7 @@
 import React from 'react';
 import type { FC } from 'react';
 import { View } from '@tarojs/components';
-import { DatePicker } from '@sub-edu-behavior/components';
+import { DatePicker } from '@sub-edu-behavior/components/datePicker';
 import type { ChildProps } from '@sub-edu-behavior/components/archive';
 import dayjs from 'dayjs';
 import classNames from 'classnames';

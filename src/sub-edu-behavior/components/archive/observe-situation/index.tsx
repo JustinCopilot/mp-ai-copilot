@@ -2,7 +2,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect, FC, useMemo } from 'react';
 import { View } from '@tarojs/components';
-import { Option, SelectLabelPicker } from '@sub-edu-behavior/components';
+import { Option, SelectLabelPicker } from '@sub-edu-behavior/components/SelectLabelPicker';
 import { CommonValue } from '@sub-edu-behavior/components/archive/observe-time';
 import { getSituationLabelList } from '@sub-edu-behavior/request/';
 import cloneDeep from 'lodash/cloneDeep';

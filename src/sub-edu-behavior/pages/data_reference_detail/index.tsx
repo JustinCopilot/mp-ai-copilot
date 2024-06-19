@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from '@tarojs/taro';
-import { ReferenceDetail, DataType } from '@sub-edu-behavior/components';
+import { ReferenceDetail, DataType } from '@sub-edu-behavior/components/ReferenceDetail';
 import { getStuDataDetailApi } from '@sub-edu-behavior/request';
-import type { StudentInfo } from '@sub-edu-behavior/components';
+import type { StudentInfo } from '@sub-edu-behavior/components/ReferenceDetail';
 import './index.less';
 
 export const DataReferenceDetails = () => {
