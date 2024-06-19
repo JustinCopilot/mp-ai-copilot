@@ -2,9 +2,8 @@ import type { BaseEventOrig } from '@tarojs/components';
 import type { EMicroAppUuid } from '@plugin/request/chat/type';
 
 export enum EStorage {
-  MOBILE = 'mobile',
-  TOKEN = 'token',
-  HOST_ENV = 'host_env',
+  TOKEN = 'xiaoc_token',
+  HOST_ENV = 'xiaoc_env',
   EDU_CHOOSE_IMG_LIST = 'edu_choose_img_list',
   EDU_FRAME_IMG_LIST = 'edu_frame_img_list',
   EDU_SYNTHESIS_IMG_LIST = 'edu_synthesis_img_list',
