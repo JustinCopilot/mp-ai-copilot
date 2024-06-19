@@ -37,9 +37,9 @@ export default defineAppConfig({
         ...pluginPages,
       ],
     },
-    // 幼教行为观察分包
+    // 幼教分包
     {
-      root: "sub-edu-behavior/",
+      root: "sub-edu/",
       pages: [
         ...eduBehaviorPages,
       ],

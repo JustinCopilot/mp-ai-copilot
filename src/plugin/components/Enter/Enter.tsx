@@ -27,7 +27,6 @@ interface EnterProps {
 }
 
 const Enter: React.FC<EnterProps> = (props) => {
-  console.log('%c [ xiaoc enter props1 ]', 'font-size:13px; background:pink; color:#bf2c9f;', props);
   const {
     env = EEnv.PROD,
     appType = null,

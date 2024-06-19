@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import Taro from '@tarojs/taro';
 import { ChatWrapperContext } from '@plugin/stores/ChatWrapperContext';
-import { EEduBehaviorTag } from '@sub-edu-behavior/interface';
+import { EEduBehaviorTag } from '@sub-edu/interface';
 import { View, ScrollView } from '@tarojs/components';
 import { EAnswerStatus } from '@plugin/components/ChatWrapper';
 import './index.less';

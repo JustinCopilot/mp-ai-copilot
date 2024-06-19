@@ -123,7 +123,7 @@ export default defineConfig(async (merge, { command, mode }) => {
       '@common': path.resolve(__dirname, '..', 'src/common'),
       '@assets': path.resolve(__dirname, '..', 'src/common/assets'),
       '@plugin': path.resolve(__dirname, '..', 'src/plugin'),
-      '@sub-edu-behavior': path.resolve(__dirname, '..', 'src/sub-edu-behavior'),
+      '@sub-edu': path.resolve(__dirname, '..', 'src/sub-edu'),
       '@sub-pag': path.resolve(__dirname, '..', 'src/sub-pag'),
       '@pages': path.resolve(__dirname, '..', 'src/pages'),
       '@components': path.resolve(__dirname, '..', 'src/plugin/components'),
