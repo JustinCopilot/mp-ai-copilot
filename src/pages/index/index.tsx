@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Button, Input } from '@tarojs/components';
 import { ETurnTokenType } from '@plugin/request/common/type';
 import Taro from '@tarojs/taro';
-import { PAGInit } from 'libpag-miniprogram';
 import ClifeAiHelperEnter from '@plugin/components/Enter/Enter';
 import './index.less';
 
